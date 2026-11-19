@@ -72,6 +72,11 @@ Assistant that understands them in English (and Yiddish).
 | D17 | **Lumber cost basis is chosen per price list**: today's market, the running average of loads bought, or a typed planning number. The price builder shows the other two beside it. |
 | D18 | **"Other costs" per load**: the $700 in the example is an other cost. Each customer/plant can carry other costs per load (a field, possibly several lines), and they count in the **margin and profit per load**. |
 | D19 | **Quote unit varies by customer**: each price list chooses per piece, per bundle, per MBF or per load. The app can still show the others for reference. |
+| D20 | **Common count is selectable**: price comparisons (batch calculator, purchase log) convert to a common length, **10' by default**, changeable per comparison. |
+| D21 | **Usable offcuts are tracked** as inventory items (e.g. 24" leftovers); scrap counts as waste. |
+| D22 | **Inventory locations: BB Pallets' own yard plus each subcontractor's yard.** |
+| D23 | **Counted by size and length** (e.g. 2x3 × 10'); count sheets total to board feet. |
+| D24 | **Every stock line has an owner** (BB Pallets or a subcontractor). Counts record both; only BB Pallets' wood affects quantities owned and average cost. |
 
 ---
 
@@ -463,13 +468,6 @@ first milestone is built on the numbers in this file meanwhile.
     "stale prices" warning and a re-price-all button.
   - C15: is freight per destination, and who pays it (delivered vs pickup)?
     Demo: freight per plant, zero for pickup plants.
-
-### D. Buying and inventory
-17. Is the **"10-foot count"** their standard way of comparing prices?
-18. Where do offcuts go, and are they tracked?
-19. Where is inventory physically: one yard, each subcontractor's yard, both?
-20. Is it counted by item/size/length, or total board feet?
-21. How should each subcontractor's own wood be kept separate?
 
 ### E. Subcontractors
 22. How many subcontractors, and does each do different work (cutting,
