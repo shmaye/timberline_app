@@ -79,6 +79,10 @@ Assistant that understands them in English (and Yiddish).
 | D24 | **Subcontractors' own stock is not tracked.** Only BB Pallets' wood is in the app (in their own yard and in each subcontractor's yard). Counters count only BB Pallets' wood; the count sheet carries a reminder to leave the subcontractor's pile out. (Replaces an earlier answer that gave stock lines an owner.) |
 | D25 | **Subcontractors report by phone or email today**; the office types the cut/loaded quantities into the job. |
 | D26 | **US loads go through a customs broker.** Each US plant (or customer) records its broker; broker details print on the BOL and the customs papers are emailed to the broker. Which papers go with the truck: ask BB Pallets. |
+| D27 | **Users, for now: one salesperson from BB Pallets.** Built multi-user anyway (owner, office, buyer later). |
+| D28 | **Costs and margins are hidden by default**; an admin turns them on per person. |
+| D29 | **Phone and tablet use**: counts and recounts at the yard, and the owner on the road (look-ups, approvals, Assistant). Every screen must work at phone width. |
+| D30 | **Email: Hotmail (Outlook.com) and Gmail** are confirmed. Send from their own mailbox through Microsoft Graph (personal Microsoft accounts included) and Gmail. |
 
 ---
 
@@ -437,8 +441,8 @@ notifications, user menu.
 
 ## 12. Open questions
 
-Ask the user these, a group at a time. When the answer has to come from BB
-Pallets, mark it "ask BB Pallets".
+All groups (A–G) were gone through with the account owner on 2026-11-19.
+Answers are in section 2 (D13–D30). What's left is waiting on BB Pallets.
 
 ### Waiting on BB Pallets
 
@@ -485,13 +489,6 @@ first milestone is built on the numbers in this file meanwhile.
   - F28–29: which customers are billed in USD vs CAD; any Quebec customers
     (QST, French documents). Demo: currency per plant, tax per province.
   - F30: which papers go with a US load (the broker is confirmed, D26).
-
-### G. People and access
-31. Who will use Timberline (owner, office, buyer, subcontractors, drivers)?
-32. Who may see costs and margins, and who must not?
-33. Will anyone use it on a phone or tablet (counts at the yard, the owner on
-    the road)?
-34. Which email system do they use (Microsoft 365 / Gmail / other)?
 
 ---
 
