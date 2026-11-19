@@ -69,6 +69,9 @@ Assistant that understands them in English (and Yiddish).
 | D14 | **Trailer catalog** (Settings → Trailer types), maintained in the app, to choose from when planning. Starting set: **53' dry van, 48' flatbed, tri-axle** (lower weight limit) and a **B-train** (two trailers, each with its own deck and weight limit). Real dimensions and limits to be confirmed by BB Pallets. |
 | D15 | **Multi-drop loads happen sometimes** (more than one plant on one truck). The planner supports drops, with the first drop nearest the doors. |
 | D16 | **A split load becomes two separate orders**, each with its own order number (linked to each other). |
+| D17 | **Lumber cost basis is chosen per price list**: today's market, the running average of loads bought, or a typed planning number. The price builder shows the other two beside it. |
+| D18 | **"Other costs" per load**: the $700 in the example is an other cost. Each customer/plant can carry other costs per load (a field, possibly several lines), and they count in the **margin and profit per load**. |
+| D19 | **Quote unit varies by customer**: each price list chooses per piece, per bundle, per MBF or per load. The app can still show the others for reference. |
 
 ---
 
@@ -174,7 +177,7 @@ Worked example (their numbers), per MBF:
 | + 5% waste, applied to labor too (the subcontractor charges on wood coming in) | × 1.05 = $666.75 |
 | + freight: $2,300 per load (set between the cheapest carrier, $2,000, and the backup, $2,500–2,600) ÷ 44,000 bd ft | + $52.25 |
 | **Delivered cost** | **$719** |
-| + margin: target $2,000 per load + a $700 "additional cost" for this customer, call it $3,000 ÷ 44,000 | + $68 |
+| + margin: target $2,000 per load + $700 of "other costs" for this customer (D18), call it $3,000 ÷ 44,000 | + $68 |
 | **Selling price** | **$787** |
 
 Per piece: **3 × 3 × 31 ÷ 144 = 1.9375 board feet** × $0.787 = $1.5248 →
@@ -455,14 +458,11 @@ first milestone is built on the numbers in this file meanwhile.
     back. Demo: fillers set per plant; the subcontractor enters the loaded
     count on the job, which updates the order.
 
-### C. Pricing
-12. Which lumber cost goes into a price: today's market, the average, or a
-    round planning number?
-13. What is the **$700 "additional cost"** on that customer? Do others have
-    one?
-14. How often are prices updated, and what triggers it?
-15. Is freight per destination? Who pays it (delivered vs pickup)?
-16. Do they quote per piece, per bundle, per MBF, or per load?
+- **C (round 3):**
+  - C14: how often prices are updated, and what triggers it. Demo: a
+    "stale prices" warning and a re-price-all button.
+  - C15: is freight per destination, and who pays it (delivered vs pickup)?
+    Demo: freight per plant, zero for pickup plants.
 
 ### D. Buying and inventory
 17. Is the **"10-foot count"** their standard way of comparing prices?
