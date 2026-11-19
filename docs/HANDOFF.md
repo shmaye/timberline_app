@@ -65,6 +65,10 @@ Assistant that understands them in English (and Yiddish).
 | D10 | **Lots of existing data will be loaded in.** Imports from Excel/CSV are a first-class feature. |
 | D11 | **Load planning is interactive 3D** (like the Gemsli warehouse map): the truck fills as items are added, weight updates live, and loading order (first on / last on) is visible and adjustable, so they can see and confirm the load before it goes. |
 | D12 | **First milestone is visuals and a clickable workflow** for BB Pallets to click through. |
+| D13 | **Load limit is whichever runs out first**: board feet (~44,000), weight, or floor space/volume. The planner tracks all three and warns on the first to run out; the limits come from the trailer type. |
+| D14 | **Trailer catalog** (Settings → Trailer types), maintained in the app, to choose from when planning. Starting set: **53' dry van, 48' flatbed, tri-axle** (lower weight limit) and a **B-train** (two trailers, each with its own deck and weight limit). Real dimensions and limits to be confirmed by BB Pallets. |
+| D15 | **Multi-drop loads happen sometimes** (more than one plant on one truck). The planner supports drops, with the first drop nearest the doors. |
+| D16 | **A split load becomes two separate orders**, each with its own order number (linked to each other). |
 
 ---
 
@@ -399,7 +403,7 @@ notifications, user menu.
 | **Customers** | Accounts & plants · Contacts · Statements & payments |
 | **Catalog** | Items · Pallets (parts lists) · Stock lengths |
 | **Reports** | Operations · Money · Scheduled |
-| **Settings** | Users & access · Email · Trailer types · Carriers · Taxes & currency · Imports |
+| **Settings** | Users & access · Email · Trailer types (catalog, incl. B-train) · Carriers · Taxes & currency · Imports |
 
 ---
 
@@ -441,17 +445,15 @@ first milestone is built on the numbers in this file meanwhile.
   5. a **bill of lading**, **packing slip**, **invoice** and **subcontractor
      job sheet** as they look today.
 
-### B. Loads and the 3D planner
-6. What limits a load in practice: board feet (44,000?), weight, floor
-   space, or whichever comes first? Does it change by trailer type?
-7. Which **trailer types** do they use (length, width, height, axles, weight
-   limit)?
-8. How are bundles placed: rows across, stacked how high, any rules (heavy at
-   the bottom, sizes together)?
-9. **Multi-drop loads**: do they deliver to more than one plant per truck?
-10. How are filler items chosen, and how does the real loaded quantity come
-    back?
-11. When a load is split, is the second load its own order?
+- **B (round 2):**
+  - B7: real dimensions, axles and weight limits of each trailer type they
+    use (the catalog's starting set is in D14).
+  - B8: how bundles are placed: rows across, how high they stack, rules
+    (heavy at the bottom, sizes together). Demo: rows across, heaviest at the
+    bottom, drag to change.
+  - B10: how filler items are chosen, and how the real loaded quantity comes
+    back. Demo: fillers set per plant; the subcontractor enters the loaded
+    count on the job, which updates the order.
 
 ### C. Pricing
 12. Which lumber cost goes into a price: today's market, the average, or a
