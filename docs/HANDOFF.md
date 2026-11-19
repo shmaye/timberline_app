@@ -78,6 +78,7 @@ Assistant that understands them in English (and Yiddish).
 | D23 | **Counted by size and length** (e.g. 2x3 × 10'); count sheets total to board feet. |
 | D24 | **Subcontractors' own stock is not tracked.** Only BB Pallets' wood is in the app (in their own yard and in each subcontractor's yard). Counters count only BB Pallets' wood; the count sheet carries a reminder to leave the subcontractor's pile out. (Replaces an earlier answer that gave stock lines an owner.) |
 | D25 | **Subcontractors report by phone or email today**; the office types the cut/loaded quantities into the job. |
+| D26 | **US loads go through a customs broker.** Each US plant (or customer) records its broker; broker details print on the BOL and the customs papers are emailed to the broker. Which papers go with the truck: ask BB Pallets. |
 
 ---
 
@@ -476,14 +477,14 @@ first milestone is built on the numbers in this file meanwhile.
   - E23: how each is paid (per MBF in, per piece, per load, extras). Demo: a
     rate card per subcontractor.
 
-### F. Money and systems
-25. What program are orders, invoices and inventory in today?
-26. Accounting software (QuickBooks? Sage?) that invoices and payments must
-    flow into?
-27. Payment terms, credit limits, and who chases late payers?
-28. Currencies: which customers are billed in USD vs CAD?
-29. Any Quebec customers (QST, French documents)?
-30. Customs: do they use a broker for US loads? Which papers go with them?
+- **F (round 6):**
+  - F25–26: what program orders, invoices and inventory are in today, and
+    which accounting software (QuickBooks? Sage?) invoices and payments must
+    flow into. Demo: invoices in Timberline with a "send to accounting" button.
+  - F27: payment terms, credit limits, and who chases late payers.
+  - F28–29: which customers are billed in USD vs CAD; any Quebec customers
+    (QST, French documents). Demo: currency per plant, tax per province.
+  - F30: which papers go with a US load (the broker is confirmed, D26).
 
 ### G. People and access
 31. Who will use Timberline (owner, office, buyer, subcontractors, drivers)?
