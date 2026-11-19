@@ -426,14 +426,20 @@ notifications, user menu.
 Ask the user these, a group at a time. When the answer has to come from BB
 Pallets, mark it "ask BB Pallets".
 
-### A. Things to collect from BB Pallets (most useful first)
-1. A real **customer needs spreadsheet** and the **load worksheet** it goes
-   through.
-2. A recent **inventory/count sheet** and the month-end calculation.
-3. A **price list** for one customer and the cost sheet behind it.
-4. Their **catalog** in whatever form exists (for the day-one import).
-5. A **bill of lading**, **packing slip**, **invoice** and **subcontractor job
-   sheet** as they look today.
+### Waiting on BB Pallets
+
+Questions the account owner couldn't answer; they go to BB Pallets. The
+first milestone is built on the numbers in this file meanwhile.
+
+- **A1–A5 (round 1, 2026-11-19):** none of these documents are in hand yet.
+  Collect from BB Pallets, most useful first:
+  1. a real **customer needs spreadsheet** and the **load worksheet** it goes
+     through;
+  2. a recent **inventory/count sheet** and the month-end calculation;
+  3. a **price list** for one customer and the cost sheet behind it;
+  4. their **catalog** in whatever form exists (for the day-one import);
+  5. a **bill of lading**, **packing slip**, **invoice** and **subcontractor
+     job sheet** as they look today.
 
 ### B. Loads and the 3D planner
 6. What limits a load in practice: board feet (44,000?), weight, floor
