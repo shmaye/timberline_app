@@ -978,7 +978,9 @@ window.addEventListener('DOMContentLoaded', route);
     return `<svg viewBox="-110 -170 760 450" class="chart" role="img" aria-label="3D view of load L-2417 on a 53 foot dry van">
       <polygon points="${pts(far)}" fill="var(--surface-2)" stroke="var(--line-2)" stroke-dasharray="4 4" opacity=".7"/>
       <polygon points="${pts(nose)}" fill="var(--surface-2)" stroke="var(--line-2)" opacity=".8"/>
-      ${wheel(520, TW)}${wheel(565, TW)}${wheel(110, TW)}
+      <polygon points="${pts([[0, -7, TW - 30], [TL, -7, TW - 30], [TL, -16, TW - 30], [0, -16, TW - 30]])}" fill="#33383d"/>
+      <polygon points="${pts([[100, -16, TW - 30], [118, -16, TW - 30], [118, -40, TW - 30], [100, -40, TW - 30]])}" fill="#33383d"/>
+      ${wheel(520, TW - 10)}${wheel(565, TW - 10)}
       <polygon points="${pts(deckFront)}" fill="#4b5157"/><polygon points="${pts(deckEnd)}" fill="#3a3f44"/>
       <polygon points="${pts(deckTop)}" fill="#7a6a55" stroke="#4b4033"/>
       ${sorted.map(boxSvg).join('')}
@@ -1009,7 +1011,7 @@ window.addEventListener('DOMContentLoaded', route);
     H.gauge('Board feet', `38,750 <small>/ 44,000</small>`, 88, '88% · room for 13 more bundles of 3x3 × 31"'),
     H.gauge('Weight', `43,100 <small>/ 45,000 lb</small>`, 96, '96% · weight runs out first', 'warn'),
     H.gauge('Floor', `82%`, 82, `${Math.round(USED / 12)}' of 53' used · 3 high`),
-    H.gauge('Weight over axles', `<span class="num">47 / 53</span> <small>front / rear %</small>`, null, 'Balanced · drivers check the air gauges', 'ok'),
+    H.gauge('Weight over axles', `47% <small>/ 53%</small>`, null, 'Front / rear · balanced', 'ok'),
   ]);
   const trailerPick = () => `<div class="btns">${D.trailers.map((t, i) => `<span class="filter ${i === 0 ? 'on' : ''}">${t.name}</span>`).join('')}${H.go('Trailer types', 'settings-trailers', 'ghost sm')}</div>`;
   const plannerHead = () => H.head(`Load ${st.load} · Proposal ${st.proposal} · ${st.customer}`, 'Two drops: Caldari Road and Jane Street',
@@ -1051,14 +1053,13 @@ window.addEventListener('DOMContentLoaded', route);
       `<div class="panel"><div class="hd"><h3>3D view</h3>${trailerPick()}</div><div class="bd">${iso3d()}
         <div class="btns small" style="justify-content:space-between"><span class="muted">Drag to turn, pinch or scroll to zoom. The live version works like the <a href="https://claude.ai/artifact/B8tH5FtyJjvUaC5yp4ws7R" target="_blank" rel="noopener">3D flatbed demo</a>.</span>
         <span class="btns">${H.btn('Angle', 'sm')}${H.btn('Side', 'sm')}${H.btn('Top', 'sm')}${H.btn('Doors end', 'sm')}</span></div></div></div>` +
-      `<div class="split">` +
       H.panel('Loading order · nose to doors', loadTable(), H.btn('Best direction for each', 'sm') + H.btn('Add item', 'sm', 'plus'), true) +
-      `<div style="display:flex;flex-direction:column;gap:12px">` +
+      `<div class="grid2" style="gap:12px">` +
       H.callout('warn', '<b>1,900 lb left before the weight limit.</b> Add 3 bundles of 3x3 × 37½" (a major size for Caldari Road), then fill the rest with 2x4 × 40" filler.', H.btn('Apply', 'sm')) +
       H.callout('info', '<b>Too much for one truck?</b> Split into 2 loads: the second becomes its own order (24-0318-B) shipping in 3 weeks or 1 month. Or cut items.', H.btn('Split', 'sm')) +
       H.callout('info', '<b>2x3 × 39" grooved goes lengthwise.</b> Across, it would use 9" more floor for the same 18 bundles.') +
       H.callout('', '<b>Filler: as many as fit.</b> The packing slip leaves the filler quantity blank, to be filled in at loading.') +
-      `</div></div>` +
+      `</div>` +
       H.panel('Top view', topView(), H.chip('Drop 1 nearest the doors', 'now')),
   });
 
@@ -1179,11 +1180,11 @@ window.addEventListener('DOMContentLoaded', route);
       H.stages(D.stages, 3) +
       `<div class="split">` +
       H.panel('', H.filters(['*Open', 'Emailed', 'Cutting', 'Loaded, no quantities', 'Done']) + H.table(['Job', 'Order · plant', 'Subcontractor', 'Ship', 'Status', ''], [
-        [`<b>${st.job}</b>`, `${st.order} · Caldari Rd + Jane St`, 'Kessler Wood Works', 'Nov 24', H.chip('Ready to email', 'now'), H.go('Job sheet', 'doc-jobsheet', 'sm')],
-        ['J-1181', '24-0316 · Caldari Road', 'Kessler Wood Works', 'Nov 24', H.chip('Cutting', 'info'), H.btn('Open', 'sm')],
-        ['J-1179', '24-0311 · Caldari Road', 'Kessler Wood Works', 'Nov 17', H.chip('Loaded, no quantities', 'warn'), H.go('Enter quantities', 'dlg-loaded', 'sm')],
-        ['J-1180', '24-0314 · Newark NJ', 'Pinegrove Pallet', 'Nov 26', H.chip('Emailed', 'info'), H.btn('Open', 'sm')],
-        ['J-1175', '24-0305 · Toronto (pickup)', 'Kessler Wood Works', 'Nov 12', H.chip('Done', 'ok'), H.btn('Open', 'sm')],
+        [`<b class="nowrap">${st.job}</b>`, `${st.order} · Caldari Rd + Jane St`, 'Kessler Wood Works', '<span class=\"nowrap\">Nov 24</span>', H.chip('Ready to email', 'now'), H.go('Job sheet', 'doc-jobsheet', 'sm')],
+        ['<span class=\"nowrap\">J-1181</span>', '24-0316 · Caldari Road', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 24</span>', H.chip('Cutting', 'info'), H.btn('Open', 'sm')],
+        ['<span class=\"nowrap\">J-1179</span>', '24-0311 · Caldari Road', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 17</span>', H.chip('Loaded, no quantities', 'warn'), H.go('Enter quantities', 'dlg-loaded', 'sm')],
+        ['<span class=\"nowrap\">J-1180</span>', '24-0314 · Newark NJ', 'Pinegrove Pallet', '<span class=\"nowrap\">Nov 26</span>', H.chip('Emailed', 'info'), H.btn('Open', 'sm')],
+        ['<span class=\"nowrap\">J-1175</span>', '24-0305 · Toronto (pickup)', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 12</span>', H.chip('Done', 'ok'), H.btn('Open', 'sm')],
       ], { sel: 0 }), '', true) +
       H.panel(`${st.job} · ${st.order}`, H.form([H.field('Subcontractor', 'Kessler Wood Works ▾'), H.field('Ship date', 'Tue Nov 24, 2026'), H.field('Load', `${st.load} · 53' dry van`, '', true), H.field('Packing slip', 'Filler line blank', '', true)]) +
         `<div style="margin-top:14px">${H.table(['Item', { t: 'Bundles', num: true }, 'From stock'], [['3x3 × 31"', 54, '3x3 × 10\' (3 pcs)'], ['2x3 × 39" grooved', 18, '2x3 × 10\' (3 pcs) · groove'], ['3x3 × 37½"', 12, '3x3 × 12\' (3 pcs)'], ['2x4 × 40" filler', 'Fill', '2x4 × 10\' (3 pcs)']])}</div>` +
