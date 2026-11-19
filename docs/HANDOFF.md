@@ -76,7 +76,8 @@ Assistant that understands them in English (and Yiddish).
 | D21 | **Usable offcuts are tracked** as inventory items (e.g. 24" leftovers); scrap counts as waste. |
 | D22 | **Inventory locations: BB Pallets' own yard plus each subcontractor's yard.** |
 | D23 | **Counted by size and length** (e.g. 2x3 × 10'); count sheets total to board feet. |
-| D24 | **Every stock line has an owner** (BB Pallets or a subcontractor). Counts record both; only BB Pallets' wood affects quantities owned and average cost. |
+| D24 | **Subcontractors' own stock is not tracked.** Only BB Pallets' wood is in the app (in their own yard and in each subcontractor's yard). Counters count only BB Pallets' wood; the count sheet carries a reminder to leave the subcontractor's pile out. (Replaces an earlier answer that gave stock lines an owner.) |
+| D25 | **Subcontractors report by phone or email today**; the office types the cut/loaded quantities into the job. |
 
 ---
 
@@ -262,7 +263,7 @@ Per piece: **3 × 3 × 31 ÷ 144 = 1.9375 board feet** × $0.787 = $1.5248 →
 - **Count sheets and recount sheets** (D8), with shipments since the count
   date handled automatically.
 - Adjustments with reasons.
-- The subcontractor's wood kept separate.
+- The subcontractor's own wood is **not tracked** (D24); count sheets remind counters to leave it out.
 
 ### 4.6 Subcontractors and fulfilment (D7)
 
@@ -469,11 +470,11 @@ first milestone is built on the numbers in this file meanwhile.
   - C15: is freight per destination, and who pays it (delivered vs pickup)?
     Demo: freight per plant, zero for pickup plants.
 
-### E. Subcontractors
-22. How many subcontractors, and does each do different work (cutting,
-    grooving, pallets)?
-23. How is each paid: per MBF in, per piece, per load? Plus extras?
-24. How does a subcontractor report what was cut and loaded today?
+- **E (round 5):**
+  - E22: how many subcontractors, and what each does (cutting, grooving,
+    pallets). Demo: 2–3 subcontractors, each tagged with what it can do.
+  - E23: how each is paid (per MBF in, per piece, per load, extras). Demo: a
+    rate card per subcontractor.
 
 ### F. Money and systems
 25. What program are orders, invoices and inventory in today?
