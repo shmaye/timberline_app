@@ -88,6 +88,11 @@ a{color:var(--brand)}
 .body{display:grid;grid-template-columns:minmax(0,1fr);flex:1;background:var(--bg);position:relative}
 .body.with-dock{grid-template-columns:minmax(0,1fr) 320px}
 .work{padding:24px 28px 32px;display:flex;flex-direction:column;gap:20px;min-width:0}
+/* documents + dialogs: the page and the dimmed overlay share one grid cell, so a tall dialog makes the page grow */
+.work.overlay{display:grid;padding:0;min-height:760px}
+.work.overlay>*{grid-area:1/1;min-width:0}
+.work.overlay>.under{padding:24px 28px 32px;display:flex;flex-direction:column;gap:20px}
+.work.overlay>.scrim{position:relative;inset:auto}
 
 /* ---------- page parts ---------- */
 .ph{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-end;justify-content:space-between}
@@ -205,7 +210,7 @@ table.t{width:100%;border-collapse:collapse;font-size:13px}
 .dialog>.bd{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
 .dialog>footer{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
 .docbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between;width:min(900px,100%);margin:0 auto 12px;color:#fff}
-.docbar .btn{background:var(--surface);}
+.docbar .btn{background:var(--surface);color:var(--fg)}
 .paper{background:var(--paper);color:var(--paper-fg);width:min(900px,100%);margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,.25);padding:44px 48px;font-size:12.5px;line-height:1.45;border-radius:2px}
 .paper h1{font-size:22px;letter-spacing:.02em;color:var(--paper-fg)}
 .paper .lh{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-bottom:2px solid var(--paper-fg);padding-bottom:12px;margin-bottom:16px}

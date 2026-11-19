@@ -186,13 +186,13 @@ function frame(w) {
   const rail = DEPTS.map(d => `<a class="dept" href="#${d.tabs[0][0]}" aria-current="${d.id === dept.id}">${icon(d.id, 18)}<span>${d.label}</span></a>`).join('');
   const tabs = dept.tabs.map(([id, label]) => `<a href="#${id}" aria-selected="${id === w.tab}">${label}</a>`).join('');
   const under = w.kind !== 'screen' && w.under ? w.under() : '';
-  const content = w.kind === 'screen' ? w.html() : under + w.html();
+  const content = w.kind === 'screen' ? w.html() : '';
   return `<div class="app">
   <nav class="rail" aria-label="Departments"><div class="logo"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="15" width="22" height="4" rx="1" fill="var(--crayon)"/><rect x="2" y="20.5" width="22" height="3.5" rx="1" fill="var(--crayon)" opacity=".6"/><path d="M13 2 6 13h14z" fill="var(--rail-fg)"/></svg>Timberline</div>${rail}<div class="sep"></div><div class="foot">‹ Collapse</div></nav>
   <div class="main">
     <div class="top"><div class="search">${icon('search')}<span>Search orders, plants, items, loads…</span></div><div class="tb"><div class="lang"><span class="on">EN</span><span>FR</span></div><span class="bell">${icon('bell', 18)}</span><a class="ask" href="#dlg-assistant" style="text-decoration:none">${icon('spark')}<span>Assistant</span></a><div class="avatar">BB</div></div></div>
     <div class="tabs">${tabs}</div>
-    <div class="body ${w.dock ? 'with-dock' : ''}"><div class="work" style="${w.kind !== 'screen' ? 'min-height:760px' : ''}">${content}</div>${w.dock || ''}</div>
+    <div class="body ${w.dock ? 'with-dock' : ''}">${w.kind === 'screen' ? `<div class="work">${content}</div>` : `<div class="work overlay"><div class="under">${under}</div>${w.html()}</div>`}${w.dock || ''}</div>
   </div></div>`;
 }
 function notes(w) {
