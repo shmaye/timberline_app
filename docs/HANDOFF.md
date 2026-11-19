@@ -83,6 +83,7 @@ Assistant that understands them in English (and Yiddish).
 | D28 | **Costs and margins are hidden by default**; an admin turns them on per person. |
 | D29 | **Phone and tablet use**: counts and recounts at the yard, and the owner on the road (look-ups, approvals, Assistant). Every screen must work at phone width. |
 | D30 | **Email: Hotmail (Outlook.com) and Gmail** are confirmed. Send from their own mailbox through Microsoft Graph (personal Microsoft accounts included) and Gmail. |
+| D31 | **Bundles can go across the trailer or lengthwise** (along the length of the truck). The planner lets the user turn each item, offers "best direction for each" (the one that uses less deck), and locks long stock (longer than the trailer is wide) to lengthwise. Loads mix short dunnage, long dunnage, stock lumber and pallets, and on a flatbed the load height above the deck is a fourth gauge. A 3D flatbed example is in `docs/flatbed-3d.html`. |
 
 ---
 
