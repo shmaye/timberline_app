@@ -108,6 +108,12 @@ select{border:1px solid var(--line);background:var(--surface);border-radius:var(
         <option value="2">2"</option>
         <option value="4">4"</option>
       </select>
+      <label for="plan" class="meta">Plan the weight on</label>
+      <select id="plan">
+        <option value="light">Light side</option>
+        <option value="avg" selected>Average</option>
+        <option value="heavy">Heavy side</option>
+      </select>
       <label for="unload" class="meta">Unloads from</label>
       <select id="unload">
         <option value="sides">Sides (flatbed)</option>
@@ -140,7 +146,7 @@ select{border:1px solid var(--line);background:var(--surface);border-radius:var(
       <h2>Loading order</h2>
       <div class="sub">First on goes to the nose. Use the arrows to change the order.</div>
       <div id="rows"></div>
-      <div class="foot">Example figures. Real bundle sizes, pieces and weights will come from the catalog. Bundles are packed tight: no space between them unless you set a gap between rows. Each block is one bundle, outlined so you can tell them apart. Extra layers (less than a full bundle) go on top of the last bundle and make it taller. Risers (3½" 4x4 dunnage) sit under every bundle and count in the height. The gaps between them (the fork openings) always face where the forklift unloads: the sides on a flatbed, the back in a van. When a bundle goes across, its risers are turned too, so the job sheet must tell the subcontractor which way to build it. Pallets need no risers.</div>
+      <div class="foot">Example figures. Real bundle sizes, pieces and weights will come from the catalog. Wood weight: SPF dry 1.90 ± 0.20, hemlock green 3.00 ± 0.30, hardwood pallets 4.00 ± 0.50 lb per board foot. The weight gauge shows the light side, average and heavy side; choose which to plan on. Bundles are packed tight: no space between them unless you set a gap between rows. Each block is one bundle, outlined so you can tell them apart. Extra layers (less than a full bundle) go on top of the last bundle and make it taller. Risers (3½" 4x4 dunnage) sit under every bundle and count in the height. The gaps between them (the fork openings) always face where the forklift unloads: the sides on a flatbed, the back in a van. When a bundle goes across, its risers are turned too, so the job sheet must tell the subcontractor which way to build it. Pallets need no risers.</div>
     </div>
   </div>
 </div>
@@ -151,13 +157,14 @@ select{border:1px solid var(--line);background:var(--surface);border-radius:var(
 <script>
 (function(){
 // ---------- data (inches, lb) ----------
-const DECK_W=102, DECK_Y=60, MAX_LOAD_H=102, MAX_LB=48000, BF_CAP=44000, RISER=3.5;
-let GAP=0, UNLOAD='sides'; // fork openings (gaps between risers) always face where the forklift comes from
+const DECK_W=102, DECK_Y=60, MAX_LOAD_H=102, MAX_LB=48000, BF_CAP=25000, RISER=3.5; // planned board feet for a flatbed: a planning figure, not a limit (D43)
+let GAP=0, UNLOAD='sides', PLAN='avg'; // fork openings (gaps between risers) always face where the forklift comes from
  // space between rows along the deck; bundles side by side always touch
 const SPECIES={
-  spf:{label:'SPF (spruce-pine-fir)',face:'#e6c792',end:'#d9b47a',grain:'#c29a5c',lbPerBf:2.3},
-  hem:{label:'Hemlock',face:'#c99a6c',end:'#b8875a',grain:'#9c6b40',lbPerBf:3.4},
-  hard:{label:'Hardwood (oak mix)',face:'#a97b52',end:'#946640',grain:'#704a2a',lbPerBf:4.0}
+  // weight per board foot: average and how far it can be off, up or down (D45, same as Catalog › Species & weights)
+  spf:{label:'SPF (spruce-pine-fir), dry',face:'#e6c792',end:'#d9b47a',grain:'#c29a5c',lbPerBf:1.9,vary:0.2},
+  hem:{label:'Hemlock, green',face:'#c99a6c',end:'#b8875a',grain:'#9c6b40',lbPerBf:3.0,vary:0.3},
+  hard:{label:'Hardwood mix (pallets), dry',face:'#a97b52',end:'#946640',grain:'#704a2a',lbPerBf:4.0,vary:0.5}
 };
 // t × w × L piece; bundle W (across the pieces) × H; endPaint = colour mills paint on stock ends
 const ITEMS=[
@@ -173,6 +180,7 @@ ITEMS.forEach(it=>{
   else{it.pcs=Math.floor(it.W/it.w)*Math.floor(it.H/it.t);it.bf=it.pcs*it.t*it.w*it.L/144;it.lb=it.bf*SPECIES[it.sp].lbPerBf;it.layerT=it.t;it.perLayer=Math.floor(it.W/it.w)}
   it.maxXl=Math.floor(it.H/it.layerT/2); // up to half a bundle more on top
   it.bfLayer=it.bf/(it.pcs/it.perLayer); it.lbLayer=it.lb/(it.pcs/it.perLayer);
+  const sp=SPECIES[it.sp]; it.lo=1-sp.vary/sp.lbPerBf; it.hi=1+sp.vary/sp.lbPerBf; // light side / heavy side as a share of the average
 });
 let order=ITEMS.map(i=>i.id), deckLen=636, selected=null;
 const byId=id=>ITEMS.find(i=>i.id===id);
@@ -208,7 +216,7 @@ function pack(){
   return {placed,len:Math.max(0,x-GAP),maxH};
 }
 function totals(){
-  let bf=0,lb=0; ITEMS.forEach(it=>{const c=it.n*it.stack;bf+=c*it.bf+it.xl*it.bfLayer;lb+=c*it.lb+it.xl*it.lbLayer}); return {bf,lb};
+  let bf=0,lb=0,lo=0,hi=0; ITEMS.forEach(it=>{const c=it.n*it.stack,w=c*it.lb+it.xl*it.lbLayer;bf+=c*it.bf+it.xl*it.bfLayer;lb+=w;lo+=w*it.lo;hi+=w*it.hi}); return {bf,lb,lo,hi};
 }
 
 // ---------- gauges + list ----------
@@ -220,8 +228,11 @@ function gauge(id,val,cap,vtxt,note,warnAt=0.9){
 }
 function renderPanel(P){
   const T=totals();
-  gauge('g-bf',T.bf,BF_CAP,`${fmt(T.bf)} <small>/ ${fmt(BF_CAP)}</small>`,p=>`${Math.round(p*100)}% of the 44,000 bd ft planning load`);
-  gauge('g-wt',T.lb,MAX_LB,`${fmt(T.lb)} <small>/ ${fmt(MAX_LB)} lb</small>`,p=>p>1?`${fmt(T.lb-MAX_LB)} lb over the limit`:`${Math.round(p*100)}% · ${fmt(MAX_LB-T.lb)} lb to spare`);
+  gauge('g-bf',T.bf,BF_CAP,`${fmt(T.bf)} <small>/ ≈ ${fmt(BF_CAP)} planned</small>`,p=>`${Math.round(p*100)}% of the planned load for a flatbed (D43; the 44,000 figure is still to confirm)`);
+  const plan=PLAN==='light'?T.lo:PLAN==='heavy'?T.hi:T.lb, planName={light:'light side',avg:'average',heavy:'heavy side'}[PLAN];
+  gauge('g-wt',plan,MAX_LB,`${fmt(plan)} <small>/ ${fmt(MAX_LB)} lb</small>`,p=>(p>1?`Over by ${fmt(plan-MAX_LB)} lb on the ${planName}`:`${Math.round(p*100)}% on the ${planName} · ${fmt(MAX_LB-plan)} lb to spare`)+` · light ${fmt(T.lo)} · average ${fmt(T.lb)} · heavy ${fmt(T.hi)}`+(PLAN!=='heavy'&&plan<=MAX_LB&&T.hi>MAX_LB?' · over the limit if the wood is heavy':''));
+  document.querySelector('#g-wt .k').textContent=`Weight · planned on ${planName}`;
+  if(PLAN!=='heavy'&&plan<=MAX_LB&&T.hi>MAX_LB)document.getElementById('g-wt').className='g warn';
   gauge('g-len',P.len,deckLen,`${ftin(P.len)} <small>/ ${ftin(deckLen)}</small>`,p=>p>1?`${ftin(P.len-deckLen)} past the end of the deck`:`${Math.round(p*100)}% · ${ftin(deckLen-P.len)} of deck free`);
   gauge('g-ht',P.maxH,MAX_LOAD_H,`${Math.round(P.maxH)}" <small>/ ${MAX_LOAD_H}"</small>`,p=>p>1?'Too high: take a layer off':`Tallest stack · limit 8' 6" above the deck`,0.95);
   document.getElementById('rows').innerHTML=order.map((id,i)=>{
@@ -251,6 +262,7 @@ document.getElementById('rows').addEventListener('click',e=>{
   }
   update();
 });
+document.getElementById('plan').onchange=e=>{PLAN=e.target.value;update()};
 document.getElementById('unload').onchange=e=>{UNLOAD=e.target.value;update()};
 document.getElementById('gap').onchange=e=>{GAP=+e.target.value;update()};
 document.getElementById('trailer').onchange=e=>{deckLen=+e.target.value;buildTruck();update();frame('angle')};
@@ -482,7 +494,7 @@ function pick(e){const r=renderer.domElement.getBoundingClientRect();mouse.set((
 renderer.domElement.addEventListener('pointermove',e=>{
   if(e.buttons){tip.hidden=true;return}const it=pick(e);if(!it){tip.hidden=true;return}
   const r=stage.getBoundingClientRect();tip.hidden=false;
-  tip.innerHTML=`<b>${it.name}</b>${it.kind} · ${SPECIES[it.sp].label}<br>${it.dir==='across'?'Across the deck':'Lengthwise'} · ${it.stack} high<br><span class="num">${it.pallet?it.pcs+' pallets':it.pcs+' pcs'} · ${fmt(it.bf)} bd ft · ${fmt(it.lb)} lb</span>`;
+  tip.innerHTML=`<b>${it.name}</b>${it.kind} · ${SPECIES[it.sp].label}<br>${it.dir==='across'?'Across the deck':'Lengthwise'} · ${it.stack} high<br><span class="num">${it.pallet?it.pcs+' pallets':it.pcs+' pcs'} · ${fmt(it.bf)} bd ft · ${fmt(it.lb)} lb</span><br><span class="meta">${fmt(it.lb*it.lo)} to ${fmt(it.lb*it.hi)} lb per bundle (${SPECIES[it.sp].lbPerBf.toFixed(2)} ± ${SPECIES[it.sp].vary.toFixed(2)} lb per bd ft)</span>`;
   tip.style.left=Math.min(e.clientX-r.left+14,r.width-250)+'px';tip.style.top=(e.clientY-r.top+14)+'px';
 });
 renderer.domElement.addEventListener('pointerleave',()=>tip.hidden=true);
