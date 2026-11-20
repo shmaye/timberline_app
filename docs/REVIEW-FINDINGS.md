@@ -13,8 +13,9 @@ Everything marked **(proposed)** is my suggestion, not something BB Pallets said
 The plan is sound in its core: the order story, the request → record idea (D37),
 the price build-up and the buying calculator are clear and match the notes.
 It is ready for a data model of the **core** (parties, proposals, orders, loads,
-office requests, email log, price lists), but not yet for inventory and costing,
-whose owner is still an open question.
+office requests, email log, price lists). Inventory and costing are his own
+work and stay in the plan, but should be modelled after the core, once it is
+known whether his stock figures are BB Pallets' official ones.
 Three things must be settled first because they change tables, not just screens:
 the **44,000 board feet per load** figure does not agree with the weight limits
 the mockups show, the **office request** record is too thin to carry D37, and
@@ -148,25 +149,38 @@ Ranked. Each one changes the data model or a worked example the rest is built on
   - `#dlg-confirmload` makes the job and packing slip. The bill of lading is made
     when the booking is confirmed, since it needs the carrier.
 
-### M6. Who the user is, and whose inventory this is, changes a whole department
+### M6. Inventory is his own work, but whether it is the official stock is still open
 
 - **Where:** section 3, D25, D28, D29, D36, 4.5, all `#inventory-*` windows.
-- **What is wrong:** section 3 says the person in the notes has been there 40
-  years and does sales, pricing and buying, and balances stock on Sundays. D36
-  says the user is one remote salesperson whose every purchase needs office
-  approval. Are these the same person? D29 says "the owner on the road", D25
-  says "the office types the quantities", D28 says "an admin turns costs on".
-  A remote salesperson cannot count a yard or receive a lumber load.
-- **Why it matters:** if the stock is not BB Pallets' official stock, then counts,
-  adjustments, average cost and waste booking are a second set of books that
-  will drift from the real one. If it is official, it does not fit "he requests,
-  the office does".
-- **Fix:** get the answer (already in section 12) **before** modelling inventory.
-  Meanwhile (proposed): build no inventory ledger in the first version. Keep
-  only a purchase log (what was bought, at what delivered cost, where it went)
-  because pricing and buying gains need it. Go through the hand-off once and
-  replace "owner", "the office types" and "BB Pallets does" with who really
-  does it under D36.
+- **Answered by the account owner (2026-11-20):** the salesperson in D36 **is**
+  the person in the voice notes (almost 40 years there; sales, pricing, buying,
+  and the stock balancing that takes 4–10 days or a Sunday). So the inventory
+  department is not overbuilt for him: counts, recounts, average cost and waste
+  are his own job today, and one of the biggest time savings in the plan.
+- **What is still wrong:**
+  - The hand-off never says this. Section 3 describes "the person in the notes"
+    and D36 "one salesperson" as if they could be two people, and D25 ("the
+    office types the quantities"), D29 ("the owner on the road") and 4.5 ("the
+    owner counts in and out") leave it unclear who does what.
+  - Still open (section 12): is the stock he balances BB Pallets' **official**
+    stock? If the office keeps its own figures too, there are two sets of books
+    and one must be named the master. If his are the only ones, then inventory
+    is the one area where he is the source and the office is the reader, which
+    is the reverse of "he requests, the office does".
+  - He works remotely, so someone else counts the yard and checks a lumber load
+    in. The plan has no record of who that is or how their figures reach him.
+- **Fix (proposed):**
+  - Record the answer as a decision (D38) and go through the hand-off once,
+    replacing "owner", "the office types" and "BB Pallets does" with who really
+    does it.
+  - Keep inventory in the plan, built as a movement ledger (section 6), **after**
+    the core. The purchase log comes first, because pricing and buying gains
+    need it.
+  - Get the official-stock answer before modelling the ledger. If the office
+    also keeps stock figures, add a "report stock to the office" step at each
+    count (a request record, M2).
+  - Counts and receipts carry "counted by / tally from" (see S13), and count
+    sheets work on a phone for whoever is at the yard (D29).
 
 ### M7. The price build-up must be stored as lines, with per-load and per-MBF costs kept apart
 
@@ -257,8 +271,8 @@ Ranked. Each one changes the data model or a worked example the rest is built on
   size (the windows ask per size and length, or per yard: decide one). Found
   wood at $0 lowers it (their practice, keep it, but show it as its own line so
   the drop to $450 is explained). Supplier prices in USD need a rate at receipt.
-- If inventory is parked (M6), the "average of loads bought" for pricing can
-  come from the purchase log alone over a chosen period.
+- Until the inventory ledger is built (M6), the "average of loads bought" for
+  pricing can come from the purchase log alone over a chosen period.
 
 ### S6. Batch calculator: leftovers have value, and gains must be on usable feet
 - **Where:** 4.4, D20, D21, `#purchasing-offers`.
@@ -408,8 +422,10 @@ All **(proposed)**.
 | **Commission view** | Only if he says yes (section 12). | Small |
 | **Scale weight per load** | Corrects wood weights over time (M1, S7). | Small |
 
-**What can wait** (overbuilt for one salesperson today): inventory counts,
-recounts, adjustments and waste; statements, aging and payment plans; tax
+**Second phase** (his own work, but after the core, M6): inventory counts,
+recounts, adjustments and waste.
+
+**What can wait** (overbuilt for one salesperson today): statements, aging and payment plans; tax
 setup; scheduled reports; pallets parts lists (unless he sells pallets weekly);
 what-if across all customers; French screens (keep the text translatable, D5,
 but do not translate yet); 3D axle estimates; Assistant autopilot.
@@ -430,7 +446,7 @@ Section 1a's list is right. Additions:
 | `#loads-bol`, `#doc-bol` | Who issues the BOL: he, the subcontractor at loading, or the office? Until known, treat as "draft for whoever issues it". |
 | `#doc-commercial` | Customs papers are official documents. Make it "information for the office/broker", unless BB Pallets says he prepares them. |
 | `#loads-schedule` | Assistant line "move a load and tell the subcontractor and carrier": telling the carrier goes through the office (new request). |
-| `#dlg-loaded` | Text says "the office types it in": he does. "Update order makes the invoice" becomes "sends the invoice request to the office". Remove the inventory booking unless M6 is answered. |
+| `#dlg-loaded` | Text says "the office types it in": he does. "Update order makes the invoice" becomes "sends the invoice request to the office". The inventory booking stays (M6), switched on when the ledger is built. |
 | `#doc-invoice` | Split in two: **invoice request** (his document, to the office, amounts before tax) and the **office's invoice** attached when its number is recorded. |
 | `#orders-pickups` | "It is invoiced" becomes an invoice request; pickup still needs a job and a release slip. |
 | `#production-jobs`, `#doc-jobsheet` | Add the subcontractor's ready date and acknowledgement; revision number; riser direction per bundle (D34) is in the decision but not in the window text. |
@@ -503,7 +519,7 @@ All **(proposed)**.
 - **Splits and drops** (M4): do not put `load_id` on the PO or `po_id` on the
   load.
 - **Do not delete.** Cancel, supersede or retire. D37 needs the history.
-- **Inventory** (if and when): a movement ledger (receipt, issue with waste,
+- **Inventory** (second phase, M6): a movement ledger (receipt, issue with waste,
   transfer between yards, adjustment with reason), with on-hand and average
   cost worked out from it. Never store on-hand as a number someone edits.
 - **Imports (D10).** Keep each import as a batch that can be undone, and keep
@@ -561,8 +577,9 @@ Plain words. None of these is in section 12 of the hand-off.
   approval, an invoice? When is it "late"?
 - Does BB Pallets' management know this app will hold customer prices, costs
   and margins, and agree to it? Who keeps the data if he stops using it?
-- Is the salesperson the same person who spoke in the voice notes (40 years,
-  buying, counting the yard on Sundays), or someone else?
+- Do you count the yard yourself, or does someone count for you? How do their
+  numbers get to you?
+- Does the office keep its own stock figures, or are yours the only ones?
 - When a lumber load arrives at a yard, who checks the tally, and how does he
   hear about it?
 - Who makes the bill of lading today: the office, the subcontractor, or him?
