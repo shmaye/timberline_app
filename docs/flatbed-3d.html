@@ -108,6 +108,11 @@ select{border:1px solid var(--line);background:var(--surface);border-radius:var(
         <option value="2">2"</option>
         <option value="4">4"</option>
       </select>
+      <label for="unload" class="meta">Unloads from</label>
+      <select id="unload">
+        <option value="sides">Sides (flatbed)</option>
+        <option value="back">Back</option>
+      </select>
       <button class="btn" id="best">Best direction for each</button>
     </div>
   </div>
@@ -135,18 +140,20 @@ select{border:1px solid var(--line);background:var(--surface);border-radius:var(
       <h2>Loading order</h2>
       <div class="sub">First on goes to the nose. Use the arrows to change the order.</div>
       <div id="rows"></div>
-      <div class="foot">Example figures. Real bundle sizes, pieces and weights will come from the catalog. Bundles are packed tight: no space between them unless you set a gap between rows. Each block is one bundle, outlined so you can tell them apart. Extra layers (less than a full bundle) go on top of the last bundle and make it taller. Risers (3½" 4x4 dunnage) sit under every bundle and count in the height.</div>
+      <div class="foot">Example figures. Real bundle sizes, pieces and weights will come from the catalog. Bundles are packed tight: no space between them unless you set a gap between rows. Each block is one bundle, outlined so you can tell them apart. Extra layers (less than a full bundle) go on top of the last bundle and make it taller. Risers (3½" 4x4 dunnage) sit under every bundle and count in the height. The gaps between them (the fork openings) always face where the forklift unloads: the sides on a flatbed, the back in a van. When a bundle goes across, its risers are turned too, so the job sheet must tell the subcontractor which way to build it. Pallets need no risers.</div>
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
 <script>
 (function(){
 // ---------- data (inches, lb) ----------
 const DECK_W=102, DECK_Y=60, MAX_LOAD_H=102, MAX_LB=48000, BF_CAP=44000, RISER=3.5;
-let GAP=0; // space between rows along the deck; bundles side by side always touch
+let GAP=0, UNLOAD='sides'; // fork openings (gaps between risers) always face where the forklift comes from
+ // space between rows along the deck; bundles side by side always touch
 const SPECIES={
   spf:{label:'SPF (spruce-pine-fir)',face:'#e6c792',end:'#d9b47a',grain:'#c29a5c',lbPerBf:2.3},
   hem:{label:'Hemlock',face:'#c99a6c',end:'#b8875a',grain:'#9c6b40',lbPerBf:3.4},
@@ -187,7 +194,8 @@ function pack(){
       for(let j=0;j<k;j++){
         const lastSpot=(r===rows-1&&j===k-1);
         for(let s=0;s<it.stack;s++){
-          const yb=DECK_Y+RISER+s*(it.H+RISER);
+          const rs=it.pallet?0:RISER; // pallets have their own fork openings
+          const yb=DECK_Y+rs+s*(it.H+rs);
           const h=it.H+(lastSpot&&s===it.stack-1?it.xl*it.layerT:0); // extra layers make the top bundle taller
           placed.push({it,x:x+f.depth/2,z,y:yb+h/2,h,dir:it.dir,level:s});
           maxH=Math.max(maxH,yb+h-DECK_Y);
@@ -243,6 +251,7 @@ document.getElementById('rows').addEventListener('click',e=>{
   }
   update();
 });
+document.getElementById('unload').onchange=e=>{UNLOAD=e.target.value;update()};
 document.getElementById('gap').onchange=e=>{GAP=+e.target.value;update()};
 document.getElementById('trailer').onchange=e=>{deckLen=+e.target.value;buildTruck();update();frame('angle')};
 document.getElementById('best').onclick=()=>{ITEMS.forEach(it=>{
@@ -258,52 +267,144 @@ const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
 renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
 renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.outputEncoding=THREE.sRGBEncoding;
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=.78;
 stage.prepend(renderer.domElement);
 const scene=new THREE.Scene();
+if(THREE.RoomEnvironment){const pm=new THREE.PMREMGenerator(renderer);scene.environment=pm.fromScene(new THREE.RoomEnvironment(),0.04).texture}  // reflections for paint, chrome and aluminium
 const camera=new THREE.PerspectiveCamera(35,1,10,20000);
 const controls=new THREE.OrbitControls(camera,renderer.domElement);
 controls.maxPolarAngle=Math.PI*0.495; controls.minDistance=150; controls.maxDistance=3000;
 controls.addEventListener('change',draw);
-scene.add(new THREE.HemisphereLight(0xffffff,0x8a8f88,0.75));
-const sun=new THREE.DirectionalLight(0xffffff,0.85); sun.position.set(-300,900,500); sun.castShadow=true;
+scene.add(new THREE.HemisphereLight(0xffffff,0x8a8f88,0.25));
+const sun=new THREE.DirectionalLight(0xffffff,1.1); sun.position.set(-300,900,500); sun.castShadow=true;
 sun.shadow.mapSize.set(2048,2048); Object.assign(sun.shadow.camera,{left:-700,right:700,top:400,bottom:-400,near:10,far:2500});
 sun.target.position.set(300,0,0); scene.add(sun,sun.target);
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(6000,6000),new THREE.ShadowMaterial({opacity:.18}));
 ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
 
 const M=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.8,metalness:0},o));
-function box(w,h,d,mat,x,y,z,parent){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;(parent||scene).add(m);return m}
-function wheel(x,z,r,parent){const g=new THREE.Group();const tire=new THREE.Mesh(new THREE.CylinderGeometry(r,r,10,28),M(0x222428,{roughness:.95}));tire.rotation.x=Math.PI/2;tire.castShadow=true;g.add(tire);
-  const hub=new THREE.Mesh(new THREE.CylinderGeometry(r*.55,r*.55,10.6,20),M(0xb9bec4,{metalness:.6,roughness:.4}));hub.rotation.x=Math.PI/2;g.add(hub);g.position.set(x,r,z);parent.add(g)}
+const P=(c,o={})=>new THREE.MeshPhysicalMaterial(Object.assign({color:c,roughness:.32,metalness:.35,clearcoat:1,clearcoatRoughness:.06},o));
+function add(geo,mat,parent,x=0,y=0,z=0){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;(parent||scene).add(m);return m}
+function box(w,h,d,mat,x,y,z,parent){return add(new THREE.BoxGeometry(w,h,d),mat,parent,x,y,z)}
+function cyl(r,len,mat,x,y,z,axis,parent,seg=24,r2){const m=add(new THREE.CylinderGeometry(r,r2==null?r:r2,len,seg),mat,parent,x,y,z);if(axis==='x')m.rotation.z=Math.PI/2;if(axis==='z')m.rotation.x=Math.PI/2;return m}
+// a side profile (x,y points, inches) extruded across the truck and centred on z = 0
+function profile(pts,width,mat,parent,bevel=2,z=0){const s=new THREE.Shape();pts.forEach(([x,y],i)=>i?s.lineTo(x,y):s.moveTo(x,y));
+  const g=new THREE.ExtrudeGeometry(s,{depth:Math.max(.1,width-2*bevel),bevelEnabled:bevel>0,bevelThickness:bevel,bevelSize:bevel,bevelSegments:4,curveSegments:10});
+  g.translate(0,0,-Math.max(.1,width-2*bevel)/2+z);return add(g,mat,parent)}
+// tire: lathe of a rounded tread cross-section, axis along z
+const TIRE=(()=>{const R=20.5,r=11.8,h=5,V=(a,b)=>new THREE.Vector2(a,b);
+  const g=new THREE.LatheGeometry([V(r,-h),V(R-2.6,-h),V(R-.9,-h+.8),V(R,-h+2.6),V(R,h-2.6),V(R-.9,h-.8),V(R-2.6,h),V(r,h)],40);g.rotateX(Math.PI/2);return g})();
+const RIM=new THREE.CylinderGeometry(11.8,11.8,9.4,36).rotateX(Math.PI/2);
+const DISH=new THREE.CylinderGeometry(9.2,10.6,1,36).rotateX(Math.PI/2);
+const HUB=new THREE.CylinderGeometry(3.4,4.6,3,20).rotateX(Math.PI/2);
+const NUT=new THREE.CylinderGeometry(.75,.75,1.6,6).rotateX(Math.PI/2);
+let MAT=null;
+function mats0(){if(MAT)return MAT;MAT={
+  paint:P(0x6a0c12,{metalness:0,roughness:.42,clearcoat:.55,clearcoatRoughness:.12,envMapIntensity:.45}),                                   // tractor: deep red, clear-coated
+  chrome:P(0xf1f3f5,{metalness:1,roughness:.07,clearcoat:0}),
+  alu:P(0xc9ced3,{metalness:1,roughness:.28,clearcoat:0}),
+  black:M(0x18191b,{roughness:.55,metalness:.2}),
+  rubber:M(0x161718,{roughness:.95}),
+  glass:P(0x0b1116,{metalness:.2,roughness:.04,clearcoat:1}),
+  grille:M(0x0d0e10,{roughness:.4,metalness:.6}),
+  head:M(0xfffbea,{emissive:0xfff3cf,emissiveIntensity:.55,roughness:.2}),
+  amber:M(0xffb020,{emissive:0xff9500,emissiveIntensity:.6}),
+  red:M(0xd0201c,{emissive:0xb00000,emissiveIntensity:.6}),
+  white:M(0xf2f2f2,{roughness:.4}),
+  plate:M(0xa2a8ae,{metalness:.8,roughness:.4}),
+  deck:new THREE.MeshStandardMaterial({map:deckTexture(),roughness:.85,envMapIntensity:.4}),
+};return MAT}
+function deckTexture(){ // oak/apitong planks running the length of the trailer, with butt joints
+  const c=document.createElement('canvas');c.width=1024;c.height=256;const g=c.getContext('2d');const r=rand(99);const rows=12,rh=c.height/rows;
+  for(let i=0;i<rows;i++){const base=[[120,84,52],[132,92,58],[110,76,46],[126,88,54]][i%4];g.fillStyle=`rgb(${base})`;g.fillRect(0,i*rh,c.width,rh);
+    g.globalAlpha=.18;for(let k=0;k<14;k++){g.strokeStyle=r()<.5?'#3b2414':'#d2a77a';g.beginPath();const y=i*rh+r()*rh;g.moveTo(0,y);for(let x=0;x<=c.width;x+=64)g.lineTo(x,y+Math.sin(x*.01+k)*2);g.stroke()}g.globalAlpha=1;
+    g.fillStyle='rgba(20,12,6,.75)';g.fillRect(0,i*rh,c.width,1.5);const j=r()*c.width;g.fillRect(j,i*rh,2,rh)}
+  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.wrapS=THREE.RepeatWrapping;t.anisotropy=8;return t}
+function wheel(x,z,side,parent,detail=true){const m=mats0();const g=new THREE.Group();g.position.set(x,20.5,z);parent.add(g);
+  add(TIRE,m.rubber,g);add(RIM,detail?m.alu:m.black,g);
+  if(detail){const f=side*4.8;add(DISH,m.alu,g,0,0,f);const hub=add(HUB,m.chrome,g,0,0,f+side*1.4);if(side<0)hub.rotation.y=Math.PI;
+    for(let i=0;i<10;i++){const a=i/10*Math.PI*2;add(NUT,m.chrome,g,Math.cos(a)*6.4,Math.sin(a)*6.4,f+side*.8)}}}
+function duals(x,parent){[1,-1].forEach(s=>{wheel(x,s*38,s,parent,true);wheel(x,s*27.6,s,parent,false)});cyl(3.2,70,mats0().black,x,20.5,0,'z',parent)}
+function fender(x,zc,parent){const m=mats0();const s=new THREE.Shape();s.absarc(0,0,24.5,0,Math.PI,false);s.absarc(0,0,22,Math.PI,0,true);
+  const g=new THREE.ExtrudeGeometry(s,{depth:14,bevelEnabled:true,bevelThickness:.8,bevelSize:.8,bevelSegments:2,curveSegments:24});g.translate(0,0,-7);add(g,m.paint,parent,x,20.5,zc)}
 
 let truck=null;
 function buildTruck(){
-  if(truck){scene.remove(truck);truck.traverse(o=>o.geometry&&o.geometry.dispose())}
-  truck=new THREE.Group(); scene.add(truck);
-  const steel=M(0x3a4148,{metalness:.4,roughness:.55}), deckM=M(0x6b5a45,{roughness:.9}), cabM=M(0x2f5f8f,{metalness:.3,roughness:.45}), glass=M(0x1b2630,{metalness:.2,roughness:.15});
-  const L=deckLen;
-  box(L,5,DECK_W,deckM,L/2,DECK_Y-2.5,0,truck);                      // wood deck
-  box(L,10,6,steel,L/2,DECK_Y-10,-20,truck); box(L,10,6,steel,L/2,DECK_Y-10,20,truck); // main beams
-  box(L,4,3,steel,L/2,DECK_Y-4,-DECK_W/2+1.5,truck); box(L,4,3,steel,L/2,DECK_Y-4,DECK_W/2-1.5,truck); // side rails
-  for(let x=24;x<L;x+=24){box(2,2,2,steel,x,DECK_Y-6,-DECK_W/2+1,truck);box(2,2,2,steel,x,DECK_Y-6,DECK_W/2-1,truck)} // stake pockets
-  // rear tandem (duals)
-  [L-110,L-60].forEach(x=>[-38,-27,27,38].forEach(z=>wheel(x,z,20.5,truck)));
-  box(100,8,70,steel,L-85,42,0,truck);
-  // landing gear
-  [-30,30].forEach(z=>{box(4,DECK_Y-12,4,steel,110,(DECK_Y-12)/2,z,truck);box(10,2,10,steel,110,1,z,truck)});
-  // tractor
-  const tx=-20;
-  box(260,10,36,steel,tx-60,36,0,truck);                         // frame
-  box(70,6,90,steel,tx+10,DECK_Y-12,0,truck);                     // fifth wheel plate
-  box(110,70,96,cabM,tx-130,85,0,truck);                          // sleeper/cab body
-  box(70,46,92,cabM,tx-205,66,0,truck);                           // hood
-  box(4,34,84,glass,tx-187,104,0,truck);                          // windshield
-  box(3,30,3,M(0xcfd4d9,{metalness:.7,roughness:.3}),tx-195,128,-40,truck); // stack hint
-  box(12,40,96,M(0x2a3138),tx-242,62,0,truck);                    // grille
-  [[tx-205,-38],[tx-205,38]].forEach(([x,z])=>wheel(x,z,20.5,truck));
-  [tx-40,tx+10].forEach(x=>[-38,-27,27,38].forEach(z=>wheel(x,z,20.5,truck)));
-  // mud flaps + bumper
-  box(4,22,100,M(0x1e2226),tx-250,24,0,truck);
+  if(truck){scene.remove(truck);truck.traverse(o=>{if(o.geometry&&![TIRE,RIM,DISH,HUB,NUT].includes(o.geometry))o.geometry.dispose()})}
+  truck=new THREE.Group(); scene.add(truck); const m=mats0(); const L=deckLen;
+
+  // ================= trailer: 53'/48' flatbed =================
+  const T=new THREE.Group(); truck.add(T);
+  const deck=box(L,1.6,DECK_W-5,m.deck,L/2,DECK_Y-.8,0,T); m.deck.map.repeat.set(L/120,1);
+  [1,-1].forEach(s=>{
+    box(L,7.5,2.6,m.alu,L/2,DECK_Y-3.75,s*(DECK_W/2-1.3),T);                  // aluminium side rail
+    box(L,1.2,.9,m.alu,L/2,DECK_Y-7.2,s*(DECK_W/2+.1),T);                     // rub rail
+    for(let x=18;x<L-6;x+=24) box(3.2,3.6,.6,m.black,x,DECK_Y-3.6,s*(DECK_W/2+.05),T); // stake pockets
+    for(let x=0,i=0;x<L-12;x+=12,i++) box(11.6,1.6,.3,i%2?m.white:m.red,x+6,DECK_Y-5.6,s*(DECK_W/2+.1),T); // red/white reflective tape
+    for(let x=60;x<L-60;x+=120) box(2.4,1.6,.8,m.amber,x,DECK_Y-1.6,s*(DECK_W/2+.25),T); // side marker lights
+    // main I-beams: deep in the middle, shallow over the kingpin and at the rear
+    const yb=DECK_Y-1.6, pts=[[0,yb],[L,yb],[L,yb-10],[L-30,yb-12],[L-210,yb-24],[150,yb-24],[70,yb-9],[0,yb-9]];
+    profile(pts,1.2,m.black,T,0,s*18);
+    const fl=[[0,yb-9],[70,yb-9],[150,yb-24],[L-210,yb-24],[L-30,yb-12],[L,yb-10],[L,yb-11],[L-30,yb-13],[L-210,yb-25.2],[150,yb-25.2],[70,yb-10.2],[0,yb-10.2]];
+    profile(fl,7,m.black,T,0,s*18);                                            // bottom flange
+  });
+  for(let x=10;x<L;x+=16) box(3,4,DECK_W-6,m.black,x,DECK_Y-3.6,0,T);          // crossmembers
+  box(64,1,DECK_W-8,m.black,34,DECK_Y-10.6,0,T);                               // upper coupler plate
+  cyl(1.4,3,m.plate,36,DECK_Y-12.5,0,'y',T);                                   // kingpin
+  // landing gear with crank
+  const lgx=104;
+  [1,-1].forEach(s=>{box(4.2,34,4.2,m.black,lgx,DECK_Y-10.6-17,s*27,T);box(3.4,14,3.4,m.plate,lgx,8.5,s*27,T);box(10,1.6,10,m.black,lgx,.8,s*27,T);
+    const br=box(1.6,30,1.6,m.black,lgx+12,DECK_Y-24,s*24,T);br.rotation.z=-.55;});
+  box(2,2,54,m.black,lgx,30,0,T); cyl(.6,10,m.plate,lgx,38,-31,'z',T); box(.8,6,.8,m.plate,lgx,35,-36,T);
+  box(32,16,20,m.alu,300,DECK_Y-20,-30,T);                                     // tool box
+  // rear tandem on an air-ride slider
+  const ax=[L-114,L-62];
+  box(110,4,46,m.black,L-88,DECK_Y-28,0,T);
+  ax.forEach(x=>{duals(x,T);[1,-1].forEach(s=>{box(6,12,4,m.black,x-20,DECK_Y-35,s*20,T);cyl(5.2,7,m.rubber,x+12,DECK_Y-34,s*20,'y',T);box(28,2.4,4,m.black,x-4,23,s*20,T)})});
+  [1,-1].forEach(s=>{box(1,21,22,m.rubber,L-26,18,s*37,T);box(1.2,2,24,m.chrome,L-26,29.5,s*37,T)});
+  box(3,5,92,m.black,L-6,20,0,T);for(let i=0;i<8;i++)box(.4,4.6,11,i%2?m.white:m.red,L-4.4,20,-40+i*11.4,T); // rear bumper (ICC bar)
+  [1,-1].forEach(s=>{box(3,28,3,m.black,L-6,36,s*30,T);box(.8,3.2,7,m.red,L+.5,DECK_Y-4,s*40,T);box(.8,3.2,7,m.red,L+.5,DECK_Y-4,s*31,T)});
+  for(let i=-1;i<=1;i++)box(.8,1.6,2.4,m.red,L+.5,DECK_Y-4,i*4,T);
+
+  // ================= tractor: long-hood conventional with a mid-roof sleeper =================
+  const C=new THREE.Group(); truck.add(C);
+  [1,-1].forEach(s=>box(352,10,4,m.black,-84,37,s*17,C));                    // frame rails
+  box(10,15,104,m.chrome,-266,36,0,C);                                        // chrome bumper
+  box(6,4,90,m.black,-262,27,0,C);
+  profile([[-262,44],[-262,66],[-257,72],[-240,75.5],[-168,82.5],[-163,82.5],[-163,44]],86,m.paint,C,4); // hood
+  box(2.4,31,48,m.chrome,-265.6,58.5,0,C); box(2.6,27,43,m.grille,-266,58.5,0,C);       // grille
+  for(let i=0;i<7;i++) box(2.8,.8,43,m.chrome,-266.2,47+i*3.8,0,C);
+  [1,-1].forEach(s=>{box(4,7,15,m.head,-262.4,50,s*34,C);box(3,3,4,m.amber,-262,50,s*43,C)});
+  [1,-1].forEach(s=>fender(-196,s*39,C));
+  // cab + sleeper: one side profile, raked windshield, roof fairing
+  profile([[-163,44],[-163,84],[-149,114],[-141,119.5],[-104,121],[-92,132],[-47,134],[-44.5,130],[-44.5,44]],96,m.paint,C,3);
+  const ws=box(1.2,31,82,m.glass,-157.6,99.6,0,C); ws.rotation.z=-Math.atan2(14,30);       // windshield
+  box(1.4,31,1.4,m.black,-157.4,99.8,0,C).rotation.z=-Math.atan2(14,30);                 // centre post
+  box(14,2.6,90,m.paint,-145,121.5,0,C).rotation.z=-.08;                                  // sun visor
+  for(let i=-2;i<=2;i++) box(2,1.2,3,m.amber,-140,123.4,i*16,C);                          // cab marker lights
+  [1,-1].forEach(s=>{
+    const sw=new THREE.Shape();[[-157,88],[-146,110],[-129,110.5],[-129,88]].forEach(([x,y],i)=>i?sw.lineTo(x,y):sw.moveTo(x,y));
+    const g=new THREE.ExtrudeGeometry(sw,{depth:.6,bevelEnabled:false});g.translate(0,0,s>0?48.1:-48.7);add(g,m.glass,C); // side window
+    box(30,.5,.4,m.black,-142,86,s*48.3,C);box(.5,44,.4,m.black,-128,66,s*48.3,C);        // door seams
+    box(4,1.2,1.2,m.chrome,-133,80,s*48.8,C);                                              // door handle
+    box(18,6,.5,m.glass,-80,112,s*48.3,C);                                                 // sleeper window
+    cyl(.7,12,m.chrome,-158,101,s*53,'z',C); box(2,16,7,m.black,-160,100,s*59.5,C);        // mirror
+    cyl(12,54,m.alu,-124,33,s*40,'x',C,32); cyl(3,1.5,m.chrome,-112,45.5,s*40,'y',C);        // fuel tank + cap
+    [-140,-108].forEach(x=>box(2,26,2.5,m.black,x,33,s*36,C));
+    box(46,22,2,m.paint,-74,36,s*47,C);                                                    // side fairing
+    cyl(3.6,108,m.chrome,-40,98,s*44,'y',C,20); cyl(4.4,30,m.chrome,-40,70,s*44,'y',C,20);  // exhaust stacks + heat shield
+    box(1,22,22,m.rubber,96,18,s*37,C); box(1.2,2,24,m.chrome,96,29.5,s*37,C);               // mud flaps
+    box(14,1.6,9,m.alu,-150,24,s*47,C);                                                    // step
+  });
+  // headache rack behind the sleeper
+  [1,-1].forEach(s=>box(2.4,70,2.4,m.black,-36,79,s*46,C));
+  box(2.4,2.4,94,m.black,-36,113,0,C); box(2.4,2.4,94,m.black,-36,46,0,C);
+  for(let y=54;y<112;y+=8) box(1,1,92,m.black,-36,y,0,C);
+  box(54,1.4,86,m.plate,-6,44.7,0,C);                                          // diamond deck plate
+  box(40,5,44,m.black,36,DECK_Y-15,0,C); cyl(20,4,m.black,36,DECK_Y-15,0,'y',C,32); // fifth wheel
+  cyl(3,82,m.black,-196,20.5,0,'z',C);                                          // steer axle
+  [1,-1].forEach(s=>wheel(-196,s*39,s,C,true));
+  [8,60].forEach(x=>duals(x,C));                                                 // drive tandem
 }
 
 // textures drawn to scale per item and face
@@ -342,9 +443,9 @@ function lumberMats(it){
   // Box faces: +x,-x (ends) · +y,-y (top/bottom) · +z,-z (sides). Piece length runs along local x.
   return [endTex,endTex,topTex,topTex,sideTex,sideTex].map(t=>new THREE.MeshStandardMaterial({map:t,roughness:.85}));
 }
-function mats(it,h){const k=it.id+':'+h;return texCache[k]||(texCache[k]=lumberMats(h===it.H?it:Object.assign({},it,{H:h})))}
+function mats(it,h){const k=it.id+':'+h;if(!texCache[k]){texCache[k]=lumberMats(h===it.H?it:Object.assign({},it,{H:h}));texCache[k].forEach(m=>m.envMapIntensity=.35)}return texCache[k]}
 const edgeM=new THREE.LineBasicMaterial({color:0x2b1d0e,transparent:true,opacity:.55});
-const strapM=M(0x1c2a3a,{roughness:.6}), riserM=M(0xb48a5a,{roughness:.9}), hiM=M(0xf2b705,{emissive:0x5a4300,roughness:.6});
+const strapM=M(0x1c2a3a,{roughness:.6}), riserM=M(0xb48a5a,{roughness:.9,envMapIntensity:.35}), hiM=M(0xf2b705,{emissive:0x5a4300,roughness:.6});
 let load=new THREE.Group(); scene.add(load); let pickables=[];
 function buildLoad(P){
   scene.remove(load); load.traverse(o=>{if(o.geometry)o.geometry.dispose()}); load=new THREE.Group(); scene.add(load); pickables=[];
@@ -353,7 +454,10 @@ function buildLoad(P){
     const m=new THREE.Mesh(new THREE.BoxGeometry(it.L,bh,it.W),mats(it,bh)); m.castShadow=m.receiveShadow=true; m.userData.id=it.id; g.add(m); pickables.push(m);
     g.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),edgeM)); // outline, so tight bundles stay readable
     // risers under the bundle, across the pieces
-    [-.32,.32].forEach(f=>{const rr=new THREE.Mesh(new THREE.BoxGeometry(RISER,RISER,it.W),riserM);rr.position.set(f*it.L,-bh/2-RISER/2,0);rr.castShadow=true;g.add(rr)});
+    // risers run so the fork openings face the unloading side, whichever way the bundle points
+    if(!it.pallet){const openX=(b.dir==='length')===(UNLOAD==='sides'); // true: risers across the pieces (local z)
+      [-.32,.32].forEach(f=>{const rr=new THREE.Mesh(openX?new THREE.BoxGeometry(RISER,RISER,it.W):new THREE.BoxGeometry(it.L,RISER,RISER),riserM);
+        if(openX)rr.position.set(f*it.L,-bh/2-RISER/2,0);else rr.position.set(0,-bh/2-RISER/2,f*it.W);rr.castShadow=true;g.add(rr)})}
     // steel straps around the bundle
     if(!it.pallet){const k=it.L<50?2:it.L<120?3:4;for(let i=0;i<k;i++){const s=new THREE.Mesh(new THREE.BoxGeometry(1.3,bh+.6,it.W+.6),strapM);s.position.x=(i+.5)/k*it.L-it.L/2;g.add(s)}}
     else{const s=new THREE.Mesh(new THREE.BoxGeometry(1.3,bh+.6,it.W+.6),strapM);g.add(s)}
