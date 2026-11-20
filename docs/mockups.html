@@ -1034,7 +1034,8 @@ window.addEventListener('DOMContentLoaded', route);
     f: { name: '2x4 × 40" filler', L: 40, cls: 'fill', fill: 'var(--wood-4)', bf: 333, filler: true },
   };
   const BW = 42, BH = 28, GAP = 0, TL = 636, TW = 102; // packed tight (D33)
-  const LB_PER_BF = 1.9; // dry SPF, about; set per species and dry/green (D43)
+  // wood weight from Catalog › Species & weights (D45): average and how far it can be off, up or down
+  const SPF = D.species[0], LB_PER_BF = SPF.avg, LO = SPF.avg - SPF.var, HI = SPF.avg + SPF.var;
   const ROWS = [
     { k: 'a', dir: 'across', per: 3, high: 3, drop: 2, step: 1 },
     { k: 'g', dir: 'length', per: 2, high: 3, drop: 1, step: 2 },
@@ -1135,12 +1136,12 @@ window.addEventListener('DOMContentLoaded', route);
   }
 
   const gauges = () => H.kpis([
-    H.gauge('Weight, average', `${n0(LB)} <small>/ 45,000 lb</small>`, LB / 450, `${Math.round(LB / 450)}% · could be ${n0(BF * 1.7)} to ${n0(BF * 2.1)} lb`, BF * 2.1 > 45000 ? 'warn' : 'ok'),
+    H.gauge('Weight · planned on average', `${n0(LB)} <small>/ 45,000 lb</small>`, LB / 450, `${Math.round(LB / 450)}% · light ${n0(BF * LO)} · heavy ${n0(BF * HI)}${BF * HI > 45000 ? ' · over the limit if the wood is heavy' : ''}`, LB > 45000 ? 'bad' : BF * HI > 45000 || LB / 450 > 95 ? 'warn' : 'ok'),
     H.gauge('Board feet', `${n0(BF)} <small>/ ≈ 23,000 planned</small>`, BF / 230, `${Math.round(BF / 230)}% of the planned load for this plant (D43)`),
     H.gauge('Floor', `${Math.round(USED / TL * 100)}%`, USED / TL * 100, `${Math.round(USED / 12)}' of 53' used · packed tight, 3 high`),
     H.gauge('Weight over axles (estimate)', `47% <small>/ 53%</small>`, null, 'Front / rear · an estimate; the driver\'s gauges and the scale decide', 'ok'),
   ]);
-  const weightRisk = () => `<div class="btns small"><span class="muted">Plan the weight on</span>${H.seg(['Light side', 'Average', 'Heavy side'], 1)}<span class="muted">SPF dry: 1.90 ± 0.20 lb per bd ft. On the heavy side this load is <b>${n0(BF * 2.1)} lb</b>, ${BF * 2.1 > 45000 ? 'over' : 'still under'} the 45,000 limit.</span>${H.go('Species & weights', 'catalog-species', 'ghost sm')}</div>`;
+  const weightRisk = () => `<div class="btns small"><span class="muted">Plan the weight on</span>${H.seg(['Light side', 'Average', 'Heavy side'], 1)}<span class="muted">${SPF.name.split(' ')[0]} ${SPF.cond.toLowerCase()}: ${SPF.avg.toFixed(2)} ± ${SPF.var.toFixed(2)} lb per bd ft. Light side <b>${n0(BF * LO)}</b> · average <b>${n0(LB)}</b> · heavy side <b>${n0(BF * HI)} lb</b>, ${BF * HI > 45000 ? 'over' : 'still under'} the 45,000 limit.</span>${H.go('Species & weights', 'catalog-species', 'ghost sm')}</div>`;
   const unloadRules = () => `<div class="grid2" style="gap:12px">` +
     H.panel('Unloads from', `<div class="btns" style="margin-bottom:8px">${H.seg(['Back doors (van)', 'Sides (flatbed)'], 0)}</div><div class="small">Van: the first drop sits nearest the doors, fork openings face the back. Flatbed from the sides: where a drop sits along the deck matters less; the rule is <b>nothing for a later drop on top of an earlier drop's bundles</b>, and fork openings face out (D34).</div>`) +
     H.panel('Weight limits for this route', H.table(['Where', { t: 'Max load', num: true }, ''], [
@@ -1160,15 +1161,16 @@ window.addEventListener('DOMContentLoaded', route);
     ['b', 1, 12, 'length', 'Caldari Road', 4],
     ['f', 1, '4+', 'length', 'Caldari Road', 5],
   ];
-  const loadTable = () => H.table(['', '#', 'Item', 'Drop', 'Direction', { t: 'Bundles', num: true }, { t: 'Bd ft', num: true }],
+  const wt = bf => `${n0(bf * LB_PER_BF)}<div class="small muted">${n0(bf * LO)} to ${n0(bf * HI)}</div>`;
+  const loadTable = () => H.table(['', '#', 'Item', 'Drop', 'Direction', { t: 'Bundles', num: true }, { t: 'Bd ft', num: true }, { t: 'Weight lb', num: true }],
     orderRows.map(([k, drop, n, dir, plant, step]) => [
       `<span class="muted" title="Drag to reorder">⋮⋮</span>`,
       `<span class="chip">${step}</span>`,
       `${IT[k].name}${IT[k].filler ? ' ' + H.chip('Filler', 'warn') : ''}`,
       H.chip(`${drop} · ${plant}`, drop === 1 ? 'now' : 'info'),
       H.seg(['Across', 'Lengthwise'], dir === 'across' ? 0 : 1),
-      n, n === '4+' ? '1,332+' : n0(n * IT[k].bf)]),
-    { foot: ['', '', 'Total', '', '', `${BUNDLES - 4}+`, n0(BF)] });
+      n, n === '4+' ? '1,332+' : n0(n * IT[k].bf), n === '4+' ? wt(1332).replace('</div>', '+</div>').replace(/^([\d,]+)/, '$1+') : wt(n * IT[k].bf)]),
+    { foot: ['', '', 'Total', '', '', `${BUNDLES - 4}+`, n0(BF), wt(BF)] });
 
   // ---------- Loads › 3D Planner ----------
   S({
