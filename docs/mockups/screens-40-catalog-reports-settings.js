@@ -7,10 +7,10 @@
 
   // ---------- proposal / invoice lines (Ardent Metals, Caldari Road) ----------
   const LINES = [
-    { code: 'DN-2339G', bundles: 33, price: 1.36 },
-    { code: 'DN-3331', bundles: 55, price: P.piece.quoted },
-    { code: 'DN-33375', bundles: 33, price: 1.85 },
-    { code: 'DN-2440', bundles: 11, price: 1.75, filler: true, loaded: 13 },
+    { code: 'DN-2339G', bundles: 17, price: 1.36 },
+    { code: 'DN-3331', bundles: 28, price: P.piece.quoted },
+    { code: 'DN-33375', bundles: 17, price: 1.85 },
+    { code: 'DN-2440', bundles: 6, price: 1.75, filler: true, loaded: 7 }, // about 21,000 bd ft: a full load by weight (D43)
   ].map(l => { const i = it(l.code); return Object.assign({}, l, { i, pcs: l.bundles * i.perBundle, bf: l.bundles * i.perBundle * i.bf }); });
   const totBf = LINES.reduce((a, l) => a + l.bf, 0);
   const totAmt = LINES.reduce((a, l) => a + l.pcs * l.price, 0);
@@ -112,21 +112,21 @@
     ref: 'Hand-off 4.3, 4.4, 9 · D35, D36, D42, D43 · Review M7, S6',
     check: ['Is margin per load the number he judges a customer by?', 'Does he want his commission tracked here (section 12)?', 'Should "other costs" per load be split into named lines?'],
     assistant: ['"How\'s Concord doing vs last year?"', '"Why did L-2420 make less than planned?" (explains it line by line)', '"What did the last Toronto load make?"'],
-    dock: H.assistant([['me', 'Why did L-2420 make less than planned?'], ['ai', 'Three lines: freight was $2,450 (carrier\'s confirmed price) instead of $2,300, −$150. The truck carried 20,950 bd ft against 23,000 planned, so the per-load costs were spread over fewer feet, −$260. Lumber went in at $510 instead of $500 planned, −$231. Margin $2,359 against $3,000.'], ['propose', 'Email this summary to you every month-end']]),
+    dock: H.assistant([['me', 'Why did L-2420 make less than planned?'], ['ai', 'Mostly three lines: the truck carried 20,950 bd ft against 23,000 planned, so the per-load costs were spread over fewer feet, −$260. Lumber went in at $510 instead of $500, −$210 (and −$10 more waste on it). Freight was $2,450, the carrier\'s confirmed price, instead of $2,300, −$150. Margin $2,370 against $3,000.'], ['propose', 'Email this summary to you every month-end']]),
     html: () => H.head('Reports › Money', 'October 2026', 'His margin view · costs and margins visible only to people an admin allows (D28)', H.docActions()) +
       H.kpis([H.gauge('Margin per load', '$2,640', 88, 'avg of 23 loads · plan $3,000 (incl. $300 rounding)', 'ok'), H.gauge('Buying gains', '$9,350', null, 'on usable board feet · 8.5 loads', 'ok'), H.gauge('Freight vs plan', '+$1,050', null, '7 loads over the $2,300 planned', 'warn'), H.gauge('Board feet per load', '21,480', 93, 'avg loaded · 23,000 planned (D43)', 'warn')]) +
       H.panel('Load L-2420 · planned vs actual, line by line', H.table(['Line', 'Basis', { t: 'Planned', num: 1 }, { t: 'Actual', num: 1 }, { t: 'Effect on the load', num: 1 }], [
-        ['Lumber', 'per MBF', '$500.00', '$510.00 avg cost', H.chip('−$231', 'warn')],
+        ['Lumber', 'per MBF', '$500.00', '$510.00 avg cost', H.chip('−$210', 'warn')],
         ['Subcontractor labor', 'per MBF', '$135.00', '$135.00', '$0'],
-        ['Waste 5%', '% of lines above', '$31.75', '$32.25', H.chip('−$12', 'warn')],
+        ['Waste 5%', '% of lines above', '$31.75', '$32.25', H.chip('−$10', 'warn')],
         ['Freight', 'per load', '$2,300', '$2,450 confirmed', H.chip('−$150', 'bad')],
         ['Board feet on the truck', 'per load', '23,000', '20,950 loaded', H.chip('−$260', 'warn')],
         ['Other costs (Caldari Road)', 'per load', '$700', '$700', '$0'],
         ['Rounding ($300 + per-piece cents)', 'rounding', '$412', '$412', '$0'],
-      ], { foot: ['Margin', '', '$3,000', '$2,359', '−$641'] }), H.seg(['This load', 'Average, October'], 0), true) +
+      ], { foot: ['Margin', '', '$3,000', '$2,370', '−$630'] }), H.seg(['This load', 'Average, October'], 0), true) +
       `<div class="grid2">` + H.panel('Margin per load by plant (actual vs plan)', H.bars([{ label: 'Caldari', value: 2880, value2: 3000 }, { label: 'Jane St', value: 1950, value2: 2000 }, { label: 'Toronto', value: 2300, value2: 2000 }, { label: 'Newark', value: 3150, value2: 3000 }]) + '<div class="small muted">Grey: planned · green: actual</div>') +
       H.panel('Sales by plant vs last year', H.table(['Plant', { t: 'This year', num: 1 }, { t: 'Last year', num: 1 }, { t: 'Change', num: 1 }], [['Caldari Road, Concord', '$612,400', '$680,100', H.chip('−10%', 'warn')], ['Jane Street, Vaughan', '$118,200', '$102,900', H.chip('+15%', 'ok')], ['Toronto plant', '$371,000', '$355,500', H.chip('+4%', 'ok')], ['Newark NJ (USD)', 'US$298,000', 'US$240,700', H.chip('+24%', 'ok')]]), '', true) + `</div>` +
-      `<div class="grid2">` + H.panel('Freight by carrier (confirmed prices)', H.table(['Carrier', 'Role', { t: 'Loads', num: 1 }, { t: 'Avg confirmed', num: 1 }, { t: 'vs plan $2,300', num: 1 }], [['Trans-Ontario Freight', 'Cheapest', 18, '$2,060', H.chip('−$240', 'ok')], ['Bluewater Carriers', 'Backup', 5, '$2,550', H.chip('+$250', 'warn')], ['Liberty Line (US)', 'US loads', 3, 'US$3,400', '—']]), '', true) +
+      `<div class="grid2">` + H.panel('Freight by carrier (confirmed prices)', H.table(['Carrier', { t: 'Loads', num: 1 }, { t: 'Avg', num: 1 }, { t: 'vs $2,300', num: 1 }], [['Trans-Ontario (cheapest)', 18, '$2,060', H.chip('−$240', 'ok')], ['Bluewater (backup)', 5, '$2,550', H.chip('+$250', 'warn')], ['Liberty Line (US)', 3, 'US$3,400', '—']]), '', true) +
       H.panel('Commission', `<div class="small muted">Off. Turn it on if he wants his commission worked out from these margins (a question for BB Pallets).</div><div class="btns" style="margin-top:8px">${H.toggle(false)}<span class="small">Show my commission</span></div>`) + `</div>`,
   });
   S({

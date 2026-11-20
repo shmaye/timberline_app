@@ -151,6 +151,8 @@
   });
 
   /* ================= INVENTORY ================= */
+  // Phase two (D44, review M6): his own work, built after the core. Official stock or his own figures is still open.
+  const phase2 = H.callout('warn', '<b>Phase two.</b> Inventory is built after the core (orders, loads, requests, email). Whether these are BB Pallets\' official stock figures or his own working figures is still open (D44).');
   const onhandRows = [
     ['2x3 × 10\'', 'Concord yard', '38,400', '4,800', '33,600', '$545'],
     ['2x3 × 7\' trim', 'Concord yard', '30,800', '0', '30,800', '$440'],
@@ -160,7 +162,7 @@
     ['2x4 × 10\'', 'Pinegrove yard', '8,900', '2,200', '6,700', '$475'],
     ['Offcuts 2x3 × 27"', 'Kessler yard', '1,150', '0', '1,150', '$0'],
   ];
-  const onhandPage = () => H.head('Inventory', 'On hand', 'Board feet by size, length and yard, valued at the average cost of loads bought.', H.btn('Excel', '', 'xls') + H.btn('Valuation PDF', '', 'pdf')) +
+  const onhandPage = () => H.head('Inventory', 'On hand', 'Board feet by size, length and yard, valued at the average cost of loads bought. Worked out from movements; nobody types an on-hand number.', H.btn('Excel', '', 'xls') + H.btn('Valuation PDF', '', 'pdf')) + phase2 +
     H.kpis([
       H.gauge('On hand', '155,050 <small>bd ft</small>', null, 'BB Pallets\' wood only (D24)'),
       H.gauge('Committed to orders', '40,200 <small>bd ft</small>', 26, '6 open orders + 5% waste'),
@@ -171,38 +173,46 @@
       H.table(['Size & length', 'Yard', { t: 'On hand', num: true }, { t: 'Committed', num: true }, { t: 'Available', num: true }, { t: 'Avg $ / MBF', num: true }], onhandRows, { foot: ['', '', '155,050', '40,200', '114,850', '$458'] }) +
       `<div class="toolbar small muted" style="padding-top:10px">* the paper-wrapped batch, delivered cost. Each subcontractor's own wood is not tracked here (D24).</div>`, '', true) +
     `<div class="grid2">` + H.panel('By yard', H.bars([{ label: 'Concord', value: 81.8 }, { label: 'Kessler', value: 64.35 }, { label: 'Pinegrove', value: 8.9 }], { h: 170 }) + '<div class="small muted">Thousand board feet</div>') +
-    H.panel('Average cost, 2x3 (all yards)', H.lines(['May', 'Jun', 'Jul', 'Aug', 'Sep 30', 'Nov'], [{ values: [530, 540, 545, 548, 450, 510] }], { h: 170 }) + '<div class="small muted">Dropped to about $450 at the Sept 30 count, then back up with new loads at $545.</div>') + `</div>`;
+    H.panel('Average cost, 2x3 (all yards)', H.lines(['May', 'Jun', 'Jul', 'Aug', 'Sep 30', 'Nov'], [{ values: [530, 540, 545, 548, 450, 510] }], { h: 170 }) + '<div class="small muted">Dropped to about $450 at the Sept 30 count (found wood at $0), then back up with new loads at $545.</div>') + `</div>` +
+    H.panel('Movements · 3x3 × 12\', Kessler yard', H.table(['Date', 'Movement', 'Ref', { t: 'Bd ft', num: true }, { t: 'On hand after', num: true }], [
+      ['Nov 3', 'Receipt (tally from Kessler)', 'P-0415', '+44,400', '50,800'],
+      ['Nov 11', 'Issue: 3,048 shipped + 5% on top', 'L-2409', '−3,200', '47,600'],
+      ['Nov 13', 'Issue: 3,048 shipped + 5% on top', 'L-2411', '−3,200', '44,400'],
+      ['Nov 15', 'Issue: shipped since count', 'L-2412', '−3,200', '41,200'],
+      ['Nov 18', 'Adjustment: recount confirmed', 'ADJ-118', '+2,050', '43,250'],
+    ]) + `<div class="toolbar small muted" style="padding-top:10px">Receipts, issues (with 5% on top of shipped feet), transfers between yards and adjustments with a reason. On hand and average cost are worked out from these.</div>`, '', true);
   S({
     id: 'inventory-onhand', dept: 'inventory', title: 'On hand',
-    intent: 'What BB Pallets owns, in board feet, at their own yard and each subcontractor\'s yard, valued at the running average cost of loads bought, not list price. Committed shows what open orders will use, with the 5% waste added.',
-    ref: 'Hand-off 4.5; D21, D22, D23, D24',
+    intent: 'The wood he looks after, in board feet, at BB Pallets\' yard and each subcontractor\'s yard, valued at the running average cost of loads bought, not list price. On hand is worked out from movements (receipts, shipments with 5% on top, transfers, adjustments), never typed in. Committed shows what open orders will use. Phase two: built after the core, and whether it is BB Pallets\' official stock is still open.',
+    ref: 'Hand-off 4.5; D21, D22, D23, D24, D44 · Review M6',
     check: ['Do you also want cut stock (finished bundles waiting) tracked here, or only raw lumber?', 'Is one average cost per size & length right, or one per yard?', 'Should offcuts carry zero cost, or a share of the load\'s cost?'],
     assistant: ['"How much 2x3 × 10\' do we have at Kessler?"', 'Warn when an order can\'t be covered by what\'s available'],
     html: onhandPage,
   });
 
-  const countsPage = () => H.head('Inventory', 'Counts & recounts', 'A full count every two months. Book is adjusted for what shipped since the count date.', H.go('Print count sheet', 'doc-count', '', 'print') + H.btn('Start a count', 'primary', 'plus')) +
+  const countsPage = () => H.head('Inventory', 'Counts & recounts', 'A full count every two months. Book is adjusted for what shipped since the count date.', H.go('Print count sheet', 'doc-count', '', 'print') + H.btn('Start a count', 'primary', 'plus')) + phase2 +
     H.stages(['Count sheet out', 'Counted', 'Compared with book', 'Recount', 'Adjusted'], 2) +
     H.kpis([
       H.gauge('Count date', 'Nov 15', null, 'next one about Jan 15'),
       H.gauge('Book, adjusted', '157,300 <small>bd ft</small>', null, 'book at count date − 12,600 shipped since'),
       H.gauge('Counted', '160,450 <small>bd ft</small>', null, '+3,150 more than book', 'ok'),
       H.gauge('Lines off', '2 of 18', null, 'one is a bundle (~2,000 ft): recount', 'warn'),
+      H.gauge('Counted by', '2 people', null, 'Mike (Concord, phone) · Kessler (paper)'),
     ]) +
-    H.panel('Count of Nov 15 · compared with book', H.table(['Size & length', 'Yard', { t: 'Book', num: true }, { t: 'Shipped since', num: true }, { t: 'Book now', num: true }, { t: 'Counted', num: true }, { t: 'Difference', num: true }, ''], [
-      ['2x3 × 10\'', 'Concord yard', '41,600', '−3,200', '38,400', '38,620', '+220', H.chip('Let go', '')],
-      ['2x3 × 7\' trim', 'Concord yard', '30,800', '0', '30,800', '30,950', '+150', H.chip('Let go', '')],
-      ['3x3 × 12\'', 'Kessler yard', '47,600', '−6,400', '41,200', '43,250', '+2,050', H.chip('Recount', 'warn')],
-      ['2x3 × 12\'', 'Kessler yard', '22,000', '0', '22,000', '21,900', '−100', H.chip('Let go', '')],
-      ['2x4 × 10\'', 'Pinegrove yard', '11,900', '−3,000', '8,900', '7,100', '−1,800', H.chip('Recount', 'warn')],
+    H.panel('Count of Nov 15 · compared with book', H.table(['Size & length', 'Yard', 'Counted by', { t: 'Book', num: true }, { t: 'Shipped since', num: true }, { t: 'Book now', num: true }, { t: 'Counted', num: true }, { t: 'Difference', num: true }, ''], [
+      ['2x3 × 10\'', 'Concord yard', 'Mike · phone', '41,600', '−3,200', '38,400', '38,620', '+220', H.chip('Let go', '')],
+      ['2x3 × 7\' trim', 'Concord yard', 'Mike · phone', '30,800', '0', '30,800', '30,950', '+150', H.chip('Let go', '')],
+      ['3x3 × 12\'', 'Kessler yard', 'Kessler · paper', '47,600', '−6,400', '41,200', '43,250', '+2,050', H.chip('Recount', 'warn')],
+      ['2x3 × 12\'', 'Kessler yard', 'Kessler · paper', '22,000', '0', '22,000', '21,900', '−100', H.chip('Let go', '')],
+      ['2x4 × 10\'', 'Pinegrove yard', 'Pinegrove · phone', '11,900', '−3,000', '8,900', '7,100', '−1,800', H.chip('Recount', 'warn')],
     ], { cls: ['', '', 'diff', '', 'diff'] }) +
       `<div class="toolbar small muted" style="padding-top:10px">Counts usually come out higher than the books: real waste is less than the 5% booked. Small differences are adjusted and let go.</div>`,
       H.go('Recount sheet', 'doc-recount', 'sm', 'print') + H.go('Adjust to count', 'dlg-adjust', 'sm primary'), true) +
-    H.callout('info', 'Counting on a phone or tablet at the yard: the same sheet opens on screen, one line at a time, with big number buttons (D29).');
+    H.callout('info', 'He works remotely, so whoever is at the yard counts: the same sheet opens on their phone or tablet, one line at a time, with big number buttons, and their name is kept on every line (D29).');
   S({
     id: 'inventory-counts', dept: 'inventory', title: 'Counts & recounts',
-    intent: 'Replaces the 4–10 days (sometimes a whole Sunday) of balancing by hand. The count is compared with the book, adjusted automatically for everything shipped since the count date; small differences are let go, a big one (about a bundle) goes on a recount sheet.',
-    ref: 'Hand-off 4.5; D8, D23, D24, D29',
+    intent: 'Replaces the 4–10 days (sometimes a whole Sunday) of balancing by hand. Whoever is at the yard counts, on a phone or on paper, and their name is kept. The count is compared with the book, adjusted automatically for everything shipped since the count date; small differences are let go, a big one (about a bundle) goes on a recount sheet. Phase two.',
+    ref: 'Hand-off 4.5; D8, D23, D24, D29, D44 · Review M6',
     check: ['What difference is "small enough to let go": a percentage, or a number of board feet?', 'Who counts, and on paper or on a phone?', 'Do you count cut bundles too, or only raw lumber?', 'How do you handle loads that arrive or ship during the count day?'],
     assistant: ['Print the count sheet for the Kessler yard', 'Explain why 3x3 × 12\' is 2,050 ft over', 'Propose the adjustment after the recount (you approve)'],
     html: countsPage,
@@ -220,7 +230,7 @@
       `<div class="box2" style="margin-bottom:12px"><b>Count only BB Pallets' wood.</b> Leave Kessler Wood Works' own pile out. If you are not sure whose a bundle is, write it in Notes.</div>` +
       `<table><thead><tr><th>Size & length</th><th class="num">Pcs / bundle</th><th class="num">Full bundles</th><th class="num">Loose pcs</th><th class="num">Bd ft (office)</th><th>Notes</th></tr></thead><tbody>` +
       countRows.map(r => `<tr><td>${r}</td><td class="num">${r.startsWith('Off') ? '—' : r.startsWith('3x3') ? '140' : r.startsWith('4x4') ? '96' : '210'}</td><td class="num"><span class="blank"></span></td><td class="num"><span class="blank"></span></td><td class="num"></td><td><span class="blank" style="min-width:120px"></span></td></tr>`).join('') +
-      `</tbody></table><div class="sig"><div>Counted by</div><div>Checked by</div></div><div class="fine">Also opens on a phone or tablet. Shipments after the count date are adjusted by the office.</div>`),
+      `</tbody></table><div class="sig"><div>Counted by</div><div>Checked by</div></div><div class="fine">Also opens on a phone or tablet for whoever counts; their name is kept. Shipments after the count date are taken off the book automatically.</div>`),
   });
 
   S({
@@ -238,19 +248,19 @@
       <div class="fine">Possible causes to check: a bundle of the subcontractor's own wood counted by mistake; a shipment loaded but not yet booked.</div><div class="sig"><div>Recounted by</div><div>Approved</div></div>`),
   });
 
-  const adjustPage = () => H.head('Inventory', 'Adjustments', 'Every change to the book that isn\'t a purchase or a shipment, with a reason.', H.go('New adjustment', 'dlg-adjust', 'primary', 'plus')) +
+  const adjustPage = () => H.head('Inventory', 'Adjustments', 'Every change to the book that isn\'t a purchase or a shipment, with a reason.', H.go('New adjustment', 'dlg-adjust', 'primary', 'plus')) + phase2 +
     H.panel('', H.filters(['*All', 'Count', 'Recount', 'Damaged', 'Subcontractor wood mixed in', 'Other']) + H.table(['Date', 'Size & length', 'Yard', { t: 'Bd ft', num: true }, 'Reason', { t: 'Avg cost after', num: true }, 'By'], [
       ['Nov 18', '3x3 × 12\'', 'Kessler yard', '+2,050', 'Recount confirmed: count was right', '$238', 'Sales desk'],
       ['Nov 15', '2x3 × 10\'', 'Concord yard', '+220', 'Count, small difference let go', '$542', 'Sales desk'],
       ['Nov 15', '2x3 × 7\' trim', 'Concord yard', '+150', 'Count, small difference let go', '$438', 'Sales desk'],
       ['Oct 2', '2x3 × 12\'', 'Kessler yard', '−1,900', 'Subcontractor\'s own wood had been counted in', '$495', 'Sales desk'],
-      ['Sep 30', 'All 2x3', 'All yards', '+6,800', 'Count: real waste below 5%', '$450', 'Owner'],
+      ['Sep 30', 'All 2x3', 'All yards', '+6,800', 'Count: real waste below 5% (found wood at $0)', '$450', 'Sales desk'],
     ]), '', true) +
     H.callout('info', 'After an adjustment, the average cost of what\'s left is recalculated. Adding found wood at no cost lowers the average, as on Sept 30 (about $450 against $545 recently paid).');
   S({
     id: 'inventory-adjustments', dept: 'inventory', title: 'Adjustments',
     intent: 'A trail of every correction to the book, each with a reason, and the average cost it left behind. That explains later why the cost dropped to $450 and jumped back.',
-    ref: 'Hand-off 4.5; D24',
+    ref: 'Hand-off 4.5; D24, D44',
     check: ['Which reasons do you want in the list?', 'Who is allowed to make an adjustment?', 'Should found wood come in at zero cost (lowering the average), or at the current average?'],
     assistant: ['"Why did 2x3 average cost drop in September?"', 'Propose adjustments from a finished count (you approve)'],
     html: adjustPage,
@@ -270,9 +280,9 @@
       H.btn('Cancel') + H.btn('Save adjustment', 'primary')),
   });
 
-  const wastePage = () => H.head('Inventory', 'Waste', '5% is booked the moment a load ships. Real waste is checked at each count.', H.btn('Excel', '', 'xls')) +
+  const wastePage = () => H.head('Inventory', 'Waste', 'When a load ships, 5% on top of the shipped feet is taken out of stock. Real waste is checked at each count.', H.btn('Excel', '', 'xls')) + phase2 +
     H.kpis([
-      H.gauge('Booked at shipping', '5.0%', null, '40,000 ft shipped → 42,000 ft out of stock'),
+      H.gauge('Booked at shipping', '5.0%', null, '5% on top of shipped feet: 40,000 → 42,000 out'),
       H.gauge('Actual since Sept 30', '3.4%', 68, 'from the Nov 15 count', 'ok'),
       H.gauge('Over-booked', '+3,150 <small>bd ft</small>', null, 'came back at the count'),
       H.gauge('Offcuts kept', '1,150 <small>bd ft</small>', null, 'usable 27" pieces (D21)'),
@@ -288,15 +298,15 @@
     H.callout('info', '(proposed) Book waste per size and stock length instead of a flat 5%, once a few counts show the real figures. Then the count would come out closer to the book.');
   S({
     id: 'inventory-waste', dept: 'inventory', title: 'Waste',
-    intent: 'Shows the 5% booked at shipping against the real waste found at each count, by size and stock length. Real waste depends on the sizes cut and the wood quality, which is why counts come out higher than the books.',
-    ref: 'Hand-off 4.5',
+    intent: 'Shows the waste booked at shipping (5% on top of the shipped feet: 40,000 shipped takes 42,000 out of stock) against the real waste found at each count, by size and stock length. Real waste depends on the sizes cut and the wood quality, which is why counts come out higher than the books. Phase two.',
+    ref: 'Hand-off 4.5; D44 · Review arithmetic',
     check: ['Is 5% the right flat figure for every size?', 'Would you like waste booked per size and length once the numbers are known? (proposed)', 'Does the subcontractor charge on wood in, including the waste?'],
     assistant: ['"Which sizes waste more than 5%?"', 'Suggest a better waste % per size from the last counts'],
     html: wastePage,
   });
 
   /* ================= PRICING ================= */
-  const builderPage = () => H.head('Pricing › Price builder', 'Ardent Metals · Caldari Road plant, Concord ON', '20–24 loads a year · delivered · priced per piece in CAD', H.btn('Save to price list') + H.btn('Re-price list', 'primary')) +
+  const builderPage = () => H.head('Pricing › Price builder', 'Ardent Metals · Caldari Road plant, Concord ON', 'Price list version 3 · effective Oct 1, 2026 · 20–24 loads a year · delivered · per piece, CAD', H.btn('Save as new version') + H.btn('Re-price list', 'primary')) +
     `<div class="split">` +
     H.panel('Cost per 1,000 board feet (MBF)', H.form([
       `<div class="field"><label>Lumber cost basis (chosen per price list)</label><div>${H.seg(['Planning number', 'Average on hand', 'Today\'s market'], 0)}</div></div>`,
@@ -304,14 +314,16 @@
       H.field('Freight per load', '$2,300', 'cheapest $2,000 · backup $2,550'), H.field('Board feet per load', '44,000', 'to confirm (D43)'),
       H.field('Target margin per load', '$2,000'), H.field('Other costs per load (this plant)', '$700', 'D18'),
     ]) + `<div class="small muted" style="margin-top:10px">Beside the planning number: average on hand <b>$510</b> · market this week <b>$545</b></div>` +
-      `<div style="margin:16px -18px 0">` + H.table(['Step', { t: 'Per MBF', num: true }, 'How'], [
-        ['Lumber', '$500.00', 'planning number'],
-        ['+ subcontractor labor', '$635.00', '+ $135'],
-        ['+ 5% waste (on labor too)', '$666.75', '× 1.05'],
-        ['+ freight', '$719.02', '$2,300 ÷ 44 MBF = $52.27 (their figure: $52.25)'],
-        ['<b>Delivered cost</b>', '<b>$719.02</b>', 'they call it $719'],
-        ['+ margin & other costs', '$787.20', '($2,000 + $700 + $300 rounding = $3,000) ÷ 44 = $68.18'],
-      ], { foot: ['Selling price', '$787.00', 'per MBF'] }) + `</div>`) +
+      `<div style="margin:16px -18px 0">` + H.table(['Line (stored)', 'Kind', 'Basis', { t: 'Amount', num: true }, { t: 'Per MBF', num: true }, { t: 'Running', num: true }], [
+        ['Lumber', H.chip('cost'), 'per MBF', '$500.00', '$500.00', '$500.00'],
+        ['Subcontractor labor', H.chip('cost'), 'per MBF', '$135.00', '$135.00', '$635.00'],
+        ['Waste, charged on wood in', H.chip('cost'), '% of lines above', '5%', '$31.75', '$666.75'],
+        ['Freight', H.chip('cost'), 'per load', '$2,300', '$52.27', '<b>$719.02</b>'],
+        ['Other costs (this plant, D18)', H.chip('cost'), 'per load', '$700', '$15.91', '$734.93'],
+        ['Margin', H.chip('margin', 'ok'), 'per load', '$2,000', '$45.45', '$780.38'],
+        ['Rounding: "call it $3,000"', H.chip('rounding', 'warn'), 'per load', '$300', '$6.82', '$787.20'],
+      ], { foot: ['Selling price', '', '', '', '', '$787.20 → $787'] }) + `</div>` +
+      `<div class="small muted" style="margin-top:10px">Per-load lines are divided by the <b>planned board feet per load: 44,000</b> (to confirm, D43). Delivered cost $719.02 (they call it $719); freight is $52.27 per MBF exactly (their figure $52.25). Other costs are costs, not margin.</div>`) +
     `<div style="display:flex;flex-direction:column;gap:20px">` +
     H.panel('Per piece', `<div class="g" style="border:0;padding:0"><div class="k">3x3 × 31"</div><div class="v">$1.53 <small>/ piece, quoted</small></div><div class="note">3 × 3 × 31 ÷ 144 = 1.9375 bd ft × $0.787 = $1.5248 → rounded up to $1.53</div></div>`) +
     H.panel('This plant\'s list, re-priced', H.table(['Item', { t: 'Bd ft / pc', num: true }, { t: 'At $787', num: true }, { t: 'Quoted', num: true }], [
@@ -321,8 +333,8 @@
     `</div></div>`;
   S({
     id: 'pricing-builder', dept: 'pricing', title: 'Price builder',
-    intent: 'Does BB Pallets\' own cost table for one customer or plant: lumber plus labor plus waste plus freight per MBF gives delivered cost, then margin and other costs give the selling price, then per piece from each item\'s board feet. The worked example is theirs: $719 delivered, $787 selling, $1.53 a piece.',
-    ref: 'Hand-off 4.3; D17, D18, D19',
+    intent: 'Does BB Pallets\' own cost table for one customer or plant, stored as lines: each line has a kind (cost, margin or rounding) and a basis (per MBF, per load, or % of the lines above). Per-load lines are divided by the planned board feet per load, so it is clear what depends on a full truck, and their rounding ("call it $3,000") shows as its own line. Saving makes a new version with an effective date. The worked example is theirs: $719 delivered, $787 selling, $1.53 a piece.',
+    ref: 'Hand-off 4.3; D17, D18, D19, D42, D43 · Review M7',
     check: ['Is the price always rounded up to the next cent?', 'Is $3,000 a rounding of $2,700, or is there another cost in it?', 'Does grooving add a fixed amount per MBF, or per piece?', 'Is the 44,000 bd ft per load the same for every trailer and customer?'],
     assistant: ['Build the price for a new plant from its volume and freight', 'Explain how $1.53 was worked out', '"What if lumber is $525?" for this plant'],
     html: builderPage,
@@ -336,13 +348,22 @@
       ['Lakeshore Tube & Bar · Toronto', 'Average on hand', '$440', '$613', '$680', 'Per bundle', 'CAD', 'Jun 12', H.chip('Stale', 'warn')],
       ['Garden State Steel · Newark', 'Today\'s market', '$460', '$718', '$795 → US$575', 'Per MBF', 'USD', 'Jul 3', H.chip('Stale', 'warn')],
     ], { cls: ['', '', 'diff', 'diff'] }), '', true) +
+    `<div class="grid2">` + H.panel('Versions · Caldari Road', H.table(['Version', 'Effective', { t: 'Lumber', num: true }, { t: 'Sell / MBF', num: true }, 'Used by'], [
+      ['v3', 'Oct 1, 2026', '$500', '$787', 'orders from Oct 1 ' + H.chip('Current', 'ok')],
+      ['v2', 'Jun 1, 2026', '$480', '$765', 'orders 24-0261 to 24-0302'],
+      ['v1', 'Jan 6, 2026', '$520', '$809', 'orders before June'],
+    ]) + `<div class="toolbar small muted" style="padding-top:10px">Re-pricing makes a new version with an effective date. An order keeps the price it was taken at; the PO match uses the version in force on the PO date.</div>`, '', true) +
+    H.panel('Garden State · Newark (USD)', H.table(['Line', 'Basis', { t: 'Amount', num: true }], [
+      ['Selling price, CAD', 'per MBF', '$795.00'], ['Exchange to USD (proposed)', 'rate on the quote date', '× 0.723'],
+      ['Brokerage (proposed, from the broker)', 'per load', 'US$185'], ['Duty on softwood (proposed, from the broker)', '% of value, if it applies', 'to confirm'],
+    ], { foot: ['Price to Garden State', 'per MBF', 'US$575 + lines above'] }) + `<div class="toolbar small muted" style="padding-top:10px">Who pays duty and brokerage, and whether the product falls under the softwood duties, comes from the broker and BB Pallets (Review S8). Example figures.</div>`, '', true) + `</div>` +
     `<div class="grid2">` + H.panel('Caldari Road plant · 4 items', H.table(['Item', { t: 'Price', num: true }, 'Unit'], [['3x3 × 31"', '$1.53', 'piece'], ['3x3 × 37½"', '$1.85', 'piece'], ['3x3 × 38½"', '$1.90', 'piece'], ['2x4 × 40" (filler)', '$1.75', 'piece']]), H.docActions(), true) +
     H.panel('Why lists differ', '<p>Same item, different prices: "almost no standard". Margin depends on how often a plant orders and how good a customer it is. The Jane Street plant takes 4 loads a year against 20–24 at Caldari Road, so it carries more margin per MBF.</p>') + `</div>`;
   S({
     id: 'pricing-lists', dept: 'pricing', title: 'Price lists',
-    intent: 'Every customer and plant has its own prices, set in advance, so an order arrives already priced. Each list remembers the lumber cost, cost basis and quote unit it was built on, and is flagged stale when that cost is far from today\'s.',
-    ref: 'Hand-off 4.3, 8; D17, D19',
-    check: ['How far from today\'s cost should a list be before it\'s "stale"? $25? $50?', 'Do customers get a printed or emailed price list, or only quotes?', 'Do US plants have prices set in USD, or converted from CAD?'],
+    intent: 'Every customer and plant has its own prices, set in advance, so an order arrives already priced. Each list remembers the lumber cost, cost basis and quote unit it was built on, and is flagged stale when that cost is far from today\'s. Lists are versioned with effective dates, so orders keep the price they were taken at. US lists carry their currency and (proposed) lines for exchange, brokerage and duty.',
+    ref: 'Hand-off 4.3, 7, 8; D17, D19, D42 · Review S8, S14',
+    check: ['How far from today\'s cost should a list be before it\'s "stale"? $25? $50?', 'Does a new price apply from the order date or the ship date?', 'For US customers, who pays duty and the broker\'s fee?', 'Do US plants have prices set in USD, or converted from CAD?'],
     assistant: ['"Which customers are priced on lumber over $520?"', 'Re-price stale lists and show the changes (you approve)', 'Email a price list to the buyer'],
     html: listsPage,
   });
