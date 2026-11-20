@@ -13,14 +13,14 @@
   const late = d => `<span class="nowrap" style="color:var(--bad)">${d}</span>`;
   // load, request, deliver to, carrier, ready date (sub), truck date, asked price, confirmed price, office PO, state, action
   const rows = [
-    ['L-2417', ref('R-1038'), 'Ardent · Caldari Rd + Jane St', 'Trans-Ontario Freight', 'Mon Nov 23', 'Tue Nov 24', '$2,300', '$2,300', 'TPO 5531', status.conf, H.go('Open', 'doc-carrierpo', 'sm')],
-    ['L-2419', ref('R-1037'), 'Garden State · Newark NJ', 'Liberty Line (US)', late('Fri Nov 27'), 'Thu Nov 26', 'US$3,400', '—', 'TPO 5540', status.sent, H.go('Record reply', 'dlg-carrierconfirm', 'sm')],
-    ['L-2420', ref('R-1039'), 'Ardent · Caldari Road', 'Trans-Ontario Freight', 'Thu Nov 26', 'Fri Nov 27', '$2,300', '$2,450', 'TPO 5542', status.changed, H.btn('Decide', 'sm')],
-    ['L-2421', ref('R-1041'), 'Ardent · Jane Street', 'Trans-Ontario Freight', '<span class="muted">asked</span>', 'Tue Dec 1', '$2,100', '', '—', status.req, H.btn('Remind office', 'sm')],
-    ['L-2422', '—', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 'Wed Dec 2', 'Thu Dec 3', '$2,300', '', '—', status.draft, H.go('Ask the office', 'doc-carrierpo', 'sm primary')],
-    ['L-2415', ref('R-1034'), 'Ardent · Caldari Road', 'Bluewater (backup)', 'Wed Nov 18', 'Thu Nov 19', '$2,300', '$2,550', 'TPO 5536', status.rebooked, H.btn('Open', 'sm')],
-    ['L-2413', ref('R-1033'), 'Garden State · Newark NJ', 'Trans-Ontario Freight', 'Mon Nov 16', 'Tue Nov 17', '$3,100', '—', 'TPO 5533', status.noshow, H.btn('Rebook', 'sm')],
-    ['L-2414', '—', 'Lakeshore · Toronto', 'Customer picks up', 'Fri Nov 20', 'Mon Nov 23', '—', '—', '—', status.pickup, ''],
+    ['<b class="nowrap">L-2417</b>', ref('R-1038'), 'Ardent · Caldari Rd + Jane St', 'Trans-Ontario Freight', 'Mon Nov 23', 'Tue Nov 24', '$2,300', '$2,300', 'TPO 5531', status.conf, H.go('Open', 'doc-carrierpo', 'sm')],
+    ['<b class="nowrap">L-2419</b>', ref('R-1037'), 'Garden State · Newark NJ', 'Liberty Line (US)', late('Fri Nov 27'), 'Thu Nov 26', 'US$3,400', '—', 'TPO 5540', status.sent, H.go('Record reply', 'dlg-carrierconfirm', 'sm')],
+    ['<b class="nowrap">L-2420</b>', ref('R-1039'), 'Ardent · Caldari Road', 'Trans-Ontario Freight', 'Thu Nov 26', 'Fri Nov 27', '$2,300', '$2,450', 'TPO 5542', status.changed, H.btn('Decide', 'sm')],
+    ['<b class="nowrap">L-2421</b>', ref('R-1041'), 'Ardent · Jane Street', 'Trans-Ontario Freight', '<span class="muted">asked</span>', 'Tue Dec 1', '$2,100', '', '—', status.req, H.btn('Remind office', 'sm')],
+    ['<b class="nowrap">L-2422</b>', '—', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 'Wed Dec 2', 'Thu Dec 3', '$2,300', '', '—', status.draft, H.go('Ask the office', 'doc-carrierpo', 'sm primary')],
+    ['<b class="nowrap">L-2415</b>', ref('R-1034'), 'Ardent · Caldari Road', 'Bluewater (backup)', 'Wed Nov 18', 'Thu Nov 19', '$2,300', '$2,550', 'TPO 5536', status.rebooked, H.btn('Open', 'sm')],
+    ['<b class="nowrap">L-2413</b>', ref('R-1033'), 'Garden State · Newark NJ', 'Trans-Ontario Freight', 'Mon Nov 16', 'Tue Nov 17', '$3,100', '—', 'TPO 5533', status.noshow, H.btn('Rebook', 'sm')],
+    ['<b class="nowrap">L-2414</b>', '—', 'Lakeshore · Toronto', 'Customer picks up', 'Fri Nov 20', 'Mon Nov 23', '—', '—', '—', status.pickup, ''],
   ];
   const page = () =>
     H.head('Loads', 'Carrier bookings', 'Each booking is a request to the BB Pallets office (Office › Requests). The office sends the transport PO; the carrier\'s confirmation books the date and accepts the price.',

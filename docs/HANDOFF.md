@@ -91,7 +91,7 @@ Later: an office user acts on it in the app. The data and history stay the same;
 - **Today**: his day in one list: what to do, and what he is **waiting on** from each of the five parties (office, carriers, customers, suppliers, subs), with reminders. A task list, not a tile dashboard (D3).
 - **Office requests**: every request to the office and its state, in one place; becomes the office's work queue once they switch over (D37).
 
-**Windows drawn before D36 that need changing:**
+**Windows drawn before D36 that needed changing (changed 2026-11-20, with the review's section 5 list):**
 - Purchasing (purchase orders, log a purchase, supplier PO): add "approval requested → approved by office → office PO no."
 - Invoice and Statements & payments: the office invoices; he requests it and records the number; payments are a status, not bookkeeping.
 - Inventory (on hand, counts, adjustments, waste): his tracking view; whether it is BB Pallets' official stock is open.

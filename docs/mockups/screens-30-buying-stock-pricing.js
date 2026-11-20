@@ -177,7 +177,7 @@
     H.panel('Movements · 3x3 × 12\', Kessler yard', H.table(['Date', 'Movement', 'Ref', { t: 'Bd ft', num: true }, { t: 'On hand after', num: true }], [
       ['Nov 3', 'Receipt (tally from Kessler)', 'P-0415', '+44,400', '50,800'],
       ['Nov 11', 'Issue: 3,048 shipped + 5% on top', 'L-2409', '−3,200', '47,600'],
-      ['Nov 13', 'Issue: 3,048 shipped + 5% on top', 'L-2411', '−3,200', '44,400'],
+      ['Nov 13', 'Issue: 3,048 shipped + 5% on top', 'L-2406', '−3,200', '44,400'],
       ['Nov 15', 'Issue: shipped since count', 'L-2412', '−3,200', '41,200'],
       ['Nov 18', 'Adjustment: recount confirmed', 'ADJ-118', '+2,050', '43,250'],
     ]) + `<div class="toolbar small muted" style="padding-top:10px">Receipts, issues (with 5% on top of shipped feet), transfers between yards and adjustments with a reason. On hand and average cost are worked out from these.</div>`, '', true);
@@ -244,7 +244,7 @@
       `<table><thead><tr><th>Size & length</th><th>Yard</th><th class="num">Book now</th><th class="num">First count</th><th class="num">Difference</th><th class="num">Recount (bd ft)</th></tr></thead><tbody>
       <tr><td>3x3 × 12'</td><td>Kessler yard</td><td class="num">41,200</td><td class="num">43,250</td><td class="num">+2,050</td><td class="num"><span class="blank"></span></td></tr>
       <tr><td>2x4 × 10'</td><td>Pinegrove yard</td><td class="num">8,900</td><td class="num">7,100</td><td class="num">−1,800</td><td class="num"><span class="blank"></span></td></tr></tbody></table>
-      <div class="box2"><div class="k">Shipped since Nov 15, already taken off the book</div>3x3 × 12': L-2409 (3,200) and L-2411 (3,200) · 2x4 × 10': L-2410 (3,000). Includes 5% waste booked at shipping.</div>
+      <div class="box2"><div class="k">Shipped since Nov 15, already taken off the book</div>3x3 × 12': L-2409 (3,200) and L-2406 (3,200) · 2x4 × 10': L-2410 (3,000). Includes 5% waste booked at shipping.</div>
       <div class="fine">Possible causes to check: a bundle of the subcontractor's own wood counted by mistake; a shipment loaded but not yet booked.</div><div class="sig"><div>Recounted by</div><div>Approved</div></div>`),
   });
 

@@ -22,7 +22,7 @@
   const underOrders = () => H.head('Orders › Orders', 'Order ' + ST.order, ST.customer + ' · ' + ST.plant, H.btn('Invoice', 'primary')) + H.stages(D.stages, 5) +
     H.panel('Loaded quantities', H.table(['Item', { t: 'Ordered', num: 1 }, { t: 'Loaded', num: 1 }], LINES.map(l => [l.i.name, n0(l.pcs), n0(l.filler ? l.loaded * l.i.perBundle : l.pcs)])), '', true);
   const underCatalog = () => H.head('Catalog', 'Items', '', H.btn('New item', 'primary', 'plus')) + H.panel('', H.table(['Code', 'Name', 'Type'], D.items.map(i => [i.code, i.name, i.type])), '', true);
-  const underStatements = () => H.head('Customers › Statements & payments', 'Statements', '', H.btn('Send all overdue', 'primary', 'mail')) + H.panel('', H.table(['Customer', { t: 'Balance', num: 1 }], [['Ardent Metals', money(48210.55)], ['Garden State Steel', 'US' + money(31420)]]), '', true);
+  const underStatements = () => H.head('Customers › Invoices & payments', 'Invoices & payments', '', H.btn('Send all overdue', 'primary', 'mail')) + H.panel('', H.table(['Customer', { t: 'Balance', num: 1 }], [['Ardent Metals', money(48210.55)], ['Garden State Steel', 'US' + money(31420)]]), '', true);
   const underBol = () => H.head('Loads › Bills of lading', 'L-2422 · Garden State Steel, Newark NJ', 'US load · customs broker on file', H.btn('BOL') + H.btn('Customs papers', 'primary'));
 
   // =====================================================================

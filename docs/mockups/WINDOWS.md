@@ -24,33 +24,33 @@ Ref: D46 · D38 · Hand-off 1a · Review "Worth adding"
 
 ### Workflow diagram `#workflow` (screen)
 
-The whole business on one page: the order going from the customer's spreadsheet to the invoice, with buying and inventory underneath, because "you make money when you buy". Green boxes with a yellow number are the order story. Every box opens its window, so BB Pallets can say "yes, that's how we work" or "no, it's like this".
+The whole job on one page, from the salesperson's side (D36): the order going from the customer's spreadsheet to delivered and paid, with buying and stock underneath, because "you make money when you buy". The BB Pallets office has its own lane: the dashed boxes are what the office does when he asks (transport PO, purchase approval, invoice). Green boxes with a yellow number are the order story. Every box opens its window, so BB Pallets can say "yes, that's how we work" or "no, it's like this".
 
 To check with BB Pallets:
 - Is anything missing between the customer's PO and the subcontractor job?
-- Does buying really feed pricing like this (average cost into the price builder)?
-- Who does each box today: the owner, the office, or the subcontractor?
+- Does the transport PO really go out when the order is entered, or only once the subcontractor gives a ready date?
+- Who does each office box today, and how long does each usually take?
 
 Assistant here:
 - Answer "where is order 24-0318?" by pointing at its box
 - Explain any step in English or Yiddish
 
-Ref: Hand-off 4.1–4.6, 13 (item 4)
+Ref: Hand-off 1a, 4.1–4.6 · D35–D46 · Review S1, S2
 
 ### Assistant (open) `#dlg-assistant` (dialog)
 
-The Assistant is on every page and understands mixed Yiddish and English, typed or spoken. It looks things up and proposes actions, but nothing is sent or changed until a person clicks Approve. What it may do follows the person's own access.
+The Assistant is on every page and understands mixed Yiddish and English, typed or spoken. It starts narrow (Review S11): first it reads replies and documents (customer sheets, POs, office answers, carrier confirmations) into fields for him to check, then drafts requests and reminders, then answers "what am I waiting on" and other look-ups. Anything it read from a document shows where it came from, and money or quantity fields it filled stay marked until he checks them. Nothing leaves the app or changes without his click: no autopilot.
 
 To check with BB Pallets:
-- Which jobs would they hand to the Assistant first?
-- Should the Assistant ever act without a click for small things (autopilot limits)?
+- Which jobs would he hand to the Assistant first?
+- Does he want to dictate notes and calls in Yiddish and have them turned into tasks?
 
 Assistant here:
-- Lookups: sales, margins, stock, loads
-- Draft proposals, plan loads, email jobs
-- "What can I offer for this batch?"
+- Read a reply or document into fields, with its source
+- "What am I waiting on from the office?"
+- Draft a request, a follow-up or a reminder
 
-Ref: Hand-off 11, D4, D5
+Ref: Hand-off 11 · D4, D5, D38, D46 · Review S11
 
 ## Orders
 
@@ -88,7 +88,7 @@ Ref: Hand-off 4.1, D10
 
 ### Load proposals `#orders-proposals` (screen, order story step 2)
 
-BB Pallets' own worksheet: the customer's needs fitted to a full truck, with the internal order number on it. It shows % of a truck live, and offers the three moves from the notes: split into two loads, cut items, or top up with the plant's major sizes. The proposal is emailed back and waits for the customer's PO.
+His own worksheet, as he works today: the customer's needs fitted to a full truck, with the internal order number on it. It shows % of a truck live (weight as light side, average and heavy side, D45), and offers the three moves from the notes: split into two loads, cut items, or top up with the plant's major sizes. It is the fast way in and works on a phone; the 3D planner is for confirming the load, not for getting started. The proposal is emailed back and waits for the customer's PO.
 
 To check with BB Pallets:
 - Is "% of a truck" worked out from board feet, or by eye from experience?
@@ -100,7 +100,7 @@ Assistant here:
 - Split into two loads with the gap the customer picks
 - Draft the email with the proposal attached
 
-Ref: Hand-off 4.1, 4.2, D13, D16
+Ref: Hand-off 4.1, 4.2 · D13, D16, D43, D45 · Review S7
 
 ### Load proposal (document) `#doc-proposal` (document, order story step 4)
 
@@ -118,131 +118,134 @@ Ref: Hand-off 4.1, D8, D16, D19
 
 ### Email dialog `#dlg-email` (dialog, order story step 4)
 
-One email window for every document in the app. It sends from their own mailbox, picks recipients from the customer's contacts, uses the template for that document, and attaches the PDF and Excel. The Assistant can draft the text; a person clicks Send. Every email is logged on the customer and the order.
+One email window for every document and request in the app. It sends from his own mailbox, picks recipients from the contacts, uses the template for that document, and attaches the PDF and Excel. It is sent as "create a draft, then send" so the message and thread ids come back, and requests carry a reference in the subject (e.g. [TL-R-1041]), so every reply is matched and read for him (D38, D46). The Assistant can draft the text; he clicks Send. Every email is stored on the customer and the order.
 
 To check with BB Pallets:
-- Should the subcontractor or the owner be copied on proposals?
+- Should the office or the owner be copied on proposals?
 - Is the buyer always the person who gets proposals, or does it vary?
 
 Assistant here:
 - Draft the email in English or French
 - Mention the split-load choice in the text
 
-Ref: Hand-off 8, D4, D30
+Ref: Hand-off 8 · D4, D30, D38, D46 · Review M3, S10
 
 ### Orders `#orders-orders` (screen, order story step 5)
 
-Every order and where it stands: proposal, customer PO, at subcontractor, loaded, invoiced. An order is only created when the official PO matches the proposal. A split load becomes two separate orders that point at each other (D16).
+Every order with a short state (open, on hold, shipped, delivered, closed, cancelled) and its milestones: job sent, ready date, truck booked, loaded, invoice requested, invoice recorded, delivered, paid. The milestones are worked out from the job, the booking and his requests to the office, so an order can be at the subcontractor and waiting on the office at the same time. A change after the PO makes a new revision ("Rev 2"), shows what changed, and lists who must be re-told as tasks. One order = one plant = one load; a split load is two linked orders (D16, D40). (Proposed layout.)
 
 To check with BB Pallets:
 - Does every customer send a PO, or do some just say "go ahead"?
-- Do they send an order confirmation back today?
-- Who decides which subcontractor gets the job?
+- How often does an order change after the PO, and who do you call first?
+- Who decides which subcontractor gets the job: you or the office?
 
 Assistant here:
-- Say where any order stands
-- Match a PO that just came in
+- Say where any order stands and what it is waiting on
+- After a change, draft the Rev 2 messages to the subcontractor, the office and the customer
 - Remind about split loads coming due
 
-Ref: Hand-off 4.1, 4.6, D16
+Ref: Hand-off 4.1, 4.6 · D16, D36, D40, D41 · Review S3, M5
 
 ### Match customer PO to proposal `#dlg-pomatch` (dialog, order story step 5)
 
-The customer's official PO is read and laid next to the proposal it answers. Differences in items, quantities, prices or dates are flagged, then one click creates the order.
+The customer's PO is kept as its own record and laid next to the proposal it answers (one PO can feed several orders, D40). Prices are checked against the price list version in force on the PO date, not today's. The filler line is checked against the plant's over/under allowance, so the invoice will not come out above the PO. One click creates the order and its first tasks: the order confirmation to the customer and the transport PO request to the office.
 
 To check with BB Pallets:
 - How often does the PO differ from the proposal, and who wins: their PO or our proposal?
-- Do POs carry prices, or just quantities?
+- If the load comes out bigger than the PO (fillers), will their accounts payable pay it, or must they change the PO first?
+- Do customers send one PO per load, or one big PO you draw loads from?
 
 Assistant here:
 - Read the PO PDF into lines
 - Explain each difference
 - Draft a note to the buyer about a difference
 
-Ref: Hand-off 4.1
+Ref: Hand-off 4.1 · D35, D40, D42 · Review S4, S14
 
-### Invoice (document) `#doc-invoice` (document, order story step 10)
+### Invoice request → office invoice `#doc-invoice` (document, order story step 10)
 
-The invoice is made from what was really loaded, so the filler line shows the loaded quantity, not the estimate. Canadian sales carry GST/HST.
+The BB Pallets office invoices the customer (D36), so he does not issue the invoice himself. He sends an invoice request made from what was really loaded (the filler line shows the loaded quantity), with his prices, the customer's PO number and amounts before tax, plus a check that the load stays within what the PO allows. When the office's invoice comes back, its number, total with tax and PDF are recorded on the same request, and the order shows "invoiced". When the office switches over, it invoices from this request inside Timberline (D37).
 
 To check with BB Pallets:
-- Payment terms per customer (open question F27)?
-- Does the invoice go to an accounting program (F26)?
+- Who at the office does invoices, and how long do they usually take?
+- Does the customer accept an invoice above the PO (fillers), or must they change the PO first?
+- Should he see payment received, or only paid yes/no?
 
 Assistant here:
-- Explain any difference between the PO and the invoice
-- Send it to the customer's AP email with the BOL attached
+- Explain any difference between the PO and what was loaded
+- Send the request to the office and record their invoice when it comes back
 
-Ref: Hand-off 4.6, 8, D9
+Ref: Hand-off 4.6, 8 · D36, D37, D39 · Review S4, S9, section 5
 
 ### Pickup orders `#orders-pickups` (screen)
 
-Customers who send their own truck order regular items in a plain order. No load planning: the order is picked, the customer's driver signs, and it is invoiced.
+Customers who send their own truck order regular items in a plain order. No load planning and no truck to book, but the subcontractor still gets a job and a release slip, the customer's driver signs, and the invoice is a request to the BB Pallets office using what was signed for (D36).
 
 To check with BB Pallets:
 - Which customers pick up, and do they book a time?
-- Is a pickup priced without freight (D15 still open)?
-- Who signs for it at the yard?
+- Is a pickup priced without freight?
+- Who signs for it at the yard, and how does the signed slip reach you?
 
 Assistant here:
 - Turn an emailed pickup order into lines
-- Tell the subcontractor what to have ready
-- List pickups booked this week
+- Send the subcontractor the job and the release slip
+- Ask the office to invoice what was picked up
 
-Ref: Hand-off 4.1 (exception)
+Ref: Hand-off 4.1 (exception) · D36, D39
 
 ## Loads
 
 ### 3D load planner `#loads-planner` (screen, order story step 3)
 
-Fit the order to a truckload before it goes out. Bundles appear at their real size as they are added, the gauges show board feet, weight and floor live, and you drag bundles to set what goes on first. Each item can go across the trailer or lengthwise, whichever uses less floor. It suggests splitting, cutting or topping up with the plant's major sizes, then "Confirm load" locks the plan.
+Fit the order to a truckload before it goes out. Bundles appear at their real size, packed tight, and the gauges show weight (light, average and heavy side), board feet against the plant's planned load, floor and an axle estimate. Each item goes across or lengthwise, whichever uses less floor. The drop rule follows how the truck is unloaded: from the back of a van, the first drop sits nearest the doors; from the sides of a flatbed, nothing for a later drop may sit on top of an earlier one. Weight limits come from the trailer type and the region and season of the route (strictest place wins). It suggests splitting, cutting or topping up, and "Confirm load" locks the plan as a revision (Rev 1, Rev 2 after a change).
 
 To check with BB Pallets:
 - How do you stack bundles today: how many high, heavy at the bottom, sizes kept together?
-- Real trailer sizes and weight limits for each trailer type you use.
-- On a two-drop load, does the second plant always get the nose?
-- Who confirms a load: the office, the owner, or the subcontractor?
+- Real weight limits per trailer type, for Ontario, Quebec and the US states you ship to, and in spring thaw.
+- On a flatbed with two stops, does it matter where each plant's bundles sit, or only that nothing is on top of the first stop's wood?
+- Do you ever ship long stock in a van?
 
 Assistant here:
 - Plan the load from the proposal ("fill this up for Concord, mostly major sizes")
 - Suggest a split or a top-up and show the result before you approve
 - Turn every item to its best direction
 
-Ref: Hand-off 4.2 · D11, D13, D14, D15, D16, D31
+Ref: Hand-off 4.2 · D11, D13–D16, D31–D34, D41, D43, D45 · Review S7, M5
 
 ### Confirm load `#dlg-confirmload` (dialog)
 
-The "yes, this is the load" step. Confirming locks the plan and makes the packing slip, the bill of lading and the subcontractor job in one go, and records who confirmed it and when. (Proposed: it is used once the customer's PO is in; before that, the plan goes out as the proposal.)
+The "yes, this is the load" step. Confirming locks the plan as a revision (Rev 1) and makes the subcontractor job, the packing slip and the loading list, and records who confirmed it and when. The bill of lading is not made here: it needs the carrier, so it is made when the booking is confirmed. A later change makes Rev 2 and lists who must be told again (subcontractor, office and carrier, customer). (Proposed: used once the customer's PO is in.)
 
 To check with BB Pallets:
 - Is a load confirmed before or after the customer's PO arrives?
-- After confirming, who may still change it, and does the subcontractor get told automatically?
+- When a confirmed load changes, who do you have to call: the subcontractor, the office, the customer?
 
 Assistant here:
 - List what will be created before you confirm
 - Warn if a gauge is over its limit
 
-Ref: Hand-off 4.2 (Confirm) · D11
+Ref: Hand-off 4.2 (Confirm) · D11, D41 · Review M5
 
 ### Loading list `#doc-loadlist` (document, order story step 8)
 
-The step-by-step list for whoever loads the truck, printed from the same 3D plan: what goes on first (the nose) to last (the doors), which way each bundle faces, and which drop it belongs to. On a two-drop load the first drop is loaded last, nearest the doors.
+The step-by-step list for whoever loads the truck, printed from the same plan revision: what goes on first (the nose) to last (the doors), which way each bundle faces, which way its risers run so the fork openings face where it will be unloaded, and which drop it belongs to. It also prints the minimum number of straps. On a two-drop van load the first drop is loaded last, nearest the doors.
 
 To check with BB Pallets:
 - Does the loader need a drawing on the list, or only the steps?
-- Should the list show bundle tags or counts per row?
+- How many straps does a load like this get today, and who decides?
 
 Assistant here:
 - Email it to the subcontractor or the driver
 - Reprint it after a change to the plan
 
-Ref: Hand-off 4.2, 8 · D8, D15, D31
+Ref: Hand-off 4.2, 8 · D8, D15, D31, D34, D41 · Review S7
 
 ### Carrier bookings `#loads-bookings` (screen, order story step 6)
 
-Once an order is in, the truck has to be booked. The salesperson does not issue the transport PO himself: he asks the BB Pallets office to send one to the carrier with the price and the pickup date. The carrier's confirmation means two things: the date is booked, and the price is accepted. This screen tracks every load through those steps (asked, sent, confirmed, or changed by the carrier), so nothing ships on an unconfirmed truck, and the confirmed price becomes the load's real freight cost for its margin.
+Once an order is in, the truck has to be booked. He does not issue the transport PO himself: each booking is a request to the BB Pallets office (the same request record as every office step, with a reference like [TL-R-1041] in the email subject so replies match). The carrier's confirmation means two things: the date is booked, and the price is accepted. The asked price stays beside the confirmed one. A booking also shows the subcontractor's ready date and warns when the truck comes before the wood is ready; it is not final until that date is known. Declined, no-show, rebooked with the backup carrier and cancelled are states too. The confirmed price becomes the load's real freight cost for its margin.
 
 To check with BB Pallets:
+- Does the subcontractor give you a ready date before the truck is booked, or is the truck booked first?
 - Does the salesperson choose the carrier and price, or does the office?
 - Does the carrier's confirmation go to the office, to the salesperson, or both? Is there a confirmation number?
 - What does the office need in the request: pickup and delivery windows, equipment type, drops, extra-stop charges?
@@ -253,11 +256,11 @@ Assistant here:
 - Read the confirmation email and fill it in, flagging a different price or date
 - Remind you when the office or the carrier has not answered
 
-Ref: Learned from BB Pallets, Nov 2026 · D35, D36 · Hand-off 4.6, 6 (carriers)
+Ref: Learned from BB Pallets, Nov 2026 · D35, D36, D39, D41 · Review M2, S1
 
 ### Transport PO request to the office `#doc-carrierpo` (document, order story step 6)
 
-The salesperson's request to the BB Pallets office to book the truck: which load, carrier, pickup and delivery, date, equipment and the price agreed. The office turns it into its official transport PO to the carrier. It goes from his own mailbox and is logged on the order, so he can see when he asked and what he asked for.
+The salesperson's request to the BB Pallets office to book the truck: which load (and its revision), carrier, pickup and delivery, the date the wood is ready, equipment and the price agreed. The office turns it into its official transport PO to the carrier. It is request R-1038; the reference [TL-R-1038] in the subject lets Timberline match the replies. What he asked is kept frozen, so a later change is a new request, not an edit.
 
 To check with BB Pallets:
 - Can we see a real transport PO the office sends today, so the request carries everything they need?
@@ -268,11 +271,11 @@ Assistant here:
 - Fill it from the order, the load plan and the carrier's usual rate
 - Send it to the office and remind them if there is no PO by the end of the day
 
-Ref: D35, D36 · D8 (print, PDF, email)
+Ref: D35, D36, D39 · D8 (print, PDF, email) · Review M2, S1
 
 ### Record the carrier's confirmation `#dlg-carrierconfirm` (dialog, order story step 6)
 
-When the confirmation comes back (from the carrier, or forwarded by the office), the booking is marked confirmed with the office PO number, the carrier's confirmation number, the date and the price. If the date or price differs from what was asked, it is flagged so the salesperson can tell the office what to do. The confirmed price is what the load's margin uses.
+When the confirmation comes back (from the carrier, or forwarded by the office), request R-1038 is answered: office PO number, the carrier's confirmation number, the date and the price, kept beside what was asked. A different date or price is flagged for a decision; a refusal or no-show is rebooked with the backup carrier as a new request. Once confirmed, the bill of lading is drafted from the load plan and the carrier (it is made here now, not when the load is confirmed). The confirmed price is what the load's margin uses.
 
 To check with BB Pallets:
 - Do carriers ever confirm part of it (the date but not the price)?
@@ -282,7 +285,7 @@ Assistant here:
 - Fill this in from the forwarded email
 - Explain the margin effect of a price change
 
-Ref: D35, D36 · Hand-off 4.3 (freight $2,300, backup $2,500–2,600), 9 (freight by carrier)
+Ref: D35, D36, D39, D41 · Hand-off 4.3 (freight $2,300, backup $2,500–2,600), 9 · Review M2, M5
 
 ### Load schedule `#loads-schedule` (screen)
 
@@ -296,28 +299,28 @@ To check with BB Pallets:
 Assistant here:
 - "What ships next week?"
 - Remind you when a split load is coming due
-- Move a load to another day and tell the subcontractor and carrier
+- Move a load to another day: tell the subcontractor, and ask the office to change the transport PO (a new request)
 
 Ref: Hand-off 4.1, 4.2, 9 · D16
 
 ### Bills of lading `#loads-bol` (screen)
 
-One bill of lading per load, for the carrier. It is made when the load is confirmed, printed or emailed to the carrier, and the signed copy is attached when it comes back. US loads also carry the customs broker's details.
+One bill of lading per load. It is drafted when the carrier confirms the booking (it needs the carrier), as a draft for whoever issues it (the office, the subcontractor at loading, or him; to confirm). The signed copy comes back as a photo from his phone and closes the delivery, or records a problem. US loads also carry the customs broker's details.
 
 To check with BB Pallets:
+- Who makes the bill of lading today: the office, the subcontractor, or you?
 - Do you use your own BOL form or the carrier's?
-- Which papers go with a US load besides the BOL?
-- Who keeps the signed copy today?
+- Who gets the signed copy back, and how?
 
 Assistant here:
 - Email the BOL to the carrier
 - Find loads still missing a signed BOL
 
-Ref: Hand-off 4.6, 7, 8 · D8, D26
+Ref: Hand-off 4.6, 7, 8 · D8, D26, D35, D36 · Review section 5
 
 ### Bill of lading `#doc-bol` (document, order story step 8)
 
-The carrier's paper for the load: shipper, consignees in drop order, what is on the truck and its weight, and signatures at pickup and delivery. It is made from the confirmed plan, so the bundle counts and weight match. On US loads the customs broker block is filled in.
+The carrier's paper for the load: shipper, consignees in drop order, what is on the truck and its weight, and signatures at pickup and delivery. It is drafted from the confirmed plan revision once the carrier has confirmed, so bundle counts, weight and carrier match. It is a draft for whoever issues it (office, subcontractor at loading, or him; to confirm). On US loads the customs broker block is filled in.
 
 To check with BB Pallets:
 - Which freight description do you use for dunnage (e.g. "wood dunnage, untreated")?
@@ -325,25 +328,42 @@ To check with BB Pallets:
 - Which customs broker do you use for US loads?
 
 Assistant here:
-- Email it to the carrier from your mailbox
+- Send the draft to whoever issues it
 - Fill the broker block from the US plant's record
+- Read the photo of the signed copy and record the delivery
 
-Ref: Hand-off 4.6, 7 · D8, D26
+Ref: Hand-off 4.6, 7 · D8, D26, D35, D41 · Review section 5
 
-### Commercial invoice (US load) `#doc-commercial` (document)
+### Delivered, or a problem on delivery `#dlg-delivery` (dialog, order story step 11)
 
-A US load goes through a customs broker. The commercial invoice and broker details go with the truck and are emailed to the broker. Which papers exactly is still to confirm. (proposed)
+The real end of the order is delivered and paid, not the invoice. When the signed bill of lading comes back (a photo from his phone at the yard or from the driver), the load is marked delivered. If the customer reports a problem (short, damaged, wrong size, refused), it is recorded here, and it can raise a credit-note request to the office and a claim note for the carrier.
 
 To check with BB Pallets:
-- Which papers go with a US load today (F30)?
-- Is a CUSMA certificate of origin needed?
-- Is the wood heat treated or stamped (ISPM-15)?
+- What happens today when a load arrives short, damaged or wrong? Who gives the credit?
+- Who gets the signed BOL back, and how quickly?
+- Do you ever claim against a carrier for damage?
 
 Assistant here:
-- Fill in the broker and HS code from the plant
-- Email the papers to the broker before the truck leaves
+- Read the photo of the signed BOL and fill in the delivery
+- Draft the credit-note request to the office and the note to the carrier
 
-Ref: Hand-off 7, D26
+Ref: Review S2 · D29, D36, D39, D41
+
+### US load: information for the office and broker `#doc-commercial` (document)
+
+Customs papers for a US load are official documents, made by the office or the customs broker, not by him (D36). What he sends is the information they need: what is on the truck and its value, the importer of record, the delivery terms, and the tariff code and duty rate as given by the broker. Canadian softwood lumber entering the US can carry anti-dumping and countervailing duties and a US tariff; whether cut dunnage falls under them is for the broker to confirm. Who pays duty and brokerage also belongs in the price (Review S8).
+
+To check with BB Pallets:
+- Which papers go with a US load today, and who makes them (F30)?
+- Who is the importer of record: you or the customer? Who pays duty and the broker's fee?
+- Has the broker said whether your dunnage falls under the softwood lumber duties?
+- Do any customers ask for heat-treated, stamped wood (ISPM-15)?
+
+Assistant here:
+- Fill in the broker, importer and tariff code from the US plant's record
+- Email the information to the office and the broker before the truck leaves
+
+Ref: Hand-off 7 · D26, D36 · Review S8
 
 ## Office
 
@@ -367,33 +387,34 @@ Ref: D36, D37, D39 · Review M2
 
 ### Subcontractor jobs `#production-jobs` (screen, order story step 7)
 
-Each order becomes a job for the chosen subcontractor: the items, quantities, fillers and packing slip, emailed from here. After loading, the real quantities come back (by phone or email today) and the office types them in, which updates the order before invoicing.
+Each order becomes a job for the chosen subcontractor: the items, quantities, fillers, which way each bundle's risers run (D34) and the packing slip, emailed from here as a revision (Rev 1; a change sends Rev 2 with what changed). The subcontractor acknowledges it and gives a ready date; the truck booking is not final until that date is known. After loading, the real quantities come back (by phone or email today) and he types them in, then sends the invoice request to the office.
 
 To check with BB Pallets:
-- How many subcontractors do you use, and which does what?
-- What does the subcontractor need on the job: cut list, stock lengths to use, loading order?
+- Do jobs go to the subcontractor from you directly, or through the office?
+- Does the subcontractor tell you when the wood will be ready before the truck is booked?
 - How soon after loading do you get the real quantities?
 
 Assistant here:
-- Draft and email the job to the subcontractor
-- "Which jobs are loaded but have no quantities back?"
+- Draft and email the job (or Rev 2 after a change) to the subcontractor
+- "Which jobs have no ready date yet?"
 - Type in quantities from a phone call you dictate
 
-Ref: Hand-off 4.6 · D7, D25
+Ref: Hand-off 4.6 · D7, D25, D34, D36, D41 · Review S1, M5
 
 ### Subcontractor job sheet `#doc-jobsheet` (document, order story step 7)
 
-What the subcontractor needs to cut, groove and load: the items and bundles, which stock lengths to cut them from, the fillers, the ship date and the loading order. It replaces the order the office used to type up and send. (Layout proposed until we see theirs.)
+What the subcontractor needs to cut, groove and load: the items and bundles, which stock lengths to cut them from, which way each bundle's risers run (so the fork openings face where it will be unloaded), the fillers, the ship date and the loading order. It carries a revision number; Rev 2 says what changed. The subcontractor acknowledges it and writes the ready date. (Layout proposed until we see theirs.)
 
 To check with BB Pallets:
 - Can we see a job sheet as you send it today?
-- Should the sheet say which stock lengths to cut from, or leave it to the subcontractor?
+- Can the subcontractor build bundles with the risers turned either way on request?
+- Does the subcontractor reply with a ready date, or only call when it is done?
 
 Assistant here:
 - Email the job sheet with the packing slip and loading list attached
 - Translate the notes for the subcontractor if needed
 
-Ref: Hand-off 4.6, 8 · D7, D8
+Ref: Hand-off 4.6, 8 · D7, D8, D34, D41 · Review S1, M5
 
 ### Packing slip `#doc-packing` (document)
 
@@ -411,7 +432,7 @@ Ref: Hand-off 4.2, 4.6, 8 · D8
 
 ### Loaded quantities back `#dlg-loaded` (dialog, order story step 9)
 
-After loading, the subcontractor phones or emails what actually went on the truck, and the office types it in here. Differences from the order show at once, the filler count is filled in, and "Update order" makes the invoice from the real quantities. Inventory books the shipped board feet with 5% waste.
+After loading, the subcontractor phones or emails what actually went on the truck, and he types it in here (or the Assistant reads the email for him to check). Differences from the order show at once, the filler count is filled in, and he sends the invoice request to the office with the real quantities; the office invoices (D36). When inventory (phase two) is on, the shipped board feet are booked with 5% waste.
 
 To check with BB Pallets:
 - Do quantities come back per bundle or per piece?
@@ -421,11 +442,11 @@ Assistant here:
 - Read the subcontractor's email and fill in the quantities for you to check
 - Flag a difference bigger than one bundle
 
-Ref: Hand-off 4.5, 4.6 · D25
+Ref: Hand-off 4.5, 4.6 · D25, D36, D39, D44 · Review section 5
 
 ### Subcontractors `#production-subs` (screen)
 
-Each subcontractor with what they do (cut, groove, pallets), their yard, contacts and rate card, their open jobs, and what BB Pallets owes them for wood processed. Their pay is per MBF of wood coming in plus extras. Their own wood is not tracked in Timberline.
+Each subcontractor with what they do (cut, groove, pallets), their yard, contacts and rate card, and their open jobs. From the rate card it shows the expected charge for wood processed, an estimate for checking their bill, not a payable: the office pays them (D36). Their own wood is not tracked in Timberline.
 
 To check with BB Pallets:
 - How is each subcontractor paid: per MBF in, per piece, per load, plus which extras?
@@ -433,73 +454,76 @@ To check with BB Pallets:
 - Should a subcontractor ever log in, or is email enough?
 
 Assistant here:
-- "How much do we owe Kessler for November?"
+- "What should Kessler's November bill come to?"
 - Compare cost per MBF between subcontractors
 
-Ref: Hand-off 4.6, 6 · D7, D24, D25
+Ref: Hand-off 4.6, 6 · D7, D24, D25, D36 · Review S12
 
 ## Purchasing
 
 ### Offers & batch calculator `#purchasing-offers` (screen)
 
-"You don't make money when you sell, you make money when you buy." This screen works out what to offer for an odd batch: delivered cost, converted to a common count, plus extra cutting, against today's first-quality price, with the yield into the sizes customers actually buy and the leftovers it leaves.
+"You don't make money when you sell, you make money when you buy." He negotiates with suppliers himself; the office approves every purchase (D36). This screen works out what to offer for an odd batch: delivered cost, converted to a common count, plus extra cutting, against today's first-quality price, with the yield into the sizes customers buy. Leftovers can be given a value (zero by default, as in their example) and gains are counted on usable board feet. Turned-down offers are kept. Once a price is agreed, the next step is asking the office to approve.
 
 To check with BB Pallets:
 - Is the 10-foot count the standard, and when would you compare on another length?
 - How do you estimate the extra cutting cost for a batch like this?
-- Which customer sizes should the yield table use by default?
-- Do you want a record of offers that were turned down?
+- Are leftovers like the 2' off a 12 worth anything to you, or zero?
+- Can you agree a price before the office approves, or only "subject to approval"?
 
 Assistant here:
 - "What can I offer for this batch?" from a supplier's email
 - Show the yield of 12s into this week's orders
 - Draft the counter-offer email (you click Send)
 
-Ref: Hand-off 3, 4.4; D20, D21
+Ref: Hand-off 3, 4.4; D20, D21, D36, D39 · Review S6
 
 ### Purchase orders `#purchasing-pos` (screen)
 
-A log of every load bought: supplier, length, grade, price and freight. Received loads feed the average cost that inventory is valued at, so the price builder can use what lumber really cost.
+Every load he buys, from agreed price to received tally. Every purchase is approved by the BB Pallets office (D36), so each one carries its approval request and, once approved, the office's PO number; the PO to the supplier is the office's document. Someone at the yard confirms the tally, which can differ from the order, and the received board feet set the average cost the price builder can use.
 
 To check with BB Pallets:
-- Do you send suppliers a written PO today, or just agree on the phone?
+- Who at the yard checks a load in and sends you the tally?
 - Is freight usually included in the supplier's price, or billed separately?
+- Do any suppliers bill in USD?
 - Do loads go straight to a subcontractor's yard, or always to your yard first?
 
 Assistant here:
-- Log a load from the supplier's invoice or email
+- Fill in a received load from a photo of the tally
 - Answer "what did we pay for 10s last month?"
-- Remind you of loads not received yet
+- Remind you of approved loads not received yet
 
-Ref: Hand-off 4.4, 4.5; D17, D22
+Ref: Hand-off 4.4, 4.5; D17, D22, D36, D39 · Review S5, S13
 
-### Purchase order to a supplier `#doc-supplierpo` (document)
+### Purchase approval request `#doc-supplierpo` (document)
 
-The purchase order (or written offer) sent to a supplier. Same file for print, PDF and email, and it's logged on the supplier.
+His request to the BB Pallets office to approve a purchase he has agreed with a supplier: what, how much, at what price, where it goes, and why it is a good buy. The office answers and issues its own PO to the supplier; he records the office PO number here when it comes back. Sent from his mailbox with the reference [TL-R-1042] so the reply matches.
 
 To check with BB Pallets:
-- What do suppliers need on a PO: grade, lengths, tally, delivery window?
-- Do you send offers (like the $225) in writing, or only firm orders?
+- What does the office need to approve a purchase: price, quantity, why, cash timing?
+- Who at the office approves, and up to what amount?
+- Does the office send the PO to the supplier, or tell you to go ahead?
 
 Assistant here:
-- Draft the PO from the agreed offer
-- Email it to the supplier from your mailbox (you click Send)
+- Fill it from the agreed offer and the batch calculator
+- Read the office's answer and record the approval and PO number
 
-Ref: Hand-off 8; D8
+Ref: D36, D37, D39 · Review section 5
 
-### Log a purchased load `#dlg-purchase` (dialog)
+### Record a received load `#dlg-purchase` (dialog)
 
-Record a load the moment it's bought or arrives: supplier, lengths, grade, board feet, price and freight. The preview shows how it moves the average cost before you save.
+When an approved load arrives, whoever is at the yard confirms the tally (he works remotely, so a photo or a phone call is enough). The tally can differ from the order; cost uses the board feet received. The preview shows how it moves the average cost of that size before saving.
 
 To check with BB Pallets:
 - Do you know the exact board-foot tally when a load arrives, or only later?
-- Should a load be split across two yards on one PO?
+- If the tally is short, who tells the supplier and the office?
+- Is average cost kept per size, or per size and yard?
 
 Assistant here:
-- Fill this in from a photo of the supplier's tally sheet
-- Warn when the price is far from the plan in the price lists
+- Fill this in from a photo of the tally sheet
+- Flag a tally that differs from the order by more than 1%
 
-Ref: Hand-off 4.4, 4.5
+Ref: Hand-off 4.4, 4.5; D36 · Review S5, S13
 
 ### Suppliers `#purchasing-suppliers` (screen)
 
@@ -520,7 +544,7 @@ Ref: Hand-off 6
 
 ### On hand `#inventory-onhand` (screen)
 
-What BB Pallets owns, in board feet, at their own yard and each subcontractor's yard, valued at the running average cost of loads bought, not list price. Committed shows what open orders will use, with the 5% waste added.
+The wood he looks after, in board feet, at BB Pallets' yard and each subcontractor's yard, valued at the running average cost of loads bought, not list price. On hand is worked out from movements (receipts, shipments with 5% on top, transfers, adjustments), never typed in. Committed shows what open orders will use. Phase two: built after the core, and whether it is BB Pallets' official stock is still open.
 
 To check with BB Pallets:
 - Do you also want cut stock (finished bundles waiting) tracked here, or only raw lumber?
@@ -531,11 +555,11 @@ Assistant here:
 - "How much 2x3 × 10' do we have at Kessler?"
 - Warn when an order can't be covered by what's available
 
-Ref: Hand-off 4.5; D21, D22, D23, D24
+Ref: Hand-off 4.5; D21, D22, D23, D24, D44 · Review M6
 
 ### Counts & recounts `#inventory-counts` (screen)
 
-Replaces the 4–10 days (sometimes a whole Sunday) of balancing by hand. The count is compared with the book, adjusted automatically for everything shipped since the count date; small differences are let go, a big one (about a bundle) goes on a recount sheet.
+Replaces the 4–10 days (sometimes a whole Sunday) of balancing by hand. Whoever is at the yard counts, on a phone or on paper, and their name is kept. The count is compared with the book, adjusted automatically for everything shipped since the count date; small differences are let go, a big one (about a bundle) goes on a recount sheet. Phase two.
 
 To check with BB Pallets:
 - What difference is "small enough to let go": a percentage, or a number of board feet?
@@ -548,7 +572,7 @@ Assistant here:
 - Explain why 3x3 × 12' is 2,050 ft over
 - Propose the adjustment after the recount (you approve)
 
-Ref: Hand-off 4.5; D8, D23, D24, D29
+Ref: Hand-off 4.5; D8, D23, D24, D29, D44 · Review M6
 
 ### Count sheet (blank) `#doc-count` (document)
 
@@ -591,7 +615,7 @@ Assistant here:
 - "Why did 2x3 average cost drop in September?"
 - Propose adjustments from a finished count (you approve)
 
-Ref: Hand-off 4.5; D24
+Ref: Hand-off 4.5; D24, D44
 
 ### Adjust to count `#dlg-adjust` (dialog)
 
@@ -607,7 +631,7 @@ Ref: Hand-off 4.5
 
 ### Waste `#inventory-waste` (screen)
 
-Shows the 5% booked at shipping against the real waste found at each count, by size and stock length. Real waste depends on the sizes cut and the wood quality, which is why counts come out higher than the books.
+Shows the waste booked at shipping (5% on top of the shipped feet: 40,000 shipped takes 42,000 out of stock) against the real waste found at each count, by size and stock length. Real waste depends on the sizes cut and the wood quality, which is why counts come out higher than the books. Phase two.
 
 To check with BB Pallets:
 - Is 5% the right flat figure for every size?
@@ -618,13 +642,13 @@ Assistant here:
 - "Which sizes waste more than 5%?"
 - Suggest a better waste % per size from the last counts
 
-Ref: Hand-off 4.5
+Ref: Hand-off 4.5; D44 · Review arithmetic
 
 ## Pricing
 
 ### Price builder `#pricing-builder` (screen)
 
-Does BB Pallets' own cost table for one customer or plant: lumber plus labor plus waste plus freight per MBF gives delivered cost, then margin and other costs give the selling price, then per piece from each item's board feet. The worked example is theirs: $719 delivered, $787 selling, $1.53 a piece.
+Does BB Pallets' own cost table for one customer or plant, stored as lines: each line has a kind (cost, margin or rounding) and a basis (per MBF, per load, or % of the lines above). Per-load lines are divided by the planned board feet per load, so it is clear what depends on a full truck, and their rounding ("call it $3,000") shows as its own line. Saving makes a new version with an effective date. The worked example is theirs: $719 delivered, $787 selling, $1.53 a piece.
 
 To check with BB Pallets:
 - Is the price always rounded up to the next cent?
@@ -637,15 +661,16 @@ Assistant here:
 - Explain how $1.53 was worked out
 - "What if lumber is $525?" for this plant
 
-Ref: Hand-off 4.3; D17, D18, D19
+Ref: Hand-off 4.3; D17, D18, D19, D42, D43 · Review M7
 
 ### Price lists `#pricing-lists` (screen)
 
-Every customer and plant has its own prices, set in advance, so an order arrives already priced. Each list remembers the lumber cost, cost basis and quote unit it was built on, and is flagged stale when that cost is far from today's.
+Every customer and plant has its own prices, set in advance, so an order arrives already priced. Each list remembers the lumber cost, cost basis and quote unit it was built on, and is flagged stale when that cost is far from today's. Lists are versioned with effective dates, so orders keep the price they were taken at. US lists carry their currency and (proposed) lines for exchange, brokerage and duty.
 
 To check with BB Pallets:
 - How far from today's cost should a list be before it's "stale"? $25? $50?
-- Do customers get a printed or emailed price list, or only quotes?
+- Does a new price apply from the order date or the ship date?
+- For US customers, who pays duty and the broker's fee?
 - Do US plants have prices set in USD, or converted from CAD?
 
 Assistant here:
@@ -653,7 +678,7 @@ Assistant here:
 - Re-price stale lists and show the changes (you approve)
 - Email a price list to the buyer
 
-Ref: Hand-off 4.3, 8; D17, D19
+Ref: Hand-off 4.3, 7, 8; D17, D19, D42 · Review S8, S14
 
 ### What-if `#pricing-whatif` (screen)
 
@@ -673,34 +698,35 @@ Ref: Hand-off 4.3, 9
 
 ### Accounts & plants `#customers-accounts` (screen)
 
-Customers and their plants. Each plant carries its own price list, currency, volume, pickup or delivered, freight, major sizes, filler items and other costs per load, because "almost no standard": the same item has different prices at plants 8 miles apart. Follow-ups catch a plant that is late on its usual order (proposed).
+Customers and their plants. Each plant carries its own price list, currency, volume, pickup or delivered, freight, major sizes, filler items, other costs per load, and the receiving details a carrier needs, because "almost no standard": the same item has different prices at plants 8 miles apart. A new customer or plant is set up by the BB Pallets office: here it is a request to the office (D36, D39), shown as "being set up" until they answer. Follow-ups catch a plant that is late on its usual order (proposed).
 
 To check with BB Pallets:
 - Is the plant the right level for prices, or sometimes the customer?
 - What counts as "late" for a plant: a set number of weeks?
-- Do some plants share one buyer and one invoice?
+- What does the office need from you to set up a new customer?
 
 Assistant here:
 - How is Concord doing vs last year?
 - Which plants are late on their usual order?
-- Draft a check-in email to a late plant
+- Fill a new-customer request to the office from the buyer's email
 
-Ref: Hand-off 3, 6, D18, D26
+Ref: Hand-off 3, 6 · D18, D26, D36, D39 · Review S15
 
 ### Edit a plant `#dlg-plant` (dialog)
 
-Everything that makes a plant different in one place: where it ships, who buys, which price list and currency, pickup or delivered, freight, the major sizes used for top-ups, filler items, other costs per load (D18), how often it orders, and the customs broker for US plants (D26).
+Everything that makes a plant different in one place: where it ships, who buys, price list and currency, pickup or delivered, freight, major sizes for top-ups, filler items and how far the filler may go over the PO, other costs per load (D18), how often it orders, and what a carrier needs: receiving hours, appointment, how it unloads (forklift from the side or a dock), which trailers it takes, shutdown weeks. For US plants: delivery terms, who is the importer of record, and the customs broker (D26). The unloading side sets the planner's "Unloads from" (D34).
 
 To check with BB Pallets:
-- Are other costs one number per load, or several lines (e.g. waiting time, special packaging)?
-- Is freight set per plant, or per destination area?
-- For US plants, does each plant have its own broker?
+- Do customers tell you their receiving hours and which trucks they can unload?
+- For US plants: who is the importer of record, and who pays duty and the broker?
+- How far over the PO will each plant accept on the filler line?
 
 Assistant here:
 - Fill the plant from an email signature or a PO
 - Suggest major sizes from past orders
+- Set "Unloads from" on the planner from this plant
 
-Ref: Hand-off 6, D18, D26
+Ref: Hand-off 6 · D18, D26, D34 · Review S4, S8, S15
 
 ### Contacts `#customers-contacts` (screen)
 
@@ -716,35 +742,35 @@ Assistant here:
 
 Ref: Hand-off 6, 8 (Email)
 
-### Statements & payments `#customers-statements` (screen)
+### Invoices & payments `#customers-statements` (screen, order story step 12)
 
-Who owes what (proposed): open invoices, aging, payments and credits, payment plans, and statements or overdue reminders emailed from the system. Terms and credit limits are still to be confirmed with BB Pallets.
-
-To check with BB Pallets:
-- What payment terms do customers have, and any credit limits?
-- Who chases late payers today?
-- Do payments get entered here, or come from the accounting program?
-
-Assistant here:
-- Who owes us over 60 days?
-- Draft an overdue reminder with the statement attached
-- Set up a payment plan
-
-Ref: Hand-off 6 (AR, proposed), 8, F27
-
-### Statement (document) `#doc-statement` (document)
-
-A customer statement with aging, to send to their accounts payable as a reminder. Same file to print, download or email. (proposed)
+The last step of the order story: is it paid? The BB Pallets office invoices and keeps the books (D36), so this is only his tracker: the office's invoice number, the amount, the due date, and paid yes or no. When an invoice is past due he can send the buyer a friendly nudge from his own mailbox. No aging engine, no payment plans, no accounting.
 
 To check with BB Pallets:
-- Who chases late payers today (F27)?
-- Do they send statements monthly, or only when overdue?
+- Do you need to see payments, or only whether an invoice is paid?
+- How do you hear that a customer paid: from the office, or not at all today?
+- Do you chase late payers yourself, or does the office?
 
 Assistant here:
-- Draft a polite overdue reminder
-- List every customer more than 45 days overdue
+- Which of my invoices are past due?
+- Draft a friendly nudge to the buyer
+- Mark paid when the office's email says so
 
-Ref: Hand-off 6 (accounts receivable), 8
+Ref: D36, D39 · Review S9, section 5 · Hand-off 6
+
+### Open invoices nudge `#doc-statement` (document)
+
+The office invoices and keeps the books (D36), so this is not an accounting statement: no aging engine, no payment plans. It is a simple list of a customer's open invoices (the office's invoice number, amount, due date, paid yes or no) that he can send as a polite nudge when something is late. Paid is a status he records, not bookkeeping.
+
+To check with BB Pallets:
+- Who chases late payers today: him or the office (F27)?
+- Does the office tell him when an invoice is paid?
+
+Assistant here:
+- Draft a polite nudge for what is past due
+- List every customer with an invoice past due
+
+Ref: Hand-off 6, 8 · D36 · Review section 5, "What can wait"
 
 ## Catalog
 
@@ -828,76 +854,78 @@ Ref: Hand-off 4.4, D20, D23
 
 ### Operations reports `#reports-operations` (screen)
 
-The daily and weekly picture: every open order and where it stands, the load schedule with split loads coming due, inventory on hand against what is committed, and purchases against the market. (proposed)
+A weekly look back for him: open orders and where each stands, the load schedule with split loads coming due, stock on hand against what is committed, and lumber paid against the market. Most of what he needs each morning is on Today instead; this page is for the week as a whole. (proposed)
 
 To check with BB Pallets:
-- Which of these do they look at every day?
-- Who should get them by email, and when?
+- Which of these does he look at every week, beyond Today?
+- Does the office want a copy of any of it?
 
 Assistant here:
 - "What ships this week?"
-- Email this report to the office every Monday
+- "Which proposals have had no PO for more than a week?"
 
-Ref: Hand-off 9
+Ref: Hand-off 9 · D46 · Review "What can wait"
 
 ### Money reports `#reports-money` (screen)
 
-The month in money: margin per load and per plant against the planned $2,000 to $3,000, buying gains (every $25 under plan is $1,100 a load), waste booked against actual, freight by carrier and how often the backup was used, and sales by plant against last year.
+His own margin view, load by load and plant by plant, compared line by line with the price build-up each price was made from (D42): lumber planned vs what it really cost, freight planned vs the carrier's confirmed price (D35), board feet loaded vs the planned board feet per load (D43), and the rounding line. Then buying gains on usable board feet, and sales by plant against last year. Commission is shown only if he wants it. These are his figures for judging customers, not the company's books (D36).
 
 To check with BB Pallets:
-- Is margin per load the number they judge a customer by?
+- Is margin per load the number he judges a customer by?
+- Does he want his commission tracked here (section 12)?
 - Should "other costs" per load be split into named lines?
-- Who may see this page (D28: off by default)?
 
 Assistant here:
 - "How's Concord doing vs last year?"
+- "Why did L-2420 make less than planned?" (explains it line by line)
 - "What did the last Toronto load make?"
-- Explain why a load made less than planned
 
-Ref: Hand-off 4.3, 4.4, 9, D18
+Ref: Hand-off 4.3, 4.4, 9 · D35, D36, D42, D43 · Review M7, S6
 
 ### Scheduled reports `#reports-scheduled` (screen)
 
-Any report can be emailed on a schedule, as PDF and Excel, from their own mailbox. (proposed)
+Any report can be emailed on a schedule, as PDF and Excel, from his own mailbox. This can wait for version 2: for one salesperson most of it is the Today list. When it comes, sends go through a queue, and a failed send (for example a mailbox that needs reconnecting) shows on Today instead of being lost. (proposed)
 
 To check with BB Pallets:
-- Which reports should arrive automatically, and to whom (owner, accountant)?
+- Which reports, if any, should arrive automatically, and to whom (him, the office)?
 
 Assistant here:
-- Set up a schedule from a sentence: "send me margins every month-end"
+- Set up a schedule from a sentence: "send me margins every month-end" (version 2)
 
-Ref: Hand-off 8, 9
+Ref: Hand-off 8, 9 · Review S10, "What can wait"
 
 ## Settings
 
 ### Users & access `#settings-users` (screen)
 
-For now one salesperson from BB Pallets uses it, but it is built for more. Each person gets view, read or write per department. Costs and margins are hidden unless an admin turns them on for that person.
+One person uses Timberline today: the BB Pallets salesperson (D36). It is still built for more from day one, so the office can join later (D37): the roles salesperson, office and admin exist now, and every record keeps who did what, including "recorded by him on behalf of the office". Each person gets view, read or write per department. Costs and margins are hidden unless the admin turns them on for that person (D28).
 
 To check with BB Pallets:
-- Who is the admin?
-- Should the buyer see margins, or only costs?
+- Who is the admin: the account owner (to confirm)?
+- When the office joins, who in the office should see costs and margins?
 - Will subcontractors ever log in, or only get emails?
 
 Assistant here:
 - Explain what a person can and cannot see
 - Turn the Assistant on or off for a person
 
-Ref: D27, D28, Hand-off 14 (testing mode)
+Ref: D27, D28, D36, D37 · Review section 5, section 6 (Organization, User, Role)
 
-### Email `#settings-email` (screen)
+### Email & calendar `#settings-email` (screen)
 
-Email goes out from their own mailbox, so replies come back to them and thread properly. Hotmail (Outlook.com) and Gmail are both confirmed. Each document type has its own template and signature.
+Timberline sends from his own mailbox and reads his inbox (D38), so every reply lands on the right order, request or booking and Today can say what it means (D46). Outlook.com (Hotmail) is connected first, together with its calendar; Gmail comes later because reading Gmail needs Google's review. Every sent and matched message is stored in Timberline, which is also what lets the office take over later (D37). Personal mailboxes have daily sending limits and sign-ins expire, so failures show on Today as "reconnect your mailbox" instead of being lost.
 
 To check with BB Pallets:
-- Which address sends what (sales vs office)?
-- Should every sent email be copied to someone?
+- Is his business email a personal Hotmail/Gmail address or a BB Pallets address?
+- Which office address handles each kind of request?
+- Does BB Pallets want a shared company address later?
 
 Assistant here:
 - Write a template for a document type
-- Show emails sent to a customer this month
+- Show emails exchanged with a customer this month
+- Tell you when the mailbox needs reconnecting
 
-Ref: Hand-off 8, D30
+Ref: Hand-off 8 · D30, D37, D38, D46 · Review M3, S10
 
 ### Trailer types `#settings-trailers` (screen)
 
@@ -915,31 +943,30 @@ Ref: D13, D14, D31
 
 ### Carriers `#settings-carriers` (screen)
 
-Carriers in order of preference, cheapest first, then the backup, with their rate per destination. Freight per load feeds the price builder ($2,300 planned between the $2,000 carrier and the $2,500–2,600 backup).
+Carriers in order of preference, cheapest first, then the backup, with their usual rate per destination. He uses these to fill the transport PO request to the office (D35, D36); the carrier's confirmed price is what goes into each load's margin. Freight per load also feeds the price builder ($2,300 planned, between the $2,000 carrier and the $2,500–2,600 backup).
 
 To check with BB Pallets:
 - Is freight per destination, and who pays it (open question C15)?
-- How do they book a carrier today: phone, email, portal?
+- Does he pick the carrier and price, or does the office?
 
 Assistant here:
-- Pick the carrier for a load and draft the booking email
+- Draft the transport PO request to the office with the usual carrier and rate
 - Show how often the backup was used and what it cost
 
-Ref: Hand-off 4.3, 6
+Ref: Hand-off 4.3, 6 · D35, D36
 
-### Taxes & currency `#settings-taxes` (screen)
+### Currency `#settings-taxes` (screen)
 
-Prices and invoices in the customer's currency, costs in CAD, with an exchange rate per day or per document. Sales tax by province on Canadian sales, none on exports to the US. (proposed, ask BB Pallets)
+Prices in the customer's currency (CAD or USD), costs in CAD, and the exchange rate used to compare them. Sales tax is not worked out here: the office invoices (D36), so an invoice request carries amounts before tax and the office's total is recorded when the invoice comes back. A tax table comes in only when the office switches over (D37).
 
 To check with BB Pallets:
 - Which customers are billed in USD (F28)?
-- Any Quebec customers needing QST and French documents (F29)?
-- Where should the exchange rate come from?
+- Where should the exchange rate come from: the bank, or a rate he types in?
 
 Assistant here:
-- Explain which tax applies to a plant and why
+- Show a USD price in CAD at today's rate
 
-Ref: Hand-off 7, D9
+Ref: Hand-off 7 · D9, D36, D37 · Review S9
 
 ### Imports `#settings-imports` (screen)
 

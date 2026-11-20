@@ -15,7 +15,7 @@
     ['L-2402', 'Nov 2', 'Garden State · Newark', '20,950', '38,700', '1.85'],
     ['L-2405', 'Nov 6', 'Ardent · Caldari Road', '22,100', '43,600', '1.97'],
     ['L-2409', 'Nov 11', 'Lakeshore · Toronto (pickup)', '18,300', '33,500', '1.83'],
-    ['L-2411', 'Nov 13', 'Ardent · Jane Street', '9,800', '18,900', '1.93'],
+    ['L-2404', 'Nov 4', 'Ardent · Jane Street', '9,800', '18,900', '1.93'],
     ['L-2414', 'Nov 17', 'Ardent · Caldari Road', '21,900', '41,000', '1.87'],
   ];
   const page = () =>

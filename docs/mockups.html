@@ -1336,11 +1336,11 @@ window.addEventListener('DOMContentLoaded', route);
       H.stages(D.stages, 3) +
       `<div class="split">` +
       H.panel('', H.filters(['*Open', 'Emailed', 'Cutting', 'Loaded, no quantities', 'Done']) + H.table(['Job', 'Order · plant', 'Subcontractor', 'Ready', 'Ship', 'Status', ''], [
-        [`<b class="nowrap">${st.job}</b>`, `${st.order} · Caldari Rd + Jane St`, 'Kessler Wood Works', '<span class=\"muted\">asked</span>', '<span class=\"nowrap\">Nov 24</span>', H.chip('Rev 1 · ready to email', 'now'), H.go('Job sheet', 'doc-jobsheet', 'sm')],
-        ['<span class=\"nowrap\">J-1181</span>', '24-0316 · Caldari Road', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 23</span>', '<span class=\"nowrap\">Nov 24</span>', H.chip('Cutting · acknowledged', 'info'), H.btn('Open', 'sm')],
-        ['<span class=\"nowrap\">J-1179</span>', '24-0311 · Caldari Road', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 16</span>', '<span class=\"nowrap\">Nov 17</span>', H.chip('Loaded, no quantities', 'warn'), H.go('Enter quantities', 'dlg-loaded', 'sm')],
-        ['<span class=\"nowrap\">J-1180</span>', '24-0314 · Newark NJ', 'Pinegrove Pallet', '<span class=\"nowrap\" style=\"color:var(--bad)\">Nov 27</span>', '<span class=\"nowrap\">Nov 26</span>', H.chip('Ready after the truck', 'bad'), H.btn('Open', 'sm')],
-        ['<span class=\"nowrap\">J-1175</span>', '24-0305 · Toronto (pickup)', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 11</span>', '<span class=\"nowrap\">Nov 12</span>', H.chip('Done', 'ok'), H.btn('Open', 'sm')],
+        [`<b class="nowrap">${st.job}</b>`, `${st.order} · Caldari Rd + Jane St`, 'Kessler', '<span class=\"muted\">asked</span>', '<span class=\"nowrap\">Nov 24</span>', H.chip('Rev 1 · ready to email', 'now'), H.go('Job sheet', 'doc-jobsheet', 'sm')],
+        ['<span class=\"nowrap\">J-1181</span>', '24-0316 · Caldari Road', 'Kessler', '<span class=\"nowrap\">Nov 23</span>', '<span class=\"nowrap\">Nov 24</span>', H.chip('Cutting · acknowledged', 'info'), H.btn('Open', 'sm')],
+        ['<span class=\"nowrap\">J-1179</span>', '24-0311 · Caldari Road', 'Kessler', '<span class=\"nowrap\">Nov 16</span>', '<span class=\"nowrap\">Nov 17</span>', H.chip('Loaded, no quantities', 'warn'), H.go('Quantities', 'dlg-loaded', 'sm')],
+        ['<span class=\"nowrap\">J-1180</span>', '24-0314 · Newark NJ', 'Pinegrove', '<span class=\"nowrap\" style=\"color:var(--bad)\">Nov 27</span>', '<span class=\"nowrap\">Nov 26</span>', H.chip('Ready after the truck', 'bad'), H.btn('Open', 'sm')],
+        ['<span class=\"nowrap\">J-1175</span>', '24-0305 · Toronto (pickup)', 'Kessler', '<span class=\"nowrap\">Nov 11</span>', '<span class=\"nowrap\">Nov 12</span>', H.chip('Done', 'ok'), H.btn('Open', 'sm')],
       ], { sel: 0 }), '', true) +
       H.panel(`${st.job} · ${st.order} · Rev 1`, H.form([H.field('Subcontractor', 'Kessler Wood Works ▾'), H.field('Ship date', 'Tue Nov 24, 2026'), H.field('Ready date (from Kessler)', 'Asked · not given yet'), H.field('Acknowledged', 'Not yet'), H.field('Load', `${st.load} · 53' dry van`, '', true), H.field('Packing slip', 'Filler line blank', '', true)]) +
         `<div style="margin-top:14px">${H.table(['Item', { t: 'Bundles', num: true }, 'From stock'], [['3x3 × 31"', 36, '3x3 × 10\' (3 pcs)'], ['2x3 × 39" grooved', 18, '2x3 × 10\' (3 pcs) · groove'], ['3x3 × 37½"', 12, '3x3 × 12\' (3 pcs)'], ['2x4 × 40" filler', 'Fill', '2x4 × 10\' (3 pcs)']])}</div>` +
@@ -1448,14 +1448,14 @@ window.addEventListener('DOMContentLoaded', route);
   const late = d => `<span class="nowrap" style="color:var(--bad)">${d}</span>`;
   // load, request, deliver to, carrier, ready date (sub), truck date, asked price, confirmed price, office PO, state, action
   const rows = [
-    ['L-2417', ref('R-1038'), 'Ardent · Caldari Rd + Jane St', 'Trans-Ontario Freight', 'Mon Nov 23', 'Tue Nov 24', '$2,300', '$2,300', 'TPO 5531', status.conf, H.go('Open', 'doc-carrierpo', 'sm')],
-    ['L-2419', ref('R-1037'), 'Garden State · Newark NJ', 'Liberty Line (US)', late('Fri Nov 27'), 'Thu Nov 26', 'US$3,400', '—', 'TPO 5540', status.sent, H.go('Record reply', 'dlg-carrierconfirm', 'sm')],
-    ['L-2420', ref('R-1039'), 'Ardent · Caldari Road', 'Trans-Ontario Freight', 'Thu Nov 26', 'Fri Nov 27', '$2,300', '$2,450', 'TPO 5542', status.changed, H.btn('Decide', 'sm')],
-    ['L-2421', ref('R-1041'), 'Ardent · Jane Street', 'Trans-Ontario Freight', '<span class="muted">asked</span>', 'Tue Dec 1', '$2,100', '', '—', status.req, H.btn('Remind office', 'sm')],
-    ['L-2422', '—', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 'Wed Dec 2', 'Thu Dec 3', '$2,300', '', '—', status.draft, H.go('Ask the office', 'doc-carrierpo', 'sm primary')],
-    ['L-2415', ref('R-1034'), 'Ardent · Caldari Road', 'Bluewater (backup)', 'Wed Nov 18', 'Thu Nov 19', '$2,300', '$2,550', 'TPO 5536', status.rebooked, H.btn('Open', 'sm')],
-    ['L-2413', ref('R-1033'), 'Garden State · Newark NJ', 'Trans-Ontario Freight', 'Mon Nov 16', 'Tue Nov 17', '$3,100', '—', 'TPO 5533', status.noshow, H.btn('Rebook', 'sm')],
-    ['L-2414', '—', 'Lakeshore · Toronto', 'Customer picks up', 'Fri Nov 20', 'Mon Nov 23', '—', '—', '—', status.pickup, ''],
+    ['<b class="nowrap">L-2417</b>', ref('R-1038'), 'Ardent · Caldari Rd + Jane St', 'Trans-Ontario Freight', 'Mon Nov 23', 'Tue Nov 24', '$2,300', '$2,300', 'TPO 5531', status.conf, H.go('Open', 'doc-carrierpo', 'sm')],
+    ['<b class="nowrap">L-2419</b>', ref('R-1037'), 'Garden State · Newark NJ', 'Liberty Line (US)', late('Fri Nov 27'), 'Thu Nov 26', 'US$3,400', '—', 'TPO 5540', status.sent, H.go('Record reply', 'dlg-carrierconfirm', 'sm')],
+    ['<b class="nowrap">L-2420</b>', ref('R-1039'), 'Ardent · Caldari Road', 'Trans-Ontario Freight', 'Thu Nov 26', 'Fri Nov 27', '$2,300', '$2,450', 'TPO 5542', status.changed, H.btn('Decide', 'sm')],
+    ['<b class="nowrap">L-2421</b>', ref('R-1041'), 'Ardent · Jane Street', 'Trans-Ontario Freight', '<span class="muted">asked</span>', 'Tue Dec 1', '$2,100', '', '—', status.req, H.btn('Remind office', 'sm')],
+    ['<b class="nowrap">L-2422</b>', '—', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 'Wed Dec 2', 'Thu Dec 3', '$2,300', '', '—', status.draft, H.go('Ask the office', 'doc-carrierpo', 'sm primary')],
+    ['<b class="nowrap">L-2415</b>', ref('R-1034'), 'Ardent · Caldari Road', 'Bluewater (backup)', 'Wed Nov 18', 'Thu Nov 19', '$2,300', '$2,550', 'TPO 5536', status.rebooked, H.btn('Open', 'sm')],
+    ['<b class="nowrap">L-2413</b>', ref('R-1033'), 'Garden State · Newark NJ', 'Trans-Ontario Freight', 'Mon Nov 16', 'Tue Nov 17', '$3,100', '—', 'TPO 5533', status.noshow, H.btn('Rebook', 'sm')],
+    ['<b class="nowrap">L-2414</b>', '—', 'Lakeshore · Toronto', 'Customer picks up', 'Fri Nov 20', 'Mon Nov 23', '—', '—', '—', status.pickup, ''],
   ];
   const page = () =>
     H.head('Loads', 'Carrier bookings', 'Each booking is a request to the BB Pallets office (Office › Requests). The office sends the transport PO; the carrier\'s confirmation books the date and accepts the price.',
@@ -1766,7 +1766,7 @@ window.addEventListener('DOMContentLoaded', route);
     H.panel('Movements · 3x3 × 12\', Kessler yard', H.table(['Date', 'Movement', 'Ref', { t: 'Bd ft', num: true }, { t: 'On hand after', num: true }], [
       ['Nov 3', 'Receipt (tally from Kessler)', 'P-0415', '+44,400', '50,800'],
       ['Nov 11', 'Issue: 3,048 shipped + 5% on top', 'L-2409', '−3,200', '47,600'],
-      ['Nov 13', 'Issue: 3,048 shipped + 5% on top', 'L-2411', '−3,200', '44,400'],
+      ['Nov 13', 'Issue: 3,048 shipped + 5% on top', 'L-2406', '−3,200', '44,400'],
       ['Nov 15', 'Issue: shipped since count', 'L-2412', '−3,200', '41,200'],
       ['Nov 18', 'Adjustment: recount confirmed', 'ADJ-118', '+2,050', '43,250'],
     ]) + `<div class="toolbar small muted" style="padding-top:10px">Receipts, issues (with 5% on top of shipped feet), transfers between yards and adjustments with a reason. On hand and average cost are worked out from these.</div>`, '', true);
@@ -1833,7 +1833,7 @@ window.addEventListener('DOMContentLoaded', route);
       `<table><thead><tr><th>Size & length</th><th>Yard</th><th class="num">Book now</th><th class="num">First count</th><th class="num">Difference</th><th class="num">Recount (bd ft)</th></tr></thead><tbody>
       <tr><td>3x3 × 12'</td><td>Kessler yard</td><td class="num">41,200</td><td class="num">43,250</td><td class="num">+2,050</td><td class="num"><span class="blank"></span></td></tr>
       <tr><td>2x4 × 10'</td><td>Pinegrove yard</td><td class="num">8,900</td><td class="num">7,100</td><td class="num">−1,800</td><td class="num"><span class="blank"></span></td></tr></tbody></table>
-      <div class="box2"><div class="k">Shipped since Nov 15, already taken off the book</div>3x3 × 12': L-2409 (3,200) and L-2411 (3,200) · 2x4 × 10': L-2410 (3,000). Includes 5% waste booked at shipping.</div>
+      <div class="box2"><div class="k">Shipped since Nov 15, already taken off the book</div>3x3 × 12': L-2409 (3,200) and L-2406 (3,200) · 2x4 × 10': L-2410 (3,000). Includes 5% waste booked at shipping.</div>
       <div class="fine">Possible causes to check: a bundle of the subcontractor's own wood counted by mistake; a shipment loaded but not yet booked.</div><div class="sig"><div>Recounted by</div><div>Approved</div></div>`),
   });
 
@@ -2004,7 +2004,7 @@ window.addEventListener('DOMContentLoaded', route);
   const underOrders = () => H.head('Orders › Orders', 'Order ' + ST.order, ST.customer + ' · ' + ST.plant, H.btn('Invoice', 'primary')) + H.stages(D.stages, 5) +
     H.panel('Loaded quantities', H.table(['Item', { t: 'Ordered', num: 1 }, { t: 'Loaded', num: 1 }], LINES.map(l => [l.i.name, n0(l.pcs), n0(l.filler ? l.loaded * l.i.perBundle : l.pcs)])), '', true);
   const underCatalog = () => H.head('Catalog', 'Items', '', H.btn('New item', 'primary', 'plus')) + H.panel('', H.table(['Code', 'Name', 'Type'], D.items.map(i => [i.code, i.name, i.type])), '', true);
-  const underStatements = () => H.head('Customers › Statements & payments', 'Statements', '', H.btn('Send all overdue', 'primary', 'mail')) + H.panel('', H.table(['Customer', { t: 'Balance', num: 1 }], [['Ardent Metals', money(48210.55)], ['Garden State Steel', 'US' + money(31420)]]), '', true);
+  const underStatements = () => H.head('Customers › Invoices & payments', 'Invoices & payments', '', H.btn('Send all overdue', 'primary', 'mail')) + H.panel('', H.table(['Customer', { t: 'Balance', num: 1 }], [['Ardent Metals', money(48210.55)], ['Garden State Steel', 'US' + money(31420)]]), '', true);
   const underBol = () => H.head('Loads › Bills of lading', 'L-2422 · Garden State Steel, Newark NJ', 'US load · customs broker on file', H.btn('BOL') + H.btn('Customs papers', 'primary'));
 
   // =====================================================================
@@ -2347,7 +2347,7 @@ window.addEventListener('DOMContentLoaded', route);
     ['L-2402', 'Nov 2', 'Garden State · Newark', '20,950', '38,700', '1.85'],
     ['L-2405', 'Nov 6', 'Ardent · Caldari Road', '22,100', '43,600', '1.97'],
     ['L-2409', 'Nov 11', 'Lakeshore · Toronto (pickup)', '18,300', '33,500', '1.83'],
-    ['L-2411', 'Nov 13', 'Ardent · Jane Street', '9,800', '18,900', '1.93'],
+    ['L-2404', 'Nov 4', 'Ardent · Jane Street', '9,800', '18,900', '1.93'],
     ['L-2414', 'Nov 17', 'Ardent · Caldari Road', '21,900', '41,000', '1.87'],
   ];
   const page = () =>
