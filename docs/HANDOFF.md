@@ -9,6 +9,13 @@ Put this file in the new repository as `docs/HANDOFF.md`.
 
 ---
 
+## Status (2026-11-20)
+
+- Open questions gone through with the account owner (section 12); what is left waits on BB Pallets.
+- First milestone drawn: static mockups of every window (`docs/mockups.html`, built from `docs/mockups/`), the UI direction (`docs/ui-direction.html`, colour set A chosen) and an interactive 3D flatbed (`docs/flatbed-3d.html`).
+- D36/D37 (who it's for; office can switch over later) came after most windows were drawn: section 1a lists the windows to change.
+- Next: BB Pallets reviews the mockups; an independent review of this plan (`docs/REVIEW-PACKET.md`); then the data model.
+
 ## 0. Instructions for Claude (read first)
 
 You are starting the Timberline repository. Before writing any code:
@@ -49,6 +56,48 @@ Assistant that understands them in English (and Yiddish).
 
 ---
 
+## 1a. Who it's for and how work flows (D36, D37)
+
+**The user:** one BB Pallets salesperson, often remote. Timberline is his workspace.
+Everything he does, asks for, or waits on, in one place, with email going out
+from his own mailbox (D30).
+
+**The five parties he deals with**
+
+| Party | What he does with them in Timberline |
+|---|---|
+| Customers (buyers, plants) | Needs sheets in, proposals out, POs in, order confirmations, delivery updates, invoice and payment follow-up |
+| BB Pallets office | **Requests**: transport POs (D35), purchase approval, invoices, new customer/supplier setup. **Records** their answers (PO numbers, approvals, invoice numbers, payments received) |
+| Suppliers | Offers, the batch calculator, negotiating; the purchase is final only once the office approves |
+| Carriers | Rates and availability; bookings go through the office's transport PO; confirmations recorded |
+| Subcontractors | Jobs, packing slips, loaded quantities back (by phone/email today, D25) |
+
+**Does / requests / records**
+
+| He does himself | He requests from the office | He only records |
+|---|---|---|
+| Proposals, load plans, prices, follow-ups | Transport PO to the carrier | Carrier confirmation (date + price) |
+| Offers and negotiation with suppliers | Approval of every purchase, then the supplier PO | Office approval and PO number |
+| Jobs to subcontractors (to confirm: directly or via the office) | Invoice to the customer | Invoice number; payment received (status only, no accounting) |
+| Inventory tracking of his loads (to confirm: is this BB Pallets' official stock?) | | |
+
+**Switching the office over later (D37):** each "request to the office" is a
+record with a status (asked → done by office → confirmed) and a setting for who
+acts on it. Today: email out, reply recorded by hand or read by the Assistant.
+Later: an office user acts on it in the app. No screen or data changes.
+
+**Proposed new screens (not yet drawn):**
+- **Today**: his day in one list: what to do, and what he is **waiting on** from each of the five parties (office, carriers, customers, suppliers, subs), with reminders. A task list, not a tile dashboard (D3).
+- **Office requests**: every request to the office and its state, in one place; becomes the office's work queue once they switch over (D37).
+
+**Windows drawn before D36 that need changing:**
+- Purchasing (purchase orders, log a purchase, supplier PO): add "approval requested → approved by office → office PO no."
+- Invoice and Statements & payments: the office invoices; he requests it and records the number; payments are a status, not bookkeeping.
+- Inventory (on hand, counts, adjustments, waste): his tracking view; whether it is BB Pallets' official stock is open.
+- Reports › Money: his margin view (and commission, if he wants it).
+- Settings: one user today but office roles ready; a new "Office" page with the per-step switch (D37); drop accounting-style tax setup unless needed.
+- Production jobs: confirm whether jobs go to subcontractors directly or through the office.
+
 ## 2. Decisions so far (from the account owner)
 
 | # | Decision |
@@ -87,6 +136,9 @@ Assistant that understands them in English (and Yiddish).
 | D32 | **Quantities can be less than a full bundle.** A load line is counted in pieces, not only bundles. Besides whole bundles, the planner can add **extra layers** (rows of pieces) on top of a bundle, e.g. a third more, which makes that bundle taller; it can also take single pieces. Board feet, weight and height count them; the loading list and packing slip show "18 bundles + 3 layers (42 pcs)". The limit on how much taller a bundle may get is to be confirmed (demo: up to half a bundle). |
 | D33 | **Bundles are packed tight; every inch counts.** No space between bundles in the plan, along or across the truck. A "gap between rows" setting exists but starts at 0. (The first 3D demo left 4" between rows, which cost about 2 feet of deck; fixed.) Risers (3½" 4x4 dunnage) under each bundle are real and count in the height. |
 | D34 | **Fork openings always face where the forklift unloads**: the sides on a flatbed, the back doors in a van. The openings are the gaps between the risers, so when a bundle is turned across the truck its risers must be turned too. That is decided when the subcontractor builds the bundle, so the **job sheet and loading list say, per bundle, which way the risers go**, from the confirmed load plan. Pallets have their own openings and need no risers. The planner has an "Unloads from: sides / back" setting per trailer type. |
+| D35 | **Booking the truck is a step of its own.** Once an order is entered, a **transport PO** goes to the carrier with a **price and a date**; it works as a booking note. The carrier's **confirmation means two things: the date is booked and the price is accepted.** A changed price or date is flagged for a decision (accept, or use the backup carrier), and the confirmed price is the load's real freight in its margin. Order story step 6 (later steps moved up by one). |
+| D36 | **Who Timberline is for: one BB Pallets salesperson** (works remotely, has his own way of working). It is *his* tool to run his orders, inventory and daily tasks, not BB Pallets' company system. The BB Pallets office keeps doing the official work (transport POs, purchase approval, invoicing, accounting). In Timberline he **requests** those from the office and **records** the answer. Payments can be marked paid, but there is **no accounting or bookkeeping**. **Every purchase is approved by the main office.** He deals from one place with five parties: **customers, the BB Pallets office, suppliers, carriers, subcontractors.** See section 1a. |
+| D37 | **Built so the whole BB Pallets office can switch over later.** Every step the office does is the same record whether the office works outside Timberline (today: the salesperson emails a request and records the reply) or inside it (later: the request lands in an office user's queue and they act in the app). A setting per step ("office works by email / in Timberline") switches it; data, statuses and history stay the same. Users, roles and permissions (D27, D28) are multi-user from day one. |
 
 ---
 
@@ -130,6 +182,9 @@ Assistant that understands them in English (and Yiddish).
    and send it back: the **load proposal**.
 4. The customer sends an **official PO** matching the proposal.
 5. Only then is the **order created**.
+6. **The truck is booked (D35):** a transport PO with a price and a date goes
+   to the carrier (today the salesperson asks the BB Pallets office to send it,
+   D36); the carrier's confirmation books the date and accepts the price.
 
 Exception: customers who **pick up their own orders** send a plain order of
 regular items, and no load planning is needed.
@@ -363,6 +418,7 @@ tabular), **Email**. The same file every way.
 | Subcontractor job sheet | | Subcontractor |
 | Packing slip (filler line blank) | | Subcontractor / driver |
 | Loading list (from the 3D plan) | ✓ | Subcontractor / driver |
+| Transport PO request (to the office, D35–D37) | | BB Pallets office |
 | Bill of lading | | Carrier |
 | Commercial invoice / customs papers (US loads) | | Customs broker |
 | Invoice | | Customer AP |
@@ -462,6 +518,14 @@ first milestone is built on the numbers in this file meanwhile.
   4. their **catalog** in whatever form exists (for the day-one import);
   5. a **bill of lading**, **packing slip**, **invoice** and **subcontractor
      job sheet** as they look today.
+
+- **Raised 2026-11-20 (from D35–D37):**
+  - Does the salesperson pick the carrier and price, or does the office? Does the carrier's confirmation go to him, the office, or both?
+  - Do jobs go to subcontractors from him directly, or through the office?
+  - Who invoices the customer, and does he need to see payments, or only whether an invoice is paid?
+  - Is the inventory he tracks BB Pallets' official stock, or his own view of what is available for his customers?
+  - Does he want his commission or margin tracked?
+  - What does the office use today (for a future connection when they switch over)?
 
 - **Raised 2026-11-20 (from D32/D33):**
   - Are there risers (4x4 dunnage) between stacked bundles, or only under the bottom one? How thick are they?
