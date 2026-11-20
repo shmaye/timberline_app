@@ -139,7 +139,7 @@
         ['24-0305B', 'PO 77751', 'Jane Street, Vaughan', 'Dec 2', '21,900', '$15,640', H.chip('Split load due', 'info'), '↔ 24-0305A (D16)'],
         ['24-0311', 'LTB-9921', 'Toronto (pickup)', 'Nov 25', '8,200', '$6,410', H.chip('Pickup ready', 'brand'), ''],
       ], { sel: 0 }), '', true) +
-    `<div class="bottombar"><b>Order ${st.order}</b><span style="color:var(--rail-dim)">PO matched, 0 differences</span><span style="margin-left:auto" class="btns">${H.go('Order confirmation', 'dlg-email')}${H.go('Send job to subcontractor', 'production-jobs', 'primary')}</span></div>`;
+    `<div class="bottombar"><b>Order ${st.order}</b><span style="color:var(--rail-dim)">PO matched, 0 differences</span><span style="margin-left:auto" class="btns">${H.go('Order confirmation', 'dlg-email')}${H.go('Book the carrier', 'loads-bookings', 'primary')}${H.go('Send job to subcontractor', 'production-jobs')}</span></div>`;
   S({
     id: 'orders-orders', dept: 'orders', title: 'Orders', story: 5,
     intent: 'Every order and where it stands: proposal, customer PO, at subcontractor, loaded, invoiced. An order is only created when the official PO matches the proposal. A split load becomes two separate orders that point at each other (D16).',

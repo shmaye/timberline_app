@@ -451,7 +451,7 @@ const H = {
 const DEPTS = [
   { id: 'workflow', label: 'Workflow', tabs: [['workflow', 'Whole process']] },
   { id: 'orders', label: 'Orders', tabs: [['orders-incoming', 'Incoming'], ['orders-proposals', 'Proposals'], ['orders-orders', 'Orders'], ['orders-pickups', 'Pickups']] },
-  { id: 'loads', label: 'Loads', tabs: [['loads-planner', '3D Planner'], ['loads-schedule', 'Schedule'], ['loads-bol', 'Bills of lading']] },
+  { id: 'loads', label: 'Loads', tabs: [['loads-planner', '3D Planner'], ['loads-bookings', 'Carrier bookings'], ['loads-schedule', 'Schedule'], ['loads-bol', 'Bills of lading']] },
   { id: 'production', label: 'Production', tabs: [['production-jobs', 'Jobs'], ['production-subs', 'Subcontractors']] },
   { id: 'purchasing', label: 'Purchasing', tabs: [['purchasing-offers', 'Offers & batch calculator'], ['purchasing-pos', 'Purchase orders'], ['purchasing-suppliers', 'Suppliers']] },
   { id: 'inventory', label: 'Inventory', tabs: [['inventory-onhand', 'On hand'], ['inventory-counts', 'Counts & recounts'], ['inventory-adjustments', 'Adjustments'], ['inventory-waste', 'Waste']] },
@@ -469,7 +469,7 @@ const WINDOWS = [];
  * kind: 'screen' | 'document' | 'dialog' (documents and dialogs are drawn over a dimmed page)
  * title: name shown in lists. intent: what it's for (1–3 sentences, plain words).
  * check: questions to confirm with BB Pallets. assistant: things the Assistant can do here.
- * ref: hand-off references, e.g. 'Hand-off 4.2, D11'. story: step number in the order story (1–9) if part of it.
+ * ref: hand-off references, e.g. 'Hand-off 4.2, D11'. story: step number in the order story if part of it.
  * html(): page content. dock: optional H.assistant(...) HTML to show the Assistant open.
  * under: for documents/dialogs, a function returning the page drawn underneath (optional).
  */
@@ -493,7 +493,7 @@ function frame(w) {
 function notes(w) {
   const list = a => a.length ? `<ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>` : '<p class="muted">Nothing open.</p>';
   return `<div class="notes">
-    <div class="note-c"><h3><i></i>What this ${w.kind === 'screen' ? 'screen' : w.kind} is for</h3><p>${w.intent}</p>${w.story ? `<p class="small muted">Step ${w.story} of 9 in the order story.</p>` : ''}${w.ref ? `<div class="ref">${w.ref}</div>` : ''}</div>
+    <div class="note-c"><h3><i></i>What this ${w.kind === 'screen' ? 'screen' : w.kind} is for</h3><p>${w.intent}</p>${w.story ? `<p class="small muted">Step ${w.story} of ${Math.max(...WINDOWS.map(x => x.story || 0))} in the order story.</p>` : ''}${w.ref ? `<div class="ref">${w.ref}</div>` : ''}</div>
     <div class="note-c q"><h3><i></i>To check with BB Pallets</h3>${list(w.check)}</div>
     <div class="note-c a"><h3><i></i>The Assistant here can</h3>${list(w.assistant)}</div>
   </div>`;
@@ -565,9 +565,11 @@ window.addEventListener('DOMContentLoaded', route);
     ['plan', '3D load plan', 'split, cut or top up', 408, 152, 'loads-planner', 3],
     ['send', 'Email proposal', 'PDF + Excel', 408, 232, 'doc-proposal', 4],
     ['ord', 'Match PO → order', 'flag differences', 592, 152, 'orders-orders', 5],
-    ['job', 'Job to sub', 'items, fillers, slip', 776, 152, 'production-jobs', 6],
-    ['back', 'Quantities back', 'fillers filled in', 960, 152, 'production-jobs', 8],
-    ['inv', 'Invoice', 'from loaded quantities', 1144, 152, 'doc-invoice', 9],
+    ['book', 'Book the carrier', 'transport PO: price + date', 592, 232, 'loads-bookings', 6],
+    ['conf', 'Confirms date & price', 'booking confirmed', 776, 582, 'dlg-carrierconfirm', 6],
+    ['job', 'Job to sub', 'items, fillers, slip', 776, 152, 'production-jobs', 7],
+    ['back', 'Quantities back', 'fillers filled in', 960, 152, 'production-jobs', 9],
+    ['inv', 'Invoice', 'from loaded quantities', 1144, 152, 'doc-invoice', 10],
     ['pb', 'Price builder', 'cost per MBF → price', 40, 232, 'pricing-builder'],
     ['pl', 'Price lists', 'per customer & plant', 224, 232, 'pricing-lists'],
     ['off', 'Supplier offers', 'by the load', 40, 352, 'purchasing-offers'],
@@ -576,12 +578,12 @@ window.addEventListener('DOMContentLoaded', route);
     ['oh', 'Inventory', 'board feet, average cost', 592, 352, 'inventory-onhand'],
     ['cnt', 'Count & recount', 'every two months', 776, 352, 'inventory-counts'],
     ['adj', 'Adjust & waste', '5% booked, true-up', 960, 352, 'inventory-adjustments'],
-    ['cut', 'Cut, groove, load', 'at the sub\'s yard', 776, 472, 'production-jobs', 6],
-    ['ll', 'Loading list & slip', 'filler line blank', 960, 472, 'doc-loadlist', 7],
-    ['bol', 'Bill of lading', 'carrier signs', 960, 582, 'doc-bol', 7],
+    ['cut', 'Cut, groove, load', 'at the sub\'s yard', 776, 472, 'production-jobs', 7],
+    ['ll', 'Loading list & slip', 'filler line blank', 960, 472, 'doc-loadlist', 8],
+    ['bol', 'Bill of lading', 'carrier signs', 960, 582, 'doc-bol', 8],
     ['del', 'Delivery', 'schedule, split loads', 1144, 582, 'loads-schedule'],
   ];
-  const E = [['need', 'imp'], ['imp', 'prop'], ['prop', 'plan'], ['plan', 'send'], ['send', 'cpo', 1], ['cpo', 'ord'], ['ord', 'job'], ['job', 'cut'], ['cut', 'll'], ['ll', 'bol'], ['ll', 'back'], ['back', 'inv'], ['bol', 'del'], ['del', 'recv'], ['inv', 'pay'],
+  const E = [['need', 'imp'], ['imp', 'prop'], ['prop', 'plan'], ['plan', 'send'], ['send', 'cpo', 1], ['cpo', 'ord'], ['ord', 'job'], ['ord', 'book'], ['book', 'conf'], ['conf', 'bol'], ['job', 'cut'], ['cut', 'll'], ['ll', 'bol'], ['ll', 'back'], ['back', 'inv'], ['bol', 'del'], ['del', 'recv'], ['inv', 'pay'],
     ['pb', 'pl'], ['pl', 'prop', 1], ['off', 'calc'], ['calc', 'po'], ['po', 'oh'], ['oh', 'cnt'], ['cnt', 'adj'], ['oh', 'pb', 1], ['back', 'adj', 1]];
   const pos = Object.fromEntries(N.map(n => [n[0], n]));
   const edge = ([a, b, alt]) => {
@@ -606,7 +608,7 @@ window.addEventListener('DOMContentLoaded', route);
     check: ['Is anything missing between the customer\'s PO and the subcontractor job?', 'Does buying really feed pricing like this (average cost into the price builder)?', 'Who does each box today: the owner, the office, or the subcontractor?'],
     assistant: ['Answer "where is order 24-0318?" by pointing at its box', 'Explain any step in English or Yiddish'],
     html: () => H.head('Workflow', 'How an order moves, and where the money is made', 'Click any box to open that window. Dashed arrows are information that flows back, not work.', H.go('Start the order story', 'story', 'primary')) + `<div class="wf">${svg}</div>` +
-      `<div class="btns small muted">${H.chip('1–9', 'now')} order story ${H.chip('Box', '')} other windows</div>`,
+      `<div class="btns small muted">${H.chip('1–10', 'now')} order story ${H.chip('Box', '')} other windows</div>`,
   });
 })();
 
@@ -752,7 +754,7 @@ window.addEventListener('DOMContentLoaded', route);
         ['24-0305B', 'PO 77751', 'Jane Street, Vaughan', 'Dec 2', '21,900', '$15,640', H.chip('Split load due', 'info'), '↔ 24-0305A (D16)'],
         ['24-0311', 'LTB-9921', 'Toronto (pickup)', 'Nov 25', '8,200', '$6,410', H.chip('Pickup ready', 'brand'), ''],
       ], { sel: 0 }), '', true) +
-    `<div class="bottombar"><b>Order ${st.order}</b><span style="color:var(--rail-dim)">PO matched, 0 differences</span><span style="margin-left:auto" class="btns">${H.go('Order confirmation', 'dlg-email')}${H.go('Send job to subcontractor', 'production-jobs', 'primary')}</span></div>`;
+    `<div class="bottombar"><b>Order ${st.order}</b><span style="color:var(--rail-dim)">PO matched, 0 differences</span><span style="margin-left:auto" class="btns">${H.go('Order confirmation', 'dlg-email')}${H.go('Book the carrier', 'loads-bookings', 'primary')}${H.go('Send job to subcontractor', 'production-jobs')}</span></div>`;
   S({
     id: 'orders-orders', dept: 'orders', title: 'Orders', story: 5,
     intent: 'Every order and where it stands: proposal, customer PO, at subcontractor, loaded, invoiced. An order is only created when the official PO matches the proposal. A split load becomes two separate orders that point at each other (D16).',
@@ -1093,7 +1095,7 @@ window.addEventListener('DOMContentLoaded', route);
     [5, 'Doors', '2x4 × 40" filler', '<span class="blank"></span>', 'Lengthwise, as many as fit', '1 · Caldari Road'],
   ];
   S({
-    id: 'doc-loadlist', dept: 'loads', tab: 'loads-planner', kind: 'document', title: 'Loading list', story: 7,
+    id: 'doc-loadlist', dept: 'loads', tab: 'loads-planner', kind: 'document', title: 'Loading list', story: 8,
     intent: 'The step-by-step list for whoever loads the truck, printed from the same 3D plan: what goes on first (the nose) to last (the doors), which way each bundle faces, and which drop it belongs to. On a two-drop load the first drop is loaded last, nearest the doors.',
     ref: 'Hand-off 4.2, 8 · D8, D15, D31',
     check: ['Does the loader need a drawing on the list, or only the steps?', 'Should the list show bundle tags or counts per row?'],
@@ -1150,7 +1152,7 @@ window.addEventListener('DOMContentLoaded', route);
 
   // ---------- document: BOL ----------
   S({
-    id: 'doc-bol', dept: 'loads', tab: 'loads-bol', kind: 'document', title: 'Bill of lading', story: 7,
+    id: 'doc-bol', dept: 'loads', tab: 'loads-bol', kind: 'document', title: 'Bill of lading', story: 8,
     intent: 'The carrier\'s paper for the load: shipper, consignees in drop order, what is on the truck and its weight, and signatures at pickup and delivery. It is made from the confirmed plan, so the bundle counts and weight match. On US loads the customs broker block is filled in.',
     ref: 'Hand-off 4.6, 7 · D8, D26',
     check: ['Which freight description do you use for dunnage (e.g. "wood dunnage, untreated")?', 'Does a two-drop load get one BOL with two stops, or one BOL per stop?', 'Which customs broker do you use for US loads?'],
@@ -1171,7 +1173,7 @@ window.addEventListener('DOMContentLoaded', route);
   // ---------- Production › Jobs ----------
   const jobsUnder = () => H.head('Production', 'Jobs', '', '');
   S({
-    id: 'production-jobs', dept: 'production', title: 'Subcontractor jobs', story: 6,
+    id: 'production-jobs', dept: 'production', title: 'Subcontractor jobs', story: 7,
     intent: 'Each order becomes a job for the chosen subcontractor: the items, quantities, fillers and packing slip, emailed from here. After loading, the real quantities come back (by phone or email today) and the office types them in, which updates the order before invoicing.',
     ref: 'Hand-off 4.6 · D7, D25',
     check: ['How many subcontractors do you use, and which does what?', 'What does the subcontractor need on the job: cut list, stock lengths to use, loading order?', 'How soon after loading do you get the real quantities?'],
@@ -1195,7 +1197,7 @@ window.addEventListener('DOMContentLoaded', route);
 
   // ---------- document: job sheet ----------
   S({
-    id: 'doc-jobsheet', dept: 'production', tab: 'production-jobs', kind: 'document', title: 'Subcontractor job sheet', story: 6,
+    id: 'doc-jobsheet', dept: 'production', tab: 'production-jobs', kind: 'document', title: 'Subcontractor job sheet', story: 7,
     intent: 'What the subcontractor needs to cut, groove and load: the items and bundles, which stock lengths to cut them from, the fillers, the ship date and the loading order. It replaces the order the office used to type up and send. (Layout proposed until we see theirs.)',
     ref: 'Hand-off 4.6, 8 · D7, D8',
     check: ['Can we see a job sheet as you send it today?', 'Should the sheet say which stock lengths to cut from, or leave it to the subcontractor?'],
@@ -1232,7 +1234,7 @@ window.addEventListener('DOMContentLoaded', route);
 
   // ---------- dialog: loaded quantities back ----------
   S({
-    id: 'dlg-loaded', dept: 'production', tab: 'production-jobs', kind: 'dialog', title: 'Loaded quantities back', story: 8,
+    id: 'dlg-loaded', dept: 'production', tab: 'production-jobs', kind: 'dialog', title: 'Loaded quantities back', story: 9,
     intent: 'After loading, the subcontractor phones or emails what actually went on the truck, and the office types it in here. Differences from the order show at once, the filler count is filled in, and "Update order" makes the invoice from the real quantities. Inventory books the shipped board feet with 5% waste.',
     ref: 'Hand-off 4.5, 4.6 · D25',
     check: ['Do quantities come back per bundle or per piece?', 'If the load differs from the PO, does the customer need to approve before invoicing?'],
@@ -1273,6 +1275,88 @@ window.addEventListener('DOMContentLoaded', route);
         ['Kessler Wood Works', 'Nov 1–30', '612.0', '$82,620', '$4,320', '$86,940', H.btn('Statement', 'sm', 'pdf')],
         ['Pinegrove Pallet', 'Nov 1–30', '88.0', '$11,880', '$1,420', '$13,300', H.btn('Statement', 'sm', 'pdf')],
       ]), '', true),
+  });
+})();
+
+/* ---- screens-25-bookings.js ---- */
+/* Loads › Carrier bookings: the transport PO (booking note) sent to the carrier, and the carrier's
+   confirmation, which means two things: the date is booked, and the price is accepted.
+   Learned from BB Pallets (Nov 2026): when an order is entered, the office creates a purchase order
+   for transport with a price and a date and sends it to the carrier; the carrier confirms. */
+(function () {
+  const st = D.story;
+  const status = {
+    sent: H.chip('Sent · waiting', 'warn'), conf: H.chip('Confirmed', 'ok'), draft: H.chip('Draft'),
+    changed: H.chip('Carrier changed it', 'bad'), pickup: H.chip('Pickup · no booking', 'info'),
+  };
+  const rows = [
+    ['TPO-2417', 'L-2417', `Ardent · Caldari Road + Jane St`, 'Trans-Ontario Freight', 'Tue Nov 24', '$2,300', '$2,300', status.conf, H.go('Open', 'doc-carrierpo', 'sm')],
+    ['TPO-2419', 'L-2419', 'Garden State · Newark NJ', 'Liberty Line (US)', 'Thu Nov 26', 'US$3,400', '—', status.sent, H.go('Record reply', 'dlg-carrierconfirm', 'sm')],
+    ['TPO-2420', 'L-2420', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 'Fri Nov 27', '$2,300', '$2,450', status.changed, H.btn('Decide', 'sm')],
+    ['TPO-2421', 'L-2421', 'Ardent · Jane Street', 'Trans-Ontario Freight', 'Tue Dec 1', '$2,100', '', status.draft, H.btn('Send', 'sm primary')],
+    ['—', 'L-2414', 'Lakeshore · Toronto', 'Customer picks up', 'Mon Nov 23', '—', '—', status.pickup, ''],
+  ];
+  const page = () =>
+    H.head('Loads', 'Carrier bookings', 'A transport PO goes to the carrier with a price and a date. Their confirmation books the date and accepts the price.',
+      H.btn('Excel', '', 'xls') + H.go('New transport PO', 'doc-carrierpo', 'primary', 'plus')) +
+    H.kpis([
+      H.gauge('Waiting for a reply', '1', null, 'TPO-2419 · sent 3 h ago', 'warn'),
+      H.gauge('Carrier changed price or date', '1', null, 'TPO-2420 · +$150', 'bad'),
+      H.gauge('Confirmed this week', '3', null, 'All at the booked price', 'ok'),
+      H.gauge('Freight vs plan, November', '+$150', null, '1 load over the $2,300 used in pricing'),
+    ]) +
+    H.panel('', H.filters(['*All', 'Draft', 'Sent · waiting', 'Confirmed', 'Changed', 'Pickups']) +
+      H.table(['Transport PO', 'Load', 'Deliver to', 'Carrier', 'Pickup date', { t: 'Booked price', num: true }, { t: 'Confirmed', num: true }, 'Status', ''], rows, { sel: 0 }), '', '', true) +
+    H.callout('bad', '<b>TPO-2420: Trans-Ontario confirmed Friday, but at $2,450 instead of $2,300.</b> Accept the new price (the load\'s margin drops by $150), or book the backup carrier, Bluewater, at $2,550.',
+      H.btn('Accept $2,450', 'sm') + ' ' + H.btn('Book Bluewater', 'sm')) +
+    H.callout('info', 'Customer pickups need no booking. A load cannot be confirmed for loading until its booking is confirmed (proposed).');
+  S({
+    id: 'loads-bookings', dept: 'loads', title: 'Carrier bookings', story: 6, html: page,
+    intent: 'When an order is entered, the office books the truck: a transport purchase order to the carrier with the price and the pickup date. The carrier\'s confirmation means two things: the date is booked, and the price is accepted. This screen shows every booking and its state (draft, sent and waiting, confirmed, or changed by the carrier), so nothing ships on an unconfirmed truck, and the confirmed price becomes the load\'s real freight cost for its margin.',
+    ref: 'Learned from BB Pallets, Nov 2026 · D35 · Hand-off 4.6, 6 (carriers)',
+    check: ['Is the transport PO sent as soon as the order is entered, or after the load is confirmed?', 'How does the carrier confirm: email reply, phone, or their own booking form? Is there a confirmation number?', 'What is on the transport PO besides price and date: pickup and delivery windows, equipment type, number of drops, extra-stop charges?', 'If the carrier changes the price or date, who decides: accept it, or go to the backup carrier?'],
+    assistant: ['Draft the transport PO from the order and the carrier\'s usual rate', 'Read the carrier\'s reply email and fill in the confirmation, flagging a different price or date', 'Remind you when a booking has no reply after a few hours'],
+  });
+
+  const under = () => page();
+  S({
+    id: 'doc-carrierpo', dept: 'loads', tab: 'loads-bookings', kind: 'document', title: 'Transport PO (booking note)', story: 6, under,
+    intent: 'The booking note sent to the carrier: which load, where to pick up and deliver, the date, the equipment, and the price BB Pallets will pay. Sending it asks the carrier to book the truck; their confirmation accepts both the date and the price. It goes out from your own mailbox and is logged on the order and the carrier.',
+    ref: 'D35 · D8 (print, PDF, email)',
+    check: ['Can we see a real transport PO you send today, to copy its layout?', 'Is the price always per load, or sometimes per mile or with fuel surcharge added?', 'Should the carrier sign and return it, or is an email reply enough?'],
+    assistant: ['Fill it from the order, the load plan and the carrier\'s rate', 'Email it to the carrier\'s dispatch'],
+    html: () => H.doc('Transport PO · TPO-2417', `
+      ${H.letterhead('TRANSPORT PURCHASE ORDER', [['PO', 'TPO-2417'], ['Load', st.load], ['Order', st.order], ['Date', 'Nov 19, 2026']])}
+      <div class="cols">
+        <div class="box2"><div class="k">Carrier</div>Trans-Ontario Freight<br>Dispatch · dispatch@example-carrier.ca</div>
+        <div class="box2"><div class="k">Pick up</div>Kessler Wood Works, Concord yard<br>Tue Nov 24, 2026 · 7:00–9:00</div>
+        <div class="box2"><div class="k">Deliver</div>1. Ardent Metals, Caldari Road plant, Concord ON<br>2. Ardent Metals, Jane Street plant, Vaughan ON<br>Tue Nov 24 · by 15:00</div>
+      </div>
+      <table><thead><tr><th>Equipment</th><th>Load</th><th class="num">Bundles</th><th class="num">Weight lb</th><th class="num">Drops</th></tr></thead>
+      <tbody><tr><td>53' dry van, tandem</td><td>Wood dunnage, untreated softwood</td><td class="num">88+</td><td class="num">43,100</td><td class="num">2</td></tr></tbody></table>
+      <table class="tot"><tbody><tr><td>Line haul, per load</td><td class="num">$2,150.00</td></tr><tr><td>Second drop</td><td class="num">$150.00</td></tr><tr><td>Total agreed price (CAD)</td><td class="num">$2,300.00</td></tr></tbody></table>
+      <p><b>Please confirm this booking by reply.</b> Your confirmation books the pickup date above and accepts the total price. If you cannot take it at this date or price, reply with what you can do; nothing is booked until we agree.</p>
+      <div class="sig"><div>Issued by: Sales desk, BB Pallets</div><div>Carrier confirmation no. · name · date</div></div>
+      <div class="fine">Example layout. The real one will follow BB Pallets' current transport PO.</div>
+      <div class="btns" style="justify-content:center;margin-top:18px">${H.go('Email to the carrier', 'dlg-email', 'primary', 'mail')}${H.go('Record the confirmation', 'dlg-carrierconfirm')}</div>`, false),
+  });
+
+  S({
+    id: 'dlg-carrierconfirm', dept: 'loads', tab: 'loads-bookings', kind: 'dialog', title: 'Record the carrier\'s confirmation', story: 6, under,
+    intent: 'When the carrier replies, the booking is marked confirmed with their confirmation number, the confirmed date and the confirmed price. If either differs from what was sent, it is flagged and someone decides: accept it, or book the backup carrier. The confirmed price is what the load\'s margin uses.',
+    ref: 'D35 · Hand-off 4.3 (freight $2,300, backup $2,500–2,600), 9 (freight by carrier)',
+    check: ['Do carriers ever confirm part of it (the date but not the price)?', 'Who is allowed to accept a higher price?'],
+    assistant: ['Fill this in from the carrier\'s email', 'Explain the margin effect of a price change'],
+    html: () => H.dialog('Carrier confirmation · TPO-2417', `
+      ${H.callout('ok', 'Reply from Trans-Ontario Freight dispatch, Nov 19 at 2:14 pm, read by the Assistant. Check and save.')}
+      ${H.form([H.field('Confirmation no.', 'TOF-88213'), H.field('Confirmed by', 'Dispatch, Trans-Ontario'), H.field('Pickup date', 'Tue Nov 24, 7:00–9:00'), H.field('Confirmed price', '$2,300.00', 'CAD')])}
+      ${H.table(['', 'Sent', 'Confirmed', ''], [
+        ['Date', 'Tue Nov 24', 'Tue Nov 24', H.chip('Same', 'ok')],
+        ['Price', '$2,300.00', '$2,300.00', H.chip('Same', 'ok')],
+        ['Equipment', '53\' dry van', '53\' dry van', H.chip('Same', 'ok')]])}
+      ${H.callout('info', 'Freight on this load: <b>$2,300</b>, the same as the price list was built on ($2,300 ÷ 44 MBF = $52.25 per MBF). Margin unchanged.')}
+      <div class="small muted">Attached: carrier email (saved on order ${st.order} and on Trans-Ontario Freight).</div>`,
+      H.btn('Cancel') + H.btn('Mark as confirmed', 'primary')),
   });
 })();
 
@@ -1866,7 +1950,7 @@ window.addEventListener('DOMContentLoaded', route);
       `<div class="fine">Please send your PO quoting our order no. ${ST.order}. Filler quantity is as many as fit and is invoiced as loaded. Prices per piece, CAD, delivered.</div>`),
   });
   S({
-    id: 'doc-invoice', dept: 'orders', tab: 'orders-orders', kind: 'document', story: 9, title: 'Invoice (document)',
+    id: 'doc-invoice', dept: 'orders', tab: 'orders-orders', kind: 'document', story: 10, title: 'Invoice (document)',
     intent: 'The invoice is made from what was really loaded, so the filler line shows the loaded quantity, not the estimate. Canadian sales carry GST/HST.',
     ref: 'Hand-off 4.6, 8, D9',
     check: ['Payment terms per customer (open question F27)?', 'Does the invoice go to an accounting program (F26)?'],

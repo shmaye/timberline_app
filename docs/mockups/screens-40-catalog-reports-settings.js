@@ -225,7 +225,7 @@
       `<div class="fine">Please send your PO quoting our order no. ${ST.order}. Filler quantity is as many as fit and is invoiced as loaded. Prices per piece, CAD, delivered.</div>`),
   });
   S({
-    id: 'doc-invoice', dept: 'orders', tab: 'orders-orders', kind: 'document', story: 9, title: 'Invoice (document)',
+    id: 'doc-invoice', dept: 'orders', tab: 'orders-orders', kind: 'document', story: 10, title: 'Invoice (document)',
     intent: 'The invoice is made from what was really loaded, so the filler line shows the loaded quantity, not the estimate. Canadian sales carry GST/HST.',
     ref: 'Hand-off 4.6, 8, D9',
     check: ['Payment terms per customer (open question F27)?', 'Does the invoice go to an accounting program (F26)?'],

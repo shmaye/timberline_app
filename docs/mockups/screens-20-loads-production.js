@@ -197,7 +197,7 @@
     [5, 'Doors', '2x4 × 40" filler', '<span class="blank"></span>', 'Lengthwise, as many as fit', '1 · Caldari Road'],
   ];
   S({
-    id: 'doc-loadlist', dept: 'loads', tab: 'loads-planner', kind: 'document', title: 'Loading list', story: 7,
+    id: 'doc-loadlist', dept: 'loads', tab: 'loads-planner', kind: 'document', title: 'Loading list', story: 8,
     intent: 'The step-by-step list for whoever loads the truck, printed from the same 3D plan: what goes on first (the nose) to last (the doors), which way each bundle faces, and which drop it belongs to. On a two-drop load the first drop is loaded last, nearest the doors.',
     ref: 'Hand-off 4.2, 8 · D8, D15, D31',
     check: ['Does the loader need a drawing on the list, or only the steps?', 'Should the list show bundle tags or counts per row?'],
@@ -254,7 +254,7 @@
 
   // ---------- document: BOL ----------
   S({
-    id: 'doc-bol', dept: 'loads', tab: 'loads-bol', kind: 'document', title: 'Bill of lading', story: 7,
+    id: 'doc-bol', dept: 'loads', tab: 'loads-bol', kind: 'document', title: 'Bill of lading', story: 8,
     intent: 'The carrier\'s paper for the load: shipper, consignees in drop order, what is on the truck and its weight, and signatures at pickup and delivery. It is made from the confirmed plan, so the bundle counts and weight match. On US loads the customs broker block is filled in.',
     ref: 'Hand-off 4.6, 7 · D8, D26',
     check: ['Which freight description do you use for dunnage (e.g. "wood dunnage, untreated")?', 'Does a two-drop load get one BOL with two stops, or one BOL per stop?', 'Which customs broker do you use for US loads?'],
@@ -275,7 +275,7 @@
   // ---------- Production › Jobs ----------
   const jobsUnder = () => H.head('Production', 'Jobs', '', '');
   S({
-    id: 'production-jobs', dept: 'production', title: 'Subcontractor jobs', story: 6,
+    id: 'production-jobs', dept: 'production', title: 'Subcontractor jobs', story: 7,
     intent: 'Each order becomes a job for the chosen subcontractor: the items, quantities, fillers and packing slip, emailed from here. After loading, the real quantities come back (by phone or email today) and the office types them in, which updates the order before invoicing.',
     ref: 'Hand-off 4.6 · D7, D25',
     check: ['How many subcontractors do you use, and which does what?', 'What does the subcontractor need on the job: cut list, stock lengths to use, loading order?', 'How soon after loading do you get the real quantities?'],
@@ -299,7 +299,7 @@
 
   // ---------- document: job sheet ----------
   S({
-    id: 'doc-jobsheet', dept: 'production', tab: 'production-jobs', kind: 'document', title: 'Subcontractor job sheet', story: 6,
+    id: 'doc-jobsheet', dept: 'production', tab: 'production-jobs', kind: 'document', title: 'Subcontractor job sheet', story: 7,
     intent: 'What the subcontractor needs to cut, groove and load: the items and bundles, which stock lengths to cut them from, the fillers, the ship date and the loading order. It replaces the order the office used to type up and send. (Layout proposed until we see theirs.)',
     ref: 'Hand-off 4.6, 8 · D7, D8',
     check: ['Can we see a job sheet as you send it today?', 'Should the sheet say which stock lengths to cut from, or leave it to the subcontractor?'],
@@ -336,7 +336,7 @@
 
   // ---------- dialog: loaded quantities back ----------
   S({
-    id: 'dlg-loaded', dept: 'production', tab: 'production-jobs', kind: 'dialog', title: 'Loaded quantities back', story: 8,
+    id: 'dlg-loaded', dept: 'production', tab: 'production-jobs', kind: 'dialog', title: 'Loaded quantities back', story: 9,
     intent: 'After loading, the subcontractor phones or emails what actually went on the truck, and the office types it in here. Differences from the order show at once, the filler count is filled in, and "Update order" makes the invoice from the real quantities. Inventory books the shipped board feet with 5% waste.',
     ref: 'Hand-off 4.5, 4.6 · D25',
     check: ['Do quantities come back per bundle or per piece?', 'If the load differs from the PO, does the customer need to approve before invoicing?'],

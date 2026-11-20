@@ -156,7 +156,7 @@ const H = {
 const DEPTS = [
   { id: 'workflow', label: 'Workflow', tabs: [['workflow', 'Whole process']] },
   { id: 'orders', label: 'Orders', tabs: [['orders-incoming', 'Incoming'], ['orders-proposals', 'Proposals'], ['orders-orders', 'Orders'], ['orders-pickups', 'Pickups']] },
-  { id: 'loads', label: 'Loads', tabs: [['loads-planner', '3D Planner'], ['loads-schedule', 'Schedule'], ['loads-bol', 'Bills of lading']] },
+  { id: 'loads', label: 'Loads', tabs: [['loads-planner', '3D Planner'], ['loads-bookings', 'Carrier bookings'], ['loads-schedule', 'Schedule'], ['loads-bol', 'Bills of lading']] },
   { id: 'production', label: 'Production', tabs: [['production-jobs', 'Jobs'], ['production-subs', 'Subcontractors']] },
   { id: 'purchasing', label: 'Purchasing', tabs: [['purchasing-offers', 'Offers & batch calculator'], ['purchasing-pos', 'Purchase orders'], ['purchasing-suppliers', 'Suppliers']] },
   { id: 'inventory', label: 'Inventory', tabs: [['inventory-onhand', 'On hand'], ['inventory-counts', 'Counts & recounts'], ['inventory-adjustments', 'Adjustments'], ['inventory-waste', 'Waste']] },
@@ -174,7 +174,7 @@ const WINDOWS = [];
  * kind: 'screen' | 'document' | 'dialog' (documents and dialogs are drawn over a dimmed page)
  * title: name shown in lists. intent: what it's for (1–3 sentences, plain words).
  * check: questions to confirm with BB Pallets. assistant: things the Assistant can do here.
- * ref: hand-off references, e.g. 'Hand-off 4.2, D11'. story: step number in the order story (1–9) if part of it.
+ * ref: hand-off references, e.g. 'Hand-off 4.2, D11'. story: step number in the order story if part of it.
  * html(): page content. dock: optional H.assistant(...) HTML to show the Assistant open.
  * under: for documents/dialogs, a function returning the page drawn underneath (optional).
  */
@@ -198,7 +198,7 @@ function frame(w) {
 function notes(w) {
   const list = a => a.length ? `<ul>${a.map(x => `<li>${x}</li>`).join('')}</ul>` : '<p class="muted">Nothing open.</p>';
   return `<div class="notes">
-    <div class="note-c"><h3><i></i>What this ${w.kind === 'screen' ? 'screen' : w.kind} is for</h3><p>${w.intent}</p>${w.story ? `<p class="small muted">Step ${w.story} of 9 in the order story.</p>` : ''}${w.ref ? `<div class="ref">${w.ref}</div>` : ''}</div>
+    <div class="note-c"><h3><i></i>What this ${w.kind === 'screen' ? 'screen' : w.kind} is for</h3><p>${w.intent}</p>${w.story ? `<p class="small muted">Step ${w.story} of ${Math.max(...WINDOWS.map(x => x.story || 0))} in the order story.</p>` : ''}${w.ref ? `<div class="ref">${w.ref}</div>` : ''}</div>
     <div class="note-c q"><h3><i></i>To check with BB Pallets</h3>${list(w.check)}</div>
     <div class="note-c a"><h3><i></i>The Assistant here can</h3>${list(w.assistant)}</div>
   </div>`;
