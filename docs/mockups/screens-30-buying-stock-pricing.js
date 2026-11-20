@@ -12,7 +12,8 @@
     ['12\'', '3 × 39"', '27" offcut kept', H.chip('Leftover', 'warn') + ' 81.3%'],
     ['8\'', '2 × 39"', '18" waste', H.chip('Poor', 'bad') + ' 81.3%'],
   ];
-  const offersPage = () => H.head('Purchasing › Offers', 'Offer from Muskoka Sawmill: 3 loads, paper-wrapped', 'Old stock the mill can\'t sell as premium. Asking $300 / MBF, not delivered.', H.btn('Save offer') + H.btn('Send counter-offer', 'primary', 'mail')) +
+  const offersPage = () => H.head('Purchasing › Offers', 'Offer from Muskoka Sawmill: 3 loads, paper-wrapped', 'Old stock the mill can\'t sell as premium. Asking $300 / MBF, not delivered.', H.btn('Save offer') + H.btn('Send counter-offer', '', 'mail') + H.go('Ask the office to approve', 'office-requests', 'primary')) +
+    H.stages(['Offer', 'Agreed with supplier', 'Approval asked (office)', 'Approved: office PO', 'Received'], 1) +
     H.kpis([
       H.gauge('Our offer, delivered', `${cur(B.delivered)} <small>/ MBF</small>`, null, `${cur(B.offered)} + ${cur(B.freight)} freight to the yard`),
       H.gauge('On a 10-foot count', `${cur(B.tenFt)} <small>/ MBF</small>`, null, '12s cut back to 10s: × 12 ÷ 10'),
@@ -25,6 +26,7 @@
       `<div class="field"><label>Compare on a common count</label><div>${H.seg(['8\'', '10\'', '12\''], 1)}</div></div>`,
       H.field('Lengths offered', '12\' (3 loads ≈ 132 MBF)'),
       H.field('Extra cutting cost', '≈ $11.00', '/ MBF'),
+      H.field('Value of leftovers (2\' off each 12)', '$0.00', '/ MBF · as in your example'),
       H.field('Today\'s first-quality 10s', '$345.00', '/ MBF'),
     ]) + `<div style="margin-top:16px">` + H.table(['Step', { t: 'Per MBF', num: true }, 'How'], [
       ['Supplier price, not delivered', cur(B.offered, 2), 'what we offer'],
@@ -32,9 +34,12 @@
       ['On a 10-foot count', cur(B.tenFt, 2), '× 12 ÷ 10 (12s cut back to 10s)'],
       ['+ extra cutting', '≈ ' + cur(B.cut, 2), 'more cuts per piece'],
       ['First-quality 10s this week', cur(B.firstQuality, 2), `maybe ${cur(B.nextWeek)} next week`],
-    ], { foot: ['Saving vs first quality', '≈ $40.00', '× 44 MBF ≈ $1,760 per load'] }) + `</div>` +
-    H.callout('info', 'History: we offered <b>$225</b>, they wanted <b>$300</b>, settled at <b>$235</b> a week later. Every <b>$25</b> under the cost our prices were built on is <b>$1,100 more per trailer load</b> (× 44 MBF).'),
-      H.go('Log as purchase', 'dlg-purchase', 'sm')) +
+    ], { foot: ['Saving vs first quality', '≈ $40.00', 'on usable feet: 3 loads ≈ 132 MBF bought → 110 MBF of 10s → ≈ $4,400'] }) + `</div>` +
+    `<div style="margin:0 -18px">` + H.table(['', { t: 'Offer $225', num: true }, { t: 'Settled $235', num: true }], [
+      ['Delivered (+ $20 freight)', '$245.00', '$255.00'], ['On a 10-foot count (× 12 ÷ 10)', '$294.00', '$306.00'], ['+ extra cutting', '≈ $305', '≈ $317'],
+      ['Under first-quality 10s ($345)', '≈ $40', '≈ $28'], ['Gain on 110 MBF usable', '≈ $4,400', '≈ $3,080']]) + `</div>` +
+    H.callout('info', 'History: we offered <b>$225</b>, they wanted <b>$300</b>, settled at <b>$235</b> a week later, still about $28 under first quality. Gains are counted on <b>usable</b> board feet (10/12 of a batch of 12s), not on what was bought. Leftovers are worth $0 unless you give them a value. Every <b>$25</b> under plan is <b>$1,100 more per 44,000 bd ft load</b>.'),
+      H.go('Ask the office to approve', 'office-requests', 'sm primary')) +
     `<div class="grid2">` +
     H.panel('Yield into the sizes customers buy · 2x3 × 39"', H.table(['Stock', 'Cuts', 'Waste or leftover', 'Yield'], yieldRows) +
       `<div class="toolbar small muted" style="padding-top:10px">Ardent Metals takes about half a load of 2x3 × 39" a week. Leftover 27" pieces go into inventory as offcuts (D21).</div>`, H.seg(['2x3 × 39"', '3x3 × 31"', '3x3 × 37½"'], 0), true) +
@@ -42,85 +47,90 @@
       ['North Shore 10s · Oct 2', '$545', '$500', '<span style="color:var(--bad)">−$1,980</span>'],
       ['Algonquin trim · Oct 9', '$440', '$500', '<span style="color:var(--ok)">+$2,640</span>'],
       ['Muskoka 2x3 · Oct 20', '$475', '$500', '<span style="color:var(--ok)">+$1,100</span>'],
-      ['Muskoka wrapped 12s · Nov 3', '$235', '$345 *', '<span style="color:var(--ok)">+$4,840</span>'],
-    ], { foot: ['4 loads', '', '', '+$6,600'] }) + `<div class="toolbar small muted" style="padding-top:10px">* compared with first-quality 10s that week</div>`, '', true) +
+      ['Muskoka wrapped 12s · Nov 3', '$317 *', '$345 *', '<span style="color:var(--ok)">+$1,027</span>'],
+    ], { foot: ['4 loads', '', '', '+$2,787'] }) + `<div class="toolbar small muted" style="padding-top:10px">Gain per load = (plan − paid) × MBF. * The wrapped 12s: delivered cost on a 10-foot count with cutting, against first-quality 10s that week, on usable feet (36.7 of 44 MBF a load).</div>`, '', true) +
     `</div>` +
-    H.panel('Open offers', H.table(['Supplier', 'What', { t: 'Asking', num: true }, { t: 'Our offer', num: true }, 'Status'], [
+    H.panel('Offers', H.filters(['*All', 'Open 3', 'Waiting on office 1', 'Turned down 2']) + H.table(['Supplier', 'What', { t: 'Asking', num: true }, { t: 'Our offer', num: true }, 'Status'], [
       ['Muskoka Sawmill', '3 loads paper-wrapped 12s', '$300', '$225', H.chip('Countered', 'warn')],
-      ['North Shore Forest Products', '8s & 10s, 2 loads', '$545', '—', H.chip('New', 'info')],
+      ['North Shore Forest Products', '2x3 × 10\', 2 loads', '$545', '$525', H.chip('Agreed · office asked (R-1042)', 'info')],
       ['Algonquin Lumber', 'Trim 6–7\', 1 load', '$440', '$430', H.chip('Waiting', '')],
+      ['North Shore Forest Products', '#3 12s, 1 load', '$410', '—', H.chip('Turned down: grade', '')],
+      ['Muskoka Sawmill', '4x4 × 8\' green', '$520', '$480', H.chip('Turned down: they refused', '')],
     ]), H.btn('New offer', '', 'plus'), true);
 
   S({
     id: 'purchasing-offers', dept: 'purchasing', title: 'Offers & batch calculator',
-    intent: '"You don\'t make money when you sell, you make money when you buy." This screen works out what to offer for an odd batch: delivered cost, converted to a common count, plus extra cutting, against today\'s first-quality price, with the yield into the sizes customers actually buy and the leftovers it leaves.',
-    ref: 'Hand-off 3, 4.4; D20, D21',
-    check: ['Is the 10-foot count the standard, and when would you compare on another length?', 'How do you estimate the extra cutting cost for a batch like this?', 'Which customer sizes should the yield table use by default?', 'Do you want a record of offers that were turned down?'],
+    intent: '"You don\'t make money when you sell, you make money when you buy." He negotiates with suppliers himself; the office approves every purchase (D36). This screen works out what to offer for an odd batch: delivered cost, converted to a common count, plus extra cutting, against today\'s first-quality price, with the yield into the sizes customers buy. Leftovers can be given a value (zero by default, as in their example) and gains are counted on usable board feet. Turned-down offers are kept. Once a price is agreed, the next step is asking the office to approve.',
+    ref: 'Hand-off 3, 4.4; D20, D21, D36, D39 · Review S6',
+    check: ['Is the 10-foot count the standard, and when would you compare on another length?', 'How do you estimate the extra cutting cost for a batch like this?', 'Are leftovers like the 2\' off a 12 worth anything to you, or zero?', 'Can you agree a price before the office approves, or only "subject to approval"?'],
     assistant: ['"What can I offer for this batch?" from a supplier\'s email', 'Show the yield of 12s into this week\'s orders', 'Draft the counter-offer email (you click Send)'],
     html: offersPage,
     dock: H.assistant([
       ['me', 'Muskoka has 3 loads of old 12s, wrapped. What can I offer?'],
       ['ai', 'At $225 + $20 freight, on a 10-foot count that\'s $294, about $305 with the extra cutting. First-quality 10s are $345 this week, maybe $325 next. 12s give three 39s plus a 27" offcut.'],
-      ['propose', 'Counter-offer to Muskoka Sawmill:<br><b>$225 / MBF</b>, 3 loads, FOB their yard'],
+      ['propose', 'Counter-offer to Muskoka Sawmill:<br><b>$225 / MBF</b>, 3 loads, FOB their yard, subject to office approval'],
     ]),
   });
 
-  const posPage = () => H.head('Purchasing', 'Purchase orders', 'Every load bought, with supplier, length, grade and price. This feeds the average cost.', H.go('Log a purchased load', 'dlg-purchase', 'primary', 'plus')) +
+  const posPage = () => H.head('Purchasing', 'Purchases', 'Every load he buys: agreed with the supplier, approved by the office, received with a tally. Received loads feed the average cost.', H.go('Ask the office to approve', 'doc-supplierpo', '', 'mail') + H.go('Record a received load', 'dlg-purchase', 'primary', 'plus')) +
+    H.stages(['Offer agreed', 'Approval asked', 'Approved by office (PO no.)', 'Received (tally)'], 2) +
     H.kpis([
-      H.gauge('Average cost on hand', `$510 <small>/ MBF</small>`, null, '(2 × $545 + $440) ÷ 3'),
+      H.gauge('Average cost, 2x3', `$509.89 <small>/ MBF</small>`, null, 'weighted by board feet received'),
       H.gauge('Plan in price lists', `$500 <small>/ MBF</small>`, null, 'planning number'),
-      H.gauge('Open POs', '3', null, '2 loads not received'),
-      H.gauge('Bought this month', '5 loads', null, '≈ 220 MBF'),
+      H.gauge('Waiting on the office', '1', null, 'R-1042 · 2 days, overdue', 'warn'),
+      H.gauge('Approved, not received', '2 loads', null, 'Muskoka 2 of 3 · Algonquin'),
     ]) +
-    H.panel('', H.filters(['*All', 'Open', 'Received', 'North Shore', 'Algonquin', 'Muskoka']) + H.table(['PO', 'Supplier', 'What', 'Grade', { t: 'MBF', num: true }, { t: '$ / MBF', num: true }, { t: 'Freight', num: true }, 'Delivers to', 'Status'], [
-      ['PO-S-0412', 'North Shore Forest Products', '2x3 × 8\' & 10\'', '#2 & better', '44.0', '$545', 'incl.', 'Concord yard', H.chip('Received', 'ok')],
-      ['PO-S-0413', 'North Shore Forest Products', '2x3 × 10\'', '#2 & better', '44.0', '$545', 'incl.', 'Kessler yard', H.chip('Received', 'ok')],
-      ['PO-S-0414', 'Algonquin Lumber', '2x3 trim 6–7\'', 'Trim', '44.0', '$440', 'incl.', 'Concord yard', H.chip('Received', 'ok')],
-      ['PO-S-0415', 'Muskoka Sawmill', '3x3 × 12\' paper-wrapped', 'Old stock', '132.0', '$235', '$20', 'Kessler yard', H.chip('1 of 3 in', 'warn')],
-      ['PO-S-0416', 'Muskoka Sawmill', '2x4 × 10\'', '#2', '44.0', '$475', 'incl.', 'Pinegrove yard', H.chip('Sent', 'info')],
-    ], { sel: 3 }), '', true) +
-    H.callout('info', 'Each received load updates the running average cost of that size and length at the yard it went to. Open a PO to print, download or email it to the supplier.', H.go('Open PO-S-0415', 'doc-supplierpo', 'sm'));
+    H.panel('', H.filters(['*All', 'Waiting on office', 'Approved', 'Received', 'Tally differs']) + H.table(['Purchase', 'Supplier', 'What', { t: 'MBF ordered', num: true }, { t: '$ / MBF', num: true }, { t: 'Freight in', num: true }, 'Office', 'Received (tally)', 'Status'], [
+      ['P-0412', 'North Shore Forest Products', '2x3 × 8\' & 10\'', '44.0', '$545', 'incl.', 'R-1021 · PO 5502', '43.6 · Concord yard (Mike)', H.chip('Received', 'ok')],
+      ['P-0414', 'Algonquin Lumber', '2x3 trim 6–7\'', '44.0', '$440', 'incl.', 'R-1028 · PO 5510', '44.0 · Concord yard (Mike)', H.chip('Received', 'ok')],
+      ['P-0415', 'Muskoka Sawmill', '3x3 × 12\' paper-wrapped', '132.0', '$235', '$20', 'R-1033 · PO 5521', '44.4 · Kessler (their tally)', H.chip('1 of 3 in', 'warn')],
+      ['P-0417', 'Algonquin Lumber', '2x3 trim 6–7\'', '44.0', '$440', 'incl.', 'R-1043 · PO 5544', '—', H.chip('Approved', 'info')],
+      ['P-0418', 'North Shore Forest Products', '2x3 × 10\', 2 loads', '88.0', '$525', 'incl.', 'R-1042 · asked Nov 17', '—', H.chip('Waiting on office', 'bad')],
+    ], { sel: 4 }), '', true) +
+    H.callout('info', '<b>How average cost works:</b> a moving average per size, weighted by board feet, on <b>delivered</b> cost (supplier price + freight in), updated when a load is received, using the <b>received</b> tally, not the PO. A USD price is converted at the rate on the day it is received. Wood found at a count comes in at $0 as its own line, so a drop like Sept 30 ($450) is explained.', H.go('Open R-1042', 'office-requests', 'sm'));
 
   S({
     id: 'purchasing-pos', dept: 'purchasing', title: 'Purchase orders',
-    intent: 'A log of every load bought: supplier, length, grade, price and freight. Received loads feed the average cost that inventory is valued at, so the price builder can use what lumber really cost.',
-    ref: 'Hand-off 4.4, 4.5; D17, D22',
-    check: ['Do you send suppliers a written PO today, or just agree on the phone?', 'Is freight usually included in the supplier\'s price, or billed separately?', 'Do loads go straight to a subcontractor\'s yard, or always to your yard first?'],
-    assistant: ['Log a load from the supplier\'s invoice or email', 'Answer "what did we pay for 10s last month?"', 'Remind you of loads not received yet'],
+    intent: 'Every load he buys, from agreed price to received tally. Every purchase is approved by the BB Pallets office (D36), so each one carries its approval request and, once approved, the office\'s PO number; the PO to the supplier is the office\'s document. Someone at the yard confirms the tally, which can differ from the order, and the received board feet set the average cost the price builder can use.',
+    ref: 'Hand-off 4.4, 4.5; D17, D22, D36, D39 · Review S5, S13',
+    check: ['Who at the yard checks a load in and sends you the tally?', 'Is freight usually included in the supplier\'s price, or billed separately?', 'Do any suppliers bill in USD?', 'Do loads go straight to a subcontractor\'s yard, or always to your yard first?'],
+    assistant: ['Fill in a received load from a photo of the tally', 'Answer "what did we pay for 10s last month?"', 'Remind you of approved loads not received yet'],
     html: posPage,
   });
 
   S({
-    id: 'doc-supplierpo', dept: 'purchasing', tab: 'purchasing-pos', kind: 'document', title: 'Purchase order to a supplier',
-    intent: 'The purchase order (or written offer) sent to a supplier. Same file for print, PDF and email, and it\'s logged on the supplier.',
-    ref: 'Hand-off 8; D8',
-    check: ['What do suppliers need on a PO: grade, lengths, tally, delivery window?', 'Do you send offers (like the $225) in writing, or only firm orders?'],
-    assistant: ['Draft the PO from the agreed offer', 'Email it to the supplier from your mailbox (you click Send)'],
+    id: 'doc-supplierpo', dept: 'purchasing', tab: 'purchasing-pos', kind: 'document', title: 'Purchase approval request',
+    intent: 'His request to the BB Pallets office to approve a purchase he has agreed with a supplier: what, how much, at what price, where it goes, and why it is a good buy. The office answers and issues its own PO to the supplier; he records the office PO number here when it comes back. Sent from his mailbox with the reference [TL-R-1042] so the reply matches.',
+    ref: 'D36, D37, D39 · Review section 5',
+    check: ['What does the office need to approve a purchase: price, quantity, why, cash timing?', 'Who at the office approves, and up to what amount?', 'Does the office send the PO to the supplier, or tell you to go ahead?'],
+    assistant: ['Fill it from the agreed offer and the batch calculator', 'Read the office\'s answer and record the approval and PO number'],
     under: posPage,
-    html: () => H.doc('Purchase order PO-S-0415', H.letterhead('Purchase order', [['PO', 'PO-S-0415'], ['Date', 'Nov 10, 2026'], ['Terms', 'Net 30']]) +
-      `<div class="cols"><div class="box2"><div class="k">Supplier</div>Muskoka Sawmill<br>Sawmill Rd, Bracebridge ON</div><div class="box2"><div class="k">Deliver to</div>Kessler Wood Works (Concord yard)<br>for BB Pallets</div><div class="box2"><div class="k">Freight</div>Arranged by BB Pallets, $20 / MBF</div></div>` +
-      `<table><thead><tr><th>Description</th><th>Grade</th><th class="num">Loads</th><th class="num">MBF</th><th class="num">$ / MBF</th><th class="num">Amount</th></tr></thead><tbody>
-      <tr><td>3x3 × 12' kiln-dried, paper-wrapped</td><td>Old stock, as is</td><td class="num">3</td><td class="num">132.0</td><td class="num">$235.00</td><td class="num">$31,020.00</td></tr></tbody></table>
-      <table class="tot"><tr><td>Subtotal</td><td class="num">$31,020.00</td></tr><tr><td>HST 13%</td><td class="num">$4,032.60</td></tr><tr><td>Total CAD</td><td class="num">$35,052.60</td></tr></table>
-      <div class="fine">Tally to be confirmed on delivery. Loads not as described may be refused. Please reference PO-S-0415 on all paperwork.</div><div class="sig"><div>Authorized, BB Pallets</div><div>Accepted, supplier</div></div>`, false),
+    html: () => H.doc('Purchase approval request · R-1042', H.letterhead('Purchase approval request', [['Ref', 'TL-R-1042'], ['To', 'BB Pallets office'], ['Date', 'Nov 17, 2026']]) +
+      `<div class="cols"><div class="box2"><div class="k">Supplier</div>North Shore Forest Products<br>contact: sales desk (example)</div><div class="box2"><div class="k">Deliver to</div>Kessler Wood Works, Concord yard<br>week of Nov 30</div><div class="box2"><div class="k">Why now</div>$20 under the $545 plan · Caldari Road and Jane Street need 2x3 × 39" through January</div></div>` +
+      `<table><thead><tr><th>What</th><th>Grade</th><th class="num">Loads</th><th class="num">MBF</th><th class="num">$ / MBF delivered</th><th class="num">Amount</th></tr></thead><tbody>
+      <tr><td>2x3 × 10' kiln-dried</td><td>#2 & better</td><td class="num">2</td><td class="num">88.0</td><td class="num">$525.00</td><td class="num">$46,200.00</td></tr></tbody></table>
+      <table class="tot"><tr><td>Amount before tax, CAD</td><td class="num">$46,200.00</td></tr><tr><td>Buying gain vs plan ($545)</td><td class="num">$1,760.00</td></tr></table>
+      <div class="box2"><div class="k">Office answer (recorded when it comes back)</div>Approved · Approved with changes · Declined &nbsp; Office PO no. <span class="blank"></span> &nbsp; By <span class="blank"></span> &nbsp; Date <span class="blank"></span></div>
+      <div class="fine">Please reply to this email keeping [TL-R-1042] in the subject. Tax and the supplier PO are the office's.</div><div class="sig"><div>Requested by: Sales, BB Pallets</div><div>Approved by (office)</div></div>`, false),
   });
 
   S({
-    id: 'dlg-purchase', dept: 'purchasing', tab: 'purchasing-pos', kind: 'dialog', title: 'Log a purchased load',
-    intent: 'Record a load the moment it\'s bought or arrives: supplier, lengths, grade, board feet, price and freight. The preview shows how it moves the average cost before you save.',
-    ref: 'Hand-off 4.4, 4.5',
-    check: ['Do you know the exact board-foot tally when a load arrives, or only later?', 'Should a load be split across two yards on one PO?'],
-    assistant: ['Fill this in from a photo of the supplier\'s tally sheet', 'Warn when the price is far from the plan in the price lists'],
+    id: 'dlg-purchase', dept: 'purchasing', tab: 'purchasing-pos', kind: 'dialog', title: 'Record a received load',
+    intent: 'When an approved load arrives, whoever is at the yard confirms the tally (he works remotely, so a photo or a phone call is enough). The tally can differ from the order; cost uses the board feet received. The preview shows how it moves the average cost of that size before saving.',
+    ref: 'Hand-off 4.4, 4.5; D36 · Review S5, S13',
+    check: ['Do you know the exact board-foot tally when a load arrives, or only later?', 'If the tally is short, who tells the supplier and the office?', 'Is average cost kept per size, or per size and yard?'],
+    assistant: ['Fill this in from a photo of the tally sheet', 'Flag a tally that differs from the order by more than 1%'],
     under: posPage,
-    html: () => H.dialog('Log a purchased load', H.form([
-      H.field('Supplier', 'Algonquin Lumber'), H.field('Supplier ref / invoice', 'AL-88213'), H.field('Date received', 'Nov 18, 2026'),
+    html: () => H.dialog('Record a received load · P-0417', H.form([
+      H.field('Supplier', 'Algonquin Lumber'), H.field('Office approval / PO', 'R-1043 · PO 5544', '', true), H.field('Date received', 'Nov 24, 2026'),
       H.field('Size', '2x3'), H.field('Lengths', '6\' & 7\' trim'), H.field('Grade', 'Trim'),
-      H.field('Board feet', '44,000', 'bd ft'), H.field('Price', '$440.00', '/ MBF'), H.field('Freight', 'Included'),
-      H.field('Goes to', 'Concord yard (BB Pallets)'), H.field('Against PO', 'PO-S-0414'), H.field('Paid in', 'CAD'),
-    ]) + H.panel('Effect on average cost · 2x3 at all yards', H.table(['', { t: 'Bd ft', num: true }, { t: 'Avg $ / MBF', num: true }], [
-      ['On hand before', '88,000', '$545.00'], ['This load', '44,000', '$440.00'],
-    ], { foot: ['After', '132,000', '$510.00'] }) + `<div class="toolbar small muted" style="padding-top:10px">(2 × $545 + $440) ÷ 3 = $510. Price lists built on $500 are still close.</div>`, '', true),
-      H.btn('Cancel') + H.btn('Save load', 'primary')),
+      H.field('Ordered', '44,000', 'bd ft', true), H.field('Received (tally)', '43,200', 'bd ft · −800'), H.field('Received by / tally from', 'Mike, Concord yard · photo'),
+      H.field('Price', '$440.00', '/ MBF'), H.field('Freight in', 'Included'), H.field('Currency', 'CAD', '(USD: rate on the day received)'),
+    ]) + H.callout('warn', '<b>Tally is 800 bd ft short of the order.</b> Cost uses 43,200. Tell the office and the supplier?', H.btn('Draft the note', 'sm')) +
+      H.panel('Effect on average cost · 2x3, all yards', H.table(['', { t: 'Bd ft', num: true }, { t: '$ / MBF', num: true }, { t: 'Value', num: true }], [
+        ['On hand before', '88,000', '$545.00', '$47,960'], ['This load, received', '43,200', '$440.00', '$19,008'],
+      ], { foot: ['After', '131,200', '$510.43', '$66,968'] }) + `<div class="toolbar small muted" style="padding-top:10px">Weighted by board feet on delivered cost: (88,000 × $545 + 43,200 × $440) ÷ 131,200 = $510.43. Their rule of thumb (2 × $545 + $440) ÷ 3 = $510 is the same only when the loads are the same size.</div>`, '', true),
+      H.btn('Cancel') + H.btn('Save received load', 'primary')),
   });
 
   const suppliersPage = () => H.head('Purchasing', 'Suppliers', 'Who carries what, typical prices, and the history of every offer and load.', H.btn('Add supplier', '', 'plus')) +

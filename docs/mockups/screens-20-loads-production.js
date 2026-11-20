@@ -116,12 +116,19 @@
     H.gauge('Weight, average', `${n0(LB)} <small>/ 45,000 lb</small>`, LB / 450, `${Math.round(LB / 450)}% · could be ${n0(BF * 1.7)} to ${n0(BF * 2.1)} lb`, BF * 2.1 > 45000 ? 'warn' : 'ok'),
     H.gauge('Board feet', `${n0(BF)} <small>/ ≈ 23,000 planned</small>`, BF / 230, `${Math.round(BF / 230)}% of the planned load for this plant (D43)`),
     H.gauge('Floor', `${Math.round(USED / TL * 100)}%`, USED / TL * 100, `${Math.round(USED / 12)}' of 53' used · packed tight, 3 high`),
-    H.gauge('Weight over axles', `47% <small>/ 53%</small>`, null, 'Front / rear · balanced', 'ok'),
+    H.gauge('Weight over axles (estimate)', `47% <small>/ 53%</small>`, null, 'Front / rear · an estimate; the driver\'s gauges and the scale decide', 'ok'),
   ]);
   const weightRisk = () => `<div class="btns small"><span class="muted">Plan the weight on</span>${H.seg(['Light side', 'Average', 'Heavy side'], 1)}<span class="muted">SPF dry: 1.90 ± 0.20 lb per bd ft. On the heavy side this load is <b>${n0(BF * 2.1)} lb</b>, ${BF * 2.1 > 45000 ? 'over' : 'still under'} the 45,000 limit.</span>${H.go('Species & weights', 'catalog-species', 'ghost sm')}</div>`;
+  const unloadRules = () => `<div class="grid2" style="gap:12px">` +
+    H.panel('Unloads from', `<div class="btns" style="margin-bottom:8px">${H.seg(['Back doors (van)', 'Sides (flatbed)'], 0)}</div><div class="small">Van: the first drop sits nearest the doors, fork openings face the back. Flatbed from the sides: where a drop sits along the deck matters less; the rule is <b>nothing for a later drop on top of an earlier drop's bundles</b>, and fork openings face out (D34).</div>`) +
+    H.panel('Weight limits for this route', H.table(['Where', { t: 'Max load', num: true }, ''], [
+      ['Ontario (pickup, Concord)', '45,000 lb', ''], ['Ontario, spring thaw (Mar–May)', '41,500 lb', H.chip('Not now')],
+      ['Quebec · Michigan · New Jersey', 'set per region', H.chip('To fill in', 'warn')]]) +
+      `<div class="small muted" style="margin-top:8px">Limits are kept per trailer type <b>and</b> region and season; a load is held to the strictest place on its route. A B-train has two decks, each with its own limit, plus a combined total. (Proposed; figures to confirm.)</div>`) +
+    `</div>` + H.callout('warn', '<b>Long stock in a van:</b> 2x4 × 14\' would have to go in lengthwise from the back. Check the forklift and the trailer before planning it in a van.');
   const trailerPick = () => `<div class="btns">${D.trailers.map((t, i) => `<span class="filter ${i === 0 ? 'on' : ''}">${t.name}</span>`).join('')}${H.go('Trailer types', 'settings-trailers', 'ghost sm')}</div>`;
-  const plannerHead = () => H.head(`Load ${st.load} · Proposal ${st.proposal} · ${st.customer}`, 'Two drops: Caldari Road and Jane Street',
-    'Ardent Metals, one buyer, two plants 8 miles apart. Drop 1 goes last on, nearest the doors.',
+  const plannerHead = () => H.head(`Load ${st.load} · Proposal ${st.proposal} · ${st.customer} · ${H.chip('Rev 1', 'brand')}`, 'Two drops: Caldari Road and Jane Street',
+    'Ardent Metals, one buyer, two plants 8 miles apart. In a van, drop 1 goes last on, nearest the doors.',
     H.btn('Split into 2 loads') + H.go('Loading list', 'doc-loadlist', '', 'print') + H.go('Confirm load', 'dlg-confirmload', 'primary', 'check'));
 
   const orderRows = [
@@ -144,9 +151,9 @@
   // ---------- Loads › 3D Planner ----------
   S({
     id: 'loads-planner', dept: 'loads', title: '3D load planner', story: 3,
-    intent: 'Fit the order to a truckload before it goes out. Bundles appear at their real size as they are added, the gauges show board feet, weight and floor live, and you drag bundles to set what goes on first. Each item can go across the trailer or lengthwise, whichever uses less floor. It suggests splitting, cutting or topping up with the plant\'s major sizes, then "Confirm load" locks the plan.',
-    ref: 'Hand-off 4.2 · D11, D13, D14, D15, D16, D31',
-    check: ['How do you stack bundles today: how many high, heavy at the bottom, sizes kept together?', 'Real trailer sizes and weight limits for each trailer type you use.', 'On a two-drop load, does the second plant always get the nose?', 'Who confirms a load: the office, the owner, or the subcontractor?'],
+    intent: 'Fit the order to a truckload before it goes out. Bundles appear at their real size, packed tight, and the gauges show weight (light, average and heavy side), board feet against the plant\'s planned load, floor and an axle estimate. Each item goes across or lengthwise, whichever uses less floor. The drop rule follows how the truck is unloaded: from the back of a van, the first drop sits nearest the doors; from the sides of a flatbed, nothing for a later drop may sit on top of an earlier one. Weight limits come from the trailer type and the region and season of the route (strictest place wins). It suggests splitting, cutting or topping up, and "Confirm load" locks the plan as a revision (Rev 1, Rev 2 after a change).',
+    ref: 'Hand-off 4.2 · D11, D13–D16, D31–D34, D41, D43, D45 · Review S7, M5',
+    check: ['How do you stack bundles today: how many high, heavy at the bottom, sizes kept together?', 'Real weight limits per trailer type, for Ontario, Quebec and the US states you ship to, and in spring thaw.', 'On a flatbed with two stops, does it matter where each plant\'s bundles sit, or only that nothing is on top of the first stop\'s wood?', 'Do you ever ship long stock in a van?'],
     assistant: ['Plan the load from the proposal ("fill this up for Concord, mostly major sizes")', 'Suggest a split or a top-up and show the result before you approve', 'Turn every item to its best direction'],
     dock: H.assistant([
       ['me', 'Fill this truck up for Concord, mostly their major sizes.'],
@@ -155,7 +162,7 @@
     ]),
     html: () => plannerHead() +
       H.stages(D.stages, 1) +
-      gauges() + weightRisk() +
+      gauges() + weightRisk() + unloadRules() +
       `<div class="panel"><div class="hd"><h3>3D view</h3>${trailerPick()}</div><div class="bd">${iso3d()}
         <div class="btns small" style="justify-content:space-between"><span class="muted">Drag to turn, pinch or scroll to zoom. The live version works like the <a href="https://claude.ai/artifact/B8tH5FtyJjvUaC5yp4ws7R" target="_blank" rel="noopener">3D flatbed demo</a>.</span>
         <span class="btns">${H.btn('Angle', 'sm')}${H.btn('Side', 'sm')}${H.btn('Top', 'sm')}${H.btn('Doors end', 'sm')}</span></div></div></div>` +
@@ -166,24 +173,25 @@
       H.callout('info', '<b>2x3 × 39" grooved goes lengthwise.</b> Across, it would use 9" more floor for the same 18 bundles.') +
       H.callout('', '<b>Filler: as many as fit.</b> The packing slip leaves the filler quantity blank, to be filled in at loading.') +
       `</div>` +
-      H.panel('Top view', topView(), H.chip('Drop 1 nearest the doors', 'now')),
+      H.panel('Top view · Rev 1', topView(), H.chip('Van: drop 1 nearest the doors', 'now')),
   });
 
   // ---------- dialog: confirm load ----------
   S({
     id: 'dlg-confirmload', dept: 'loads', tab: 'loads-planner', kind: 'dialog', title: 'Confirm load',
-    intent: 'The "yes, this is the load" step. Confirming locks the plan and makes the packing slip, the bill of lading and the subcontractor job in one go, and records who confirmed it and when. (Proposed: it is used once the customer\'s PO is in; before that, the plan goes out as the proposal.)',
-    ref: 'Hand-off 4.2 (Confirm) · D11',
-    check: ['Is a load confirmed before or after the customer\'s PO arrives?', 'After confirming, who may still change it, and does the subcontractor get told automatically?'],
+    intent: 'The "yes, this is the load" step. Confirming locks the plan as a revision (Rev 1) and makes the subcontractor job, the packing slip and the loading list, and records who confirmed it and when. The bill of lading is not made here: it needs the carrier, so it is made when the booking is confirmed. A later change makes Rev 2 and lists who must be told again (subcontractor, office and carrier, customer). (Proposed: used once the customer\'s PO is in.)',
+    ref: 'Hand-off 4.2 (Confirm) · D11, D41 · Review M5',
+    check: ['Is a load confirmed before or after the customer\'s PO arrives?', 'When a confirmed load changes, who do you have to call: the subcontractor, the office, the customer?'],
     assistant: ['List what will be created before you confirm', 'Warn if a gauge is over its limit'],
     under: () => plannerHead() + gauges(),
     html: () => H.dialog(`Confirm load ${st.load}`,
       H.callout('ok', `<b>All gauges are inside their limits.</b> Weight ${Math.round(LB / 450)}%, board feet ${Math.round(BF / 230)}% of the planned load, floor ${Math.round(USED / TL * 100)}%, axles balanced.`) +
       H.table(['', 'What happens', 'Result'], [
-        [H.box(true), 'Lock the 3D plan and the loading order', 'Plan v3, locked'],
+        [H.box(true), 'Lock the 3D plan and the loading order', 'Rev 1, locked'],
+        [H.box(true), 'Make the job for the subcontractor', `${st.job} · Kessler Wood Works · Rev 1`],
         [H.box(true), 'Make the packing slip (filler quantity left blank)', 'Packing slip for 24-0318'],
-        [H.box(true), 'Make the bill of lading for the carrier', `${st.bol} · Trans-Ontario Freight`],
-        [H.box(true), 'Make the job for the subcontractor', `${st.job} · Kessler Wood Works`],
+        [H.box(true), 'Make the loading list (straps, riser direction per bundle)', `Loading list ${st.load} · Rev 1`],
+        ['', '<span class="muted">Bill of lading</span>', '<span class="muted">Made when the carrier confirms the booking</span>'],
         [H.box(false), 'Email the job to Kessler now', 'You can also send it from Production › Jobs'],
       ]) +
       `<div class="form">${H.field('Confirmed by', 'Sales desk', '', true)}${H.field('Date and time', 'Nov 19, 2026 · 3:42 pm', '', true)}${H.field('Ship date', 'Tue Nov 24, 2026')}</div>`,
@@ -192,24 +200,25 @@
 
   // ---------- document: loading list ----------
   const llRows = [
-    [1, 'Nose', '3x3 × 31"', 9, 'Across, 1 row of 3, 3 high', '2 · Jane Street'],
-    [2, 'Rows 2–4', '2x3 × 39" grooved', 18, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
-    [3, 'Rows 5–7', '3x3 × 31"', 27, 'Across, 3 per row, 3 high', '1 · Caldari Road'],
-    [4, 'Rows 8–9', '3x3 × 37½"', 12, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
+    [1, 'Nose', '3x3 × 31"', 9, 'Across, 1 row of 3, 3 high · risers turned (openings to the back)', '2 · Jane Street'],
+    [2, 'Rows 2–4', '2x3 × 39" grooved', 18, 'Lengthwise, 2 per row, 3 high · risers across the pieces', '1 · Caldari Road'],
+    [3, 'Rows 5–7', '3x3 × 31"', 27, 'Across, 3 per row, 3 high · risers turned (openings to the back)', '1 · Caldari Road'],
+    [4, 'Rows 8–9', '3x3 × 37½"', 12, 'Lengthwise, 2 per row, 3 high · risers across the pieces', '1 · Caldari Road'],
     [5, 'Doors', '2x4 × 40" filler', '<span class="blank"></span>', 'Lengthwise, as many as fit', '1 · Caldari Road'],
   ];
   S({
     id: 'doc-loadlist', dept: 'loads', tab: 'loads-planner', kind: 'document', title: 'Loading list', story: 8,
-    intent: 'The step-by-step list for whoever loads the truck, printed from the same 3D plan: what goes on first (the nose) to last (the doors), which way each bundle faces, and which drop it belongs to. On a two-drop load the first drop is loaded last, nearest the doors.',
-    ref: 'Hand-off 4.2, 8 · D8, D15, D31',
-    check: ['Does the loader need a drawing on the list, or only the steps?', 'Should the list show bundle tags or counts per row?'],
+    intent: 'The step-by-step list for whoever loads the truck, printed from the same plan revision: what goes on first (the nose) to last (the doors), which way each bundle faces, which way its risers run so the fork openings face where it will be unloaded, and which drop it belongs to. It also prints the minimum number of straps. On a two-drop van load the first drop is loaded last, nearest the doors.',
+    ref: 'Hand-off 4.2, 8 · D8, D15, D31, D34, D41 · Review S7',
+    check: ['Does the loader need a drawing on the list, or only the steps?', 'How many straps does a load like this get today, and who decides?'],
     assistant: ['Email it to the subcontractor or the driver', 'Reprint it after a change to the plan'],
     under: () => plannerHead(),
-    html: () => H.doc('Loading list · ' + st.load, H.letterhead('LOADING LIST', [['Load', st.load], ['Order', st.order], ['Ship date', 'Nov 24, 2026'], ['Trailer', '53\' dry van']]) +
+    html: () => H.doc('Loading list · ' + st.load, H.letterhead('LOADING LIST', [['Load', st.load], ['Revision', 'Rev 1'], ['Order', st.order], ['Ship date', 'Nov 24, 2026'], ['Trailer', '53\' dry van']]) +
       `<div class="cols"><div class="box2"><div class="k">Load at</div>Kessler Wood Works, Concord yard</div><div class="box2"><div class="k">Drop 1 (load last, at the doors)</div>Ardent Metals, Caldari Road plant, Concord ON</div><div class="box2"><div class="k">Drop 2 (load first, at the nose)</div>Ardent Metals, Jane Street plant, Vaughan ON</div></div>` +
       `<table><thead><tr><th>Step</th><th>Where</th><th>Item</th><th class="num">Bundles</th><th>How</th><th>Drop</th><th>Done</th></tr></thead><tbody>${llRows.map(r => `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td class="num">${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>☐</td></tr>`).join('')}</tbody></table>` +
       `<div style="border:1px solid var(--paper-line);padding:8px">${topView({ s: 1.2 })}</div>` +
-      `<div class="fine">Risers (4x4) under every bundle and every layer. Filler: load as many as fit and write the count on the packing slip.</div><div class="sig"><div>Loaded by</div><div>Bundles counted</div><div>Date and time</div></div>`),
+      `<div class="box2" style="margin-top:10px"><div class="k">Securement (proposed, to confirm with the carrier)</div>Minimum straps: <b>14</b> (about one every 3 feet of load, plus one per tall stack). Extra layers on top of a bundle must still be banded and strapped.</div>` +
+      `<div class="fine">Risers (4x4) under every bundle and every layer; the gaps between them (fork openings) face where the load is unloaded: the back doors here. Filler: load as many as fit and write the count on the packing slip.</div><div class="sig"><div>Loaded by</div><div>Bundles counted</div><div>Date and time</div></div>`),
   });
 
   // ---------- Loads › Schedule ----------
@@ -219,7 +228,7 @@
     intent: 'Every load by ship date: delivered loads with their carrier, customer pickups, and the second half of split loads coming due (now + 3 weeks, or now + 1 month). It answers "what goes out this week, and what is coming". (Proposed layout.)',
     ref: 'Hand-off 4.1, 4.2, 9 · D16',
     check: ['How far ahead do you plan loads: one week, two?', 'Should pickups and delivered loads sit on the same calendar?', 'Do you want Jewish holidays and Shabbos marked when scheduling?'],
-    assistant: ['"What ships next week?"', 'Remind you when a split load is coming due', 'Move a load to another day and tell the subcontractor and carrier'],
+    assistant: ['"What ships next week?"', 'Remind you when a split load is coming due', 'Move a load to another day: tell the subcontractor, and ask the office to change the transport PO (a new request)'],
     html: () => H.head('Loads', 'Schedule', 'Week of Nov 23, 2026', H.seg(['Week', 'Month', 'List'], 0) + H.btn('‹') + H.btn('Today') + H.btn('›') + H.btn('Excel', '', 'xls')) +
       H.kpis([H.gauge('This week', '5 <small>loads</small>', null, '4 delivered · 1 pickup'), H.gauge('Board feet out', '104,800', null, 'Across 5 loads'), H.gauge('Split loads due', '2', null, 'In the next 30 days', 'warn'), H.gauge('Backup carrier', '1 of 4', null, 'Bluewater on Thursday')]) +
       `<div class="grid3" style="grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr))">` +
@@ -240,16 +249,16 @@
   const bolUnder = () => H.head('Loads', 'Bills of lading', '', '');
   S({
     id: 'loads-bol', dept: 'loads', title: 'Bills of lading',
-    intent: 'One bill of lading per load, for the carrier. It is made when the load is confirmed, printed or emailed to the carrier, and the signed copy is attached when it comes back. US loads also carry the customs broker\'s details.',
-    ref: 'Hand-off 4.6, 7, 8 · D8, D26',
-    check: ['Do you use your own BOL form or the carrier\'s?', 'Which papers go with a US load besides the BOL?', 'Who keeps the signed copy today?'],
+    intent: 'One bill of lading per load. It is drafted when the carrier confirms the booking (it needs the carrier), as a draft for whoever issues it (the office, the subcontractor at loading, or him; to confirm). The signed copy comes back as a photo from his phone and closes the delivery, or records a problem. US loads also carry the customs broker\'s details.',
+    ref: 'Hand-off 4.6, 7, 8 · D8, D26, D35, D36 · Review section 5',
+    check: ['Who makes the bill of lading today: the office, the subcontractor, or you?', 'Do you use your own BOL form or the carrier\'s?', 'Who gets the signed copy back, and how?'],
     assistant: ['Email the BOL to the carrier', 'Find loads still missing a signed BOL'],
-    html: () => H.head('Loads', 'Bills of lading', '', H.btn('Excel', '', 'xls')) +
+    html: () => H.head('Loads', 'Bills of lading', 'Drafts for whoever issues them (to confirm: office, subcontractor or you)', H.btn('Excel', '', 'xls') + H.go('Record a delivery', 'dlg-delivery', 'primary', 'check')) +
       H.panel('', H.filters(['*All', 'Draft', 'Sent to carrier', 'Signed', 'US loads']) + H.table(['BOL', 'Load', 'Ship date', 'Consignee', 'Carrier', { t: 'Bundles', num: true }, { t: 'Weight lb', num: true }, 'Status', ''], [
         [`<a href="#doc-bol">${st.bol}</a>`, st.load, 'Nov 24', 'Ardent · Caldari Road + Jane Street', 'Trans-Ontario Freight', '70+', '40,200', H.chip('Ready', 'info'), H.go('Open', 'doc-bol', 'sm')],
         ['BOL-2419', 'L-2419', 'Nov 26', 'Garden State · Newark NJ', 'Bluewater Carriers', 96, '44,200', H.chip('Needs broker', 'warn'), H.btn('Open', 'sm')],
         ['BOL-2416', 'L-2416', 'Nov 24', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 92, '42,700', H.chip('Sent to carrier'), H.btn('Open', 'sm')],
-        ['BOL-2411', 'L-2411', 'Nov 17', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 90, '43,900', H.chip('Signed', 'ok'), H.btn('Open', 'sm')],
+        ['BOL-2411', 'L-2411', 'Nov 17', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 90, '43,900', H.chip('Delivered · 1 short', 'warn'), H.go('Open', 'dlg-delivery', 'sm')],
         ['BOL-2408', 'L-2408', 'Nov 12', 'Garden State · Newark NJ', 'Liberty Line (US)', 94, '44,800', H.chip('Signed', 'ok'), H.btn('Open', 'sm')],
       ], { sel: 0 }), '', true),
   });
@@ -257,12 +266,12 @@
   // ---------- document: BOL ----------
   S({
     id: 'doc-bol', dept: 'loads', tab: 'loads-bol', kind: 'document', title: 'Bill of lading', story: 8,
-    intent: 'The carrier\'s paper for the load: shipper, consignees in drop order, what is on the truck and its weight, and signatures at pickup and delivery. It is made from the confirmed plan, so the bundle counts and weight match. On US loads the customs broker block is filled in.',
-    ref: 'Hand-off 4.6, 7 · D8, D26',
+    intent: 'The carrier\'s paper for the load: shipper, consignees in drop order, what is on the truck and its weight, and signatures at pickup and delivery. It is drafted from the confirmed plan revision once the carrier has confirmed, so bundle counts, weight and carrier match. It is a draft for whoever issues it (office, subcontractor at loading, or him; to confirm). On US loads the customs broker block is filled in.',
+    ref: 'Hand-off 4.6, 7 · D8, D26, D35, D41 · Review section 5',
     check: ['Which freight description do you use for dunnage (e.g. "wood dunnage, untreated")?', 'Does a two-drop load get one BOL with two stops, or one BOL per stop?', 'Which customs broker do you use for US loads?'],
-    assistant: ['Email it to the carrier from your mailbox', 'Fill the broker block from the US plant\'s record'],
+    assistant: ['Send the draft to whoever issues it', 'Fill the broker block from the US plant\'s record', 'Read the photo of the signed copy and record the delivery'],
     under: bolUnder,
-    html: () => H.doc('Bill of lading · ' + st.bol, H.letterhead('STRAIGHT BILL OF LADING', [['BOL', st.bol], ['Load', st.load], ['Order', st.order], ['Date', 'Nov 24, 2026'], ['Not negotiable', '']]) +
+    html: () => H.doc('Bill of lading · ' + st.bol + ' · draft', H.letterhead('STRAIGHT BILL OF LADING', [['BOL', st.bol + ' (draft)'], ['Load', st.load + ' · Rev 1'], ['Order', st.order], ['Date', 'Nov 24, 2026'], ['Not negotiable', '']]) +
       `<div class="cols"><div class="box2"><div class="k">Shipper · pick up at</div>BB Pallets c/o Kessler Wood Works<br>Concord yard, Concord ON</div><div class="box2"><div class="k">Carrier</div>Trans-Ontario Freight<br>Trailer 53' dry van · # ________ · Seal # ________</div><div class="box2"><div class="k">Freight terms</div>Prepaid · bill to BB Pallets</div></div>` +
       `<div class="cols"><div class="box2"><div class="k">Stop 1 · consignee</div>Ardent Metals, Caldari Road plant<br>Concord ON · Receiving: Dana Ferreira</div><div class="box2"><div class="k">Stop 2 · consignee</div>Ardent Metals, Jane Street plant<br>Vaughan ON · same buyer</div></div>` +
       `<table><thead><tr><th>Stop</th><th class="num">Bundles</th><th>Description</th><th class="num">Weight lb</th></tr></thead><tbody>
@@ -271,50 +280,69 @@
         <tr><td></td><td class="num"><b>70+</b></td><td><b>Total</b></td><td class="num"><b>40,200</b></td></tr></tbody></table>` +
       `<div class="box2" style="opacity:.55"><div class="k">US loads only · customs broker</div>Broker: ______________ · PARS / entry #: ______________ · Commercial invoice attached ☐</div>` +
       `<div class="fine">Received, subject to the classifications and tariffs in effect on the date of issue, the property described above in apparent good order.</div>` +
-      `<div class="sig"><div>Shipper signature · date</div><div>Driver signature · date</div><div>Consignee stop 1 · date</div><div>Consignee stop 2 · date</div></div>`, false),
+      `<div class="sig"><div>Shipper signature · date</div><div>Driver signature · date</div><div>Consignee stop 1 · date</div><div>Consignee stop 2 · date</div></div>` +
+      `<div class="btns" style="justify-content:center;margin-top:18px">${H.go('Signed copy back: record the delivery', 'dlg-delivery', 'primary', 'check')}</div>`, false),
+  });
+
+  // ---------- dialog: delivered / problem on delivery (Review S2) ----------
+  S({
+    id: 'dlg-delivery', dept: 'loads', tab: 'loads-bol', kind: 'dialog', title: 'Delivered, or a problem on delivery', story: 11,
+    intent: 'The real end of the order is delivered and paid, not the invoice. When the signed bill of lading comes back (a photo from his phone at the yard or from the driver), the load is marked delivered. If the customer reports a problem (short, damaged, wrong size, refused), it is recorded here, and it can raise a credit-note request to the office and a claim note for the carrier.',
+    ref: 'Review S2 · D29, D36, D39, D41',
+    check: ['What happens today when a load arrives short, damaged or wrong? Who gives the credit?', 'Who gets the signed BOL back, and how quickly?', 'Do you ever claim against a carrier for damage?'],
+    assistant: ['Read the photo of the signed BOL and fill in the delivery', 'Draft the credit-note request to the office and the note to the carrier'],
+    under: () => H.head('Loads', 'Bills of lading', '', '') + H.panel('', H.table(['BOL', 'Load', 'Consignee', 'Status'], [['BOL-2411', 'L-2411', 'Ardent · Caldari Road', H.chip('Delivered · 1 short', 'warn')], [st.bol, st.load, 'Ardent · Caldari Road + Jane Street', H.chip('Draft', '')]]), '', true),
+    html: () => H.dialog('Delivery · L-2411 · Ardent Metals, Caldari Road',
+      `<div class="grid2" style="gap:14px"><div>${H.drop('Photo of the signed bill of lading (from your phone)')}<div class="small muted" style="margin-top:6px">BOL-2411 · signed by D. Ferreira, Nov 17, 2:40 pm · read by the Assistant</div></div>` +
+      H.form([H.field('Delivered', 'Nov 17, 2026 · 2:40 pm'), H.field('Signed by', 'D. Ferreira (receiving)'), H.field('Exceptions on the BOL', '"1 bundle 3x3 short"')]) + `</div>` +
+      `<div><b>Problem on delivery</b><div class="btns" style="margin-top:6px">${H.seg(['None', 'Short', 'Damaged', 'Wrong size', 'Refused'], 1)}</div></div>` +
+      H.table(['Item', { t: 'On the BOL', num: true }, { t: 'Received', num: true }, { t: 'Difference', num: true }, { t: 'Value', num: true }], [['3x3 × 31"', 27, 26, H.chip('−1 bundle', 'warn'), '$214.20']]) +
+      H.callout('warn', '<b>Who carries it?</b> The loaded quantities from Kessler said 27, the customer signed for 26. Ask the office for a credit note to Ardent, and keep a claim note for the carrier until it is sorted out.') +
+      `<div class="btns">${H.go('Ask the office for a credit note (new request)', 'office-requests', '', 'mail')}${H.btn('Claim note for the carrier')}</div>`,
+      H.btn('Cancel') + H.btn('Mark delivered', 'primary', 'check'), true),
   });
 
   // ---------- Production › Jobs ----------
   const jobsUnder = () => H.head('Production', 'Jobs', '', '');
   S({
     id: 'production-jobs', dept: 'production', title: 'Subcontractor jobs', story: 7,
-    intent: 'Each order becomes a job for the chosen subcontractor: the items, quantities, fillers and packing slip, emailed from here. After loading, the real quantities come back (by phone or email today) and the office types them in, which updates the order before invoicing.',
-    ref: 'Hand-off 4.6 · D7, D25',
-    check: ['How many subcontractors do you use, and which does what?', 'What does the subcontractor need on the job: cut list, stock lengths to use, loading order?', 'How soon after loading do you get the real quantities?'],
-    assistant: ['Draft and email the job to the subcontractor', '"Which jobs are loaded but have no quantities back?"', 'Type in quantities from a phone call you dictate'],
+    intent: 'Each order becomes a job for the chosen subcontractor: the items, quantities, fillers, which way each bundle\'s risers run (D34) and the packing slip, emailed from here as a revision (Rev 1; a change sends Rev 2 with what changed). The subcontractor acknowledges it and gives a <b>ready date</b>; the truck booking is not final until that date is known. After loading, the real quantities come back (by phone or email today) and he types them in, then sends the invoice request to the office.',
+    ref: 'Hand-off 4.6 · D7, D25, D34, D36, D41 · Review S1, M5',
+    check: ['Do jobs go to the subcontractor from you directly, or through the office?', 'Does the subcontractor tell you when the wood will be ready before the truck is booked?', 'How soon after loading do you get the real quantities?'],
+    assistant: ['Draft and email the job (or Rev 2 after a change) to the subcontractor', '"Which jobs have no ready date yet?"', 'Type in quantities from a phone call you dictate'],
     html: () => H.head('Production', 'Jobs', 'By subcontractor', H.btn('New job', '', 'plus') + H.btn('Excel', '', 'xls')) +
       H.stages(D.stages, 3) +
       `<div class="split">` +
-      H.panel('', H.filters(['*Open', 'Emailed', 'Cutting', 'Loaded, no quantities', 'Done']) + H.table(['Job', 'Order · plant', 'Subcontractor', 'Ship', 'Status', ''], [
-        [`<b class="nowrap">${st.job}</b>`, `${st.order} · Caldari Rd + Jane St`, 'Kessler Wood Works', '<span class=\"nowrap\">Nov 24</span>', H.chip('Ready to email', 'now'), H.go('Job sheet', 'doc-jobsheet', 'sm')],
-        ['<span class=\"nowrap\">J-1181</span>', '24-0316 · Caldari Road', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 24</span>', H.chip('Cutting', 'info'), H.btn('Open', 'sm')],
-        ['<span class=\"nowrap\">J-1179</span>', '24-0311 · Caldari Road', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 17</span>', H.chip('Loaded, no quantities', 'warn'), H.go('Enter quantities', 'dlg-loaded', 'sm')],
-        ['<span class=\"nowrap\">J-1180</span>', '24-0314 · Newark NJ', 'Pinegrove Pallet', '<span class=\"nowrap\">Nov 26</span>', H.chip('Emailed', 'info'), H.btn('Open', 'sm')],
-        ['<span class=\"nowrap\">J-1175</span>', '24-0305 · Toronto (pickup)', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 12</span>', H.chip('Done', 'ok'), H.btn('Open', 'sm')],
+      H.panel('', H.filters(['*Open', 'Emailed', 'Cutting', 'Loaded, no quantities', 'Done']) + H.table(['Job', 'Order · plant', 'Subcontractor', 'Ready', 'Ship', 'Status', ''], [
+        [`<b class="nowrap">${st.job}</b>`, `${st.order} · Caldari Rd + Jane St`, 'Kessler Wood Works', '<span class=\"muted\">asked</span>', '<span class=\"nowrap\">Nov 24</span>', H.chip('Rev 1 · ready to email', 'now'), H.go('Job sheet', 'doc-jobsheet', 'sm')],
+        ['<span class=\"nowrap\">J-1181</span>', '24-0316 · Caldari Road', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 23</span>', '<span class=\"nowrap\">Nov 24</span>', H.chip('Cutting · acknowledged', 'info'), H.btn('Open', 'sm')],
+        ['<span class=\"nowrap\">J-1179</span>', '24-0311 · Caldari Road', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 16</span>', '<span class=\"nowrap\">Nov 17</span>', H.chip('Loaded, no quantities', 'warn'), H.go('Enter quantities', 'dlg-loaded', 'sm')],
+        ['<span class=\"nowrap\">J-1180</span>', '24-0314 · Newark NJ', 'Pinegrove Pallet', '<span class=\"nowrap\" style=\"color:var(--bad)\">Nov 27</span>', '<span class=\"nowrap\">Nov 26</span>', H.chip('Ready after the truck', 'bad'), H.btn('Open', 'sm')],
+        ['<span class=\"nowrap\">J-1175</span>', '24-0305 · Toronto (pickup)', 'Kessler Wood Works', '<span class=\"nowrap\">Nov 11</span>', '<span class=\"nowrap\">Nov 12</span>', H.chip('Done', 'ok'), H.btn('Open', 'sm')],
       ], { sel: 0 }), '', true) +
-      H.panel(`${st.job} · ${st.order}`, H.form([H.field('Subcontractor', 'Kessler Wood Works ▾'), H.field('Ship date', 'Tue Nov 24, 2026'), H.field('Load', `${st.load} · 53' dry van`, '', true), H.field('Packing slip', 'Filler line blank', '', true)]) +
-        `<div style="margin-top:14px">${H.table(['Item', { t: 'Bundles', num: true }, 'From stock'], [['3x3 × 31"', 54, '3x3 × 10\' (3 pcs)'], ['2x3 × 39" grooved', 18, '2x3 × 10\' (3 pcs) · groove'], ['3x3 × 37½"', 12, '3x3 × 12\' (3 pcs)'], ['2x4 × 40" filler', 'Fill', '2x4 × 10\' (3 pcs)']])}</div>` +
+      H.panel(`${st.job} · ${st.order} · Rev 1`, H.form([H.field('Subcontractor', 'Kessler Wood Works ▾'), H.field('Ship date', 'Tue Nov 24, 2026'), H.field('Ready date (from Kessler)', 'Asked · not given yet'), H.field('Acknowledged', 'Not yet'), H.field('Load', `${st.load} · 53' dry van`, '', true), H.field('Packing slip', 'Filler line blank', '', true)]) +
+        `<div style="margin-top:14px">${H.table(['Item', { t: 'Bundles', num: true }, 'From stock'], [['3x3 × 31"', 36, '3x3 × 10\' (3 pcs)'], ['2x3 × 39" grooved', 18, '2x3 × 10\' (3 pcs) · groove'], ['3x3 × 37½"', 12, '3x3 × 12\' (3 pcs)'], ['2x4 × 40" filler', 'Fill', '2x4 × 10\' (3 pcs)']])}</div>` +
         `<div class="btns" style="margin-top:14px">${H.go('Job sheet', 'doc-jobsheet', '', 'pdf')}${H.go('Packing slip', 'doc-packing', '', 'pdf')}${H.go('Email to Kessler', 'dlg-email', 'primary', 'mail')}</div>` +
-        `<div class="small muted" style="margin-top:12px">Emails are logged here and on the order.</div>`) +
+        `<div class="small muted" style="margin-top:12px">Emails are logged here and on the order. Pinegrove's ready date (Nov 27) is after its truck (Nov 26): tell the office before the carrier is final.</div>`) +
       `</div>`,
   });
 
   // ---------- document: job sheet ----------
   S({
     id: 'doc-jobsheet', dept: 'production', tab: 'production-jobs', kind: 'document', title: 'Subcontractor job sheet', story: 7,
-    intent: 'What the subcontractor needs to cut, groove and load: the items and bundles, which stock lengths to cut them from, the fillers, the ship date and the loading order. It replaces the order the office used to type up and send. (Layout proposed until we see theirs.)',
-    ref: 'Hand-off 4.6, 8 · D7, D8',
-    check: ['Can we see a job sheet as you send it today?', 'Should the sheet say which stock lengths to cut from, or leave it to the subcontractor?'],
+    intent: 'What the subcontractor needs to cut, groove and load: the items and bundles, which stock lengths to cut them from, which way each bundle\'s risers run (so the fork openings face where it will be unloaded), the fillers, the ship date and the loading order. It carries a revision number; Rev 2 says what changed. The subcontractor acknowledges it and writes the ready date. (Layout proposed until we see theirs.)',
+    ref: 'Hand-off 4.6, 8 · D7, D8, D34, D41 · Review S1, M5',
+    check: ['Can we see a job sheet as you send it today?', 'Can the subcontractor build bundles with the risers turned either way on request?', 'Does the subcontractor reply with a ready date, or only call when it is done?'],
     assistant: ['Email the job sheet with the packing slip and loading list attached', 'Translate the notes for the subcontractor if needed'],
     under: jobsUnder,
-    html: () => H.doc('Job sheet · ' + st.job, H.letterhead('JOB SHEET', [['Job', st.job], ['Order', st.order], ['Load', st.load], ['Ship date', 'Nov 24, 2026']]) +
+    html: () => H.doc('Job sheet · ' + st.job, H.letterhead('JOB SHEET', [['Job', st.job], ['Revision', 'Rev 1'], ['Order', st.order], ['Load', st.load], ['Ship date', 'Nov 24, 2026']]) +
       `<div class="cols"><div class="box2"><div class="k">To</div>Kessler Wood Works<br>Concord yard</div><div class="box2"><div class="k">Ship to</div>Ardent Metals · Caldari Road plant (drop 1)<br>Ardent Metals · Jane Street plant (drop 2)</div><div class="box2"><div class="k">Trailer · carrier</div>53' dry van · Trans-Ontario Freight<br>Pickup Nov 24, 7:00 am</div></div>` +
-      `<table><thead><tr><th>Item</th><th class="num">Pieces / bundle</th><th class="num">Bundles</th><th>Cut from</th><th>Extra work</th></tr></thead><tbody>
-        <tr><td>3x3 × 31"</td><td class="num">140</td><td class="num">54</td><td>3x3 × 10' (3 pcs, 7" waste)</td><td></td></tr>
-        <tr><td>2x3 × 39" grooved</td><td class="num">210</td><td class="num">18</td><td>2x3 × 10' (3 pcs, 3" waste)</td><td>Groove</td></tr>
-        <tr><td>3x3 × 37½"</td><td class="num">140</td><td class="num">12</td><td>3x3 × 12' (3 pcs, 31½" left)</td><td></td></tr>
-        <tr><td>2x4 × 40" filler</td><td class="num">150</td><td class="num">As many as fit</td><td>2x4 × 10' (3 pcs)</td><td>Count at loading</td></tr></tbody></table>` +
-      `<div class="fine">Load in the order on the attached loading list: Jane Street bundles at the nose, Caldari Road at the doors. Call or email the loaded quantities (fillers especially) to the office the same day.</div><div class="sig"><div>Received by</div><div>Date</div></div>`, false),
+      `<table><thead><tr><th>Item</th><th class="num">Pieces / bundle</th><th class="num">Bundles</th><th>Cut from</th><th>Risers</th><th>Extra work</th></tr></thead><tbody>
+        <tr><td>3x3 × 31"</td><td class="num">140</td><td class="num">36</td><td>3x3 × 10' (3 pcs, 27" left)</td><td>Turned: along the pieces</td><td></td></tr>
+        <tr><td>2x3 × 39" grooved</td><td class="num">210</td><td class="num">18</td><td>2x3 × 10' (3 pcs, 3" waste)</td><td>Across the pieces</td><td>Groove</td></tr>
+        <tr><td>3x3 × 37½"</td><td class="num">140</td><td class="num">12</td><td>3x3 × 12' (3 pcs, 31½" left)</td><td>Across the pieces</td><td></td></tr>
+        <tr><td>2x4 × 40" filler</td><td class="num">150</td><td class="num">As many as fit</td><td>2x4 × 10' (3 pcs)</td><td>Across the pieces</td><td>Count at loading</td></tr></tbody></table>` +
+      `<div class="fine">Load in the order on the attached loading list: Jane Street bundles at the nose, Caldari Road at the doors. Risers: the fork openings must face the back doors (van). Please reply with your ready date. Call or email the loaded quantities (fillers especially) the same day.</div><div class="sig"><div>Received by · acknowledged</div><div>Ready date</div></div>`, false),
   });
 
   // ---------- document: packing slip ----------
@@ -339,8 +367,8 @@
   // ---------- dialog: loaded quantities back ----------
   S({
     id: 'dlg-loaded', dept: 'production', tab: 'production-jobs', kind: 'dialog', title: 'Loaded quantities back', story: 9,
-    intent: 'After loading, the subcontractor phones or emails what actually went on the truck, and the office types it in here. Differences from the order show at once, the filler count is filled in, and "Update order" makes the invoice from the real quantities. Inventory books the shipped board feet with 5% waste.',
-    ref: 'Hand-off 4.5, 4.6 · D25',
+    intent: 'After loading, the subcontractor phones or emails what actually went on the truck, and he types it in here (or the Assistant reads the email for him to check). Differences from the order show at once, the filler count is filled in, and he sends the invoice request to the office with the real quantities; the office invoices (D36). When inventory (phase two) is on, the shipped board feet are booked with 5% waste.',
+    ref: 'Hand-off 4.5, 4.6 · D25, D36, D39, D44 · Review section 5',
     check: ['Do quantities come back per bundle or per piece?', 'If the load differs from the PO, does the customer need to approve before invoicing?'],
     assistant: ['Read the subcontractor\'s email and fill in the quantities for you to check', 'Flag a difference bigger than one bundle'],
     under: jobsUnder,
@@ -354,8 +382,8 @@
         ['2x4 × 40" filler', '1', 'Fill', '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end;border-color:var(--brand)">5</span>', H.chip('Filled in', 'info'), '1,665'],
       ], { cls: ['', '', 'diff', '', ''], foot: ['Total', '', '66+', '70', '', '21,224'] }) +
       H.callout('warn', '<b>One bundle of 3x3 × 31" short for Caldari Road.</b> The order and invoice use the loaded quantity. Add a note for the customer?') +
-      H.callout('info', 'Inventory: 21,224 bd ft shipped is booked as 22,285 bd ft out (5% waste added at shipping).'),
-      H.btn('Cancel') + H.btn('Save draft') + H.go('Update order for invoicing', 'doc-invoice', 'primary', 'check'), true),
+      H.callout('info', 'When inventory (phase two) is on: 21,224 bd ft shipped is booked as 22,285 bd ft out (5% waste added at shipping).'),
+      H.btn('Cancel') + H.btn('Save draft') + H.go('Send invoice request to the office', 'doc-invoice', 'primary', 'mail'), true),
   });
 
   // ---------- Production › Subcontractors ----------
@@ -364,20 +392,20 @@
       ? [['Wood coming in', '$135.00 / MBF'], ['Grooving', '$18.00 / MBF'], ['Extra cutting (short lengths)', '$9.00 / MBF'], ['Loading', 'Included']]
       : [['Wood coming in', '$135.00 / MBF'], ['Pallet assembly', '$4.50 / pallet'], ['Heat treatment', 'Not offered']]) +
     `<div class="form" style="margin-top:12px">${H.field('Contact', i === 0 ? 'Joe Kessler · 905-555-0144' : 'Anna Pinegrove · 905-555-0178', '', true)}${H.field('Email', i === 0 ? 'jobs@kessler-example.ca' : 'office@pinegrove-example.ca', '', true)}</div>` +
-    `<div class="kpis" style="margin-top:12px">${H.gauge('Open jobs', String(s.jobs))}${H.gauge('Processed Nov', i === 0 ? '612 <small>MBF</small>' : '88 <small>MBF</small>')}${H.gauge('To pay Nov', i === 0 ? '$86,940' : '$13,300')}</div>`,
+    `<div class="kpis" style="margin-top:12px">${H.gauge('Open jobs', String(s.jobs))}${H.gauge('Processed Nov', i === 0 ? '612 <small>MBF</small>' : '88 <small>MBF</small>')}${H.gauge('Expected charge Nov', i === 0 ? '$86,940' : '$13,300', null, 'estimate to check their bill')}</div>`,
     H.btn('Edit', 'sm') + H.go('Email', 'dlg-email', 'sm'));
   S({
     id: 'production-subs', dept: 'production', title: 'Subcontractors',
-    intent: 'Each subcontractor with what they do (cut, groove, pallets), their yard, contacts and rate card, their open jobs, and what BB Pallets owes them for wood processed. Their pay is per MBF of wood coming in plus extras. Their own wood is not tracked in Timberline.',
-    ref: 'Hand-off 4.6, 6 · D7, D24, D25',
+    intent: 'Each subcontractor with what they do (cut, groove, pallets), their yard, contacts and rate card, and their open jobs. From the rate card it shows the <b>expected charge</b> for wood processed, an estimate for checking their bill, not a payable: the office pays them (D36). Their own wood is not tracked in Timberline.',
+    ref: 'Hand-off 4.6, 6 · D7, D24, D25, D36 · Review S12',
     check: ['How is each subcontractor paid: per MBF in, per piece, per load, plus which extras?', 'Do you pay per job or once a month?', 'Should a subcontractor ever log in, or is email enough?'],
-    assistant: ['"How much do we owe Kessler for November?"', 'Compare cost per MBF between subcontractors'],
+    assistant: ['"What should Kessler\'s November bill come to?"', 'Compare cost per MBF between subcontractors'],
     html: () => H.head('Production', 'Subcontractors', '', H.btn('Add subcontractor', '', 'plus')) +
       H.callout('info', '<b>Their own wood is not tracked.</b> Only BB Pallets\' wood in their yard is counted (D24). Count sheets remind counters to leave the subcontractor\'s pile out.') +
       `<div class="grid2">${D.subs.map(subCard).join('')}</div>` +
-      H.panel('Payments due', H.table(['Subcontractor', 'Period', { t: 'MBF in', num: true }, { t: 'Base', num: true }, { t: 'Extras', num: true }, { t: 'Total', num: true }, ''], [
-        ['Kessler Wood Works', 'Nov 1–30', '612.0', '$82,620', '$4,320', '$86,940', H.btn('Statement', 'sm', 'pdf')],
-        ['Pinegrove Pallet', 'Nov 1–30', '88.0', '$11,880', '$1,420', '$13,300', H.btn('Statement', 'sm', 'pdf')],
+      H.panel('Expected charges (estimate, to check their bills)', H.table(['Subcontractor', 'Period', { t: 'MBF in', num: true }, { t: 'Base', num: true }, { t: 'Extras', num: true }, { t: 'Expected', num: true }, ''], [
+        ['Kessler Wood Works', 'Nov 1–30', '612.0', '$82,620', '$4,320', '$86,940', H.btn('Check their bill', 'sm')],
+        ['Pinegrove Pallet', 'Nov 1–30', '88.0', '$11,880', '$1,420', '$13,300', H.btn('Check their bill', 'sm')],
       ]), '', true),
   });
 })();
