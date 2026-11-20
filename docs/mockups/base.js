@@ -172,7 +172,7 @@ const DEPTS = [
   { id: 'purchasing', label: 'Purchasing', tabs: [['purchasing-offers', 'Offers & batch calculator'], ['purchasing-pos', 'Purchase orders'], ['purchasing-suppliers', 'Suppliers']] },
   { id: 'inventory', label: 'Inventory', tabs: [['inventory-onhand', 'On hand'], ['inventory-counts', 'Counts & recounts'], ['inventory-adjustments', 'Adjustments'], ['inventory-waste', 'Waste']] },
   { id: 'pricing', label: 'Pricing', tabs: [['pricing-builder', 'Price builder'], ['pricing-lists', 'Price lists'], ['pricing-whatif', 'What-if']] },
-  { id: 'customers', label: 'Customers', tabs: [['customers-accounts', 'Accounts & plants'], ['customers-contacts', 'Contacts'], ['customers-statements', 'Statements & payments']] },
+  { id: 'customers', label: 'Customers', tabs: [['customers-accounts', 'Accounts & plants'], ['customers-contacts', 'Contacts'], ['customers-statements', 'Invoices & payments']] },
   { id: 'catalog', label: 'Catalog', tabs: [['catalog-items', 'Items'], ['catalog-species', 'Species & weights'], ['catalog-pallets', 'Pallets'], ['catalog-lengths', 'Stock lengths']] },
   { id: 'reports', label: 'Reports', tabs: [['reports-operations', 'Operations'], ['reports-money', 'Money'], ['reports-scheduled', 'Scheduled']] },
   { id: 'settings', label: 'Settings', tabs: [['settings-users', 'Users & access'], ['settings-email', 'Email'], ['settings-trailers', 'Trailer types'], ['settings-carriers', 'Carriers'], ['settings-taxes', 'Taxes & currency'], ['settings-imports', 'Imports']] },
