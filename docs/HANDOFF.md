@@ -14,7 +14,8 @@ Put this file in the new repository as `docs/HANDOFF.md`.
 - Open questions gone through with the account owner (section 12); what is left waits on BB Pallets.
 - First milestone drawn: static mockups of every window (`docs/mockups.html`, built from `docs/mockups/`), the UI direction (`docs/ui-direction.html`, colour set A chosen) and an interactive 3D flatbed (`docs/flatbed-3d.html`).
 - D36/D37 (who it's for; office can switch over later) came after most windows were drawn: section 1a lists the windows to change.
-- Next: BB Pallets reviews the mockups; an independent review of this plan (`docs/REVIEW-PACKET.md`); then the data model.
+- Independent plan review done: `docs/REVIEW-FINDINGS.md`. Its must-fixes are now D38–D44; its should-change items, mockup corrections and the new screens (Today, Office requests) are not applied yet.
+- Next: BB Pallets answers (especially the 44,000 bd ft question, D43) and reviews the mockups; then the core data model (review section 6).
 
 ## 0. Instructions for Claude (read first)
 
@@ -84,7 +85,7 @@ from his own mailbox (D30).
 **Switching the office over later (D37):** each "request to the office" is a
 record with a status (asked → done by office → confirmed) and a setting for who
 acts on it. Today: email out, reply recorded by hand or read by the Assistant.
-Later: an office user acts on it in the app. No screen or data changes.
+Later: an office user acts on it in the app. The data and history stay the same; the office's own screens are added at switch-over (D39).
 
 **Proposed new screens (not yet drawn):**
 - **Today**: his day in one list: what to do, and what he is **waiting on** from each of the five parties (office, carriers, customers, suppliers, subs), with reminders. A task list, not a tile dashboard (D3).
@@ -114,7 +115,7 @@ Later: an office user acts on it in the app. No screen or data changes.
 | D10 | **Lots of existing data will be loaded in.** Imports from Excel/CSV are a first-class feature. |
 | D11 | **Load planning is interactive 3D** (like the Gemsli warehouse map): the truck fills as items are added, weight updates live, and loading order (first on / last on) is visible and adjustable, so they can see and confirm the load before it goes. |
 | D12 | **First milestone is visuals and a clickable workflow** for BB Pallets to click through. |
-| D13 | **Load limit is whichever runs out first**: board feet (~44,000), weight, or floor space/volume. The planner tracks all three and warns on the first to run out; the limits come from the trailer type. |
+| D13 | **Load limit is whichever runs out first**: weight, floor space/volume, or height (board feet is a planning figure, not a limit: see D43). The planner tracks all three and warns on the first to run out; the limits come from the trailer type. |
 | D14 | **Trailer catalog** (Settings → Trailer types), maintained in the app, to choose from when planning. Starting set: **53' dry van, 48' flatbed, tri-axle** (lower weight limit) and a **B-train** (two trailers, each with its own deck and weight limit). Real dimensions and limits to be confirmed by BB Pallets. |
 | D15 | **Multi-drop loads happen sometimes** (more than one plant on one truck). The planner supports drops, with the first drop nearest the doors. |
 | D16 | **A split load becomes two separate orders**, each with its own order number (linked to each other). |
@@ -138,7 +139,14 @@ Later: an office user acts on it in the app. No screen or data changes.
 | D34 | **Fork openings always face where the forklift unloads**: the sides on a flatbed, the back doors in a van. The openings are the gaps between the risers, so when a bundle is turned across the truck its risers must be turned too. That is decided when the subcontractor builds the bundle, so the **job sheet and loading list say, per bundle, which way the risers go**, from the confirmed load plan. Pallets have their own openings and need no risers. The planner has an "Unloads from: sides / back" setting per trailer type. |
 | D35 | **Booking the truck is a step of its own.** Once an order is entered, a **transport PO** goes to the carrier with a **price and a date**; it works as a booking note. The carrier's **confirmation means two things: the date is booked and the price is accepted.** A changed price or date is flagged for a decision (accept, or use the backup carrier), and the confirmed price is the load's real freight in its margin. Order story step 6 (later steps moved up by one). |
 | D36 | **Who Timberline is for: one BB Pallets salesperson** (works remotely, has his own way of working). It is *his* tool to run his orders, inventory and daily tasks, not BB Pallets' company system. The BB Pallets office keeps doing the official work (transport POs, purchase approval, invoicing, accounting). In Timberline he **requests** those from the office and **records** the answer. Payments can be marked paid, but there is **no accounting or bookkeeping**. **Every purchase is approved by the main office.** He deals from one place with five parties: **customers, the BB Pallets office, suppliers, carriers, subcontractors.** See section 1a. |
-| D37 | **Built so the whole BB Pallets office can switch over later.** Every step the office does is the same record whether the office works outside Timberline (today: the salesperson emails a request and records the reply) or inside it (later: the request lands in an office user's queue and they act in the app). A setting per step ("office works by email / in Timberline") switches it; data, statuses and history stay the same. Users, roles and permissions (D27, D28) are multi-user from day one. |
+| D37 | **Built so the whole BB Pallets office can switch over later.** Every step the office does is the same record whether the office works outside Timberline (today: the salesperson emails a request and records the reply) or inside it (later: the request lands in an office user's queue and they act in the app). A setting per step ("office works by email / in Timberline") switches it; data, statuses and history stay the same. The office's own screens (issue a transport PO, approve, invoice, numbering, tax) are built at switch-over; their designs are kept, switched off (D39). Users, roles and permissions (D27, D28) are multi-user from day one. |
+| D38 | **Timberline reads his inbox (review M3).** Not only sending (D30): incoming needs sheets, customer POs, office replies, carrier confirmations and subcontractor quantities are read and linked to records. **Outlook.com (Hotmail) first**, through Microsoft Graph with personal accounts allowed. **Gmail later**: reading Gmail is a restricted Google permission that needs Google's verification and a yearly security assessment (an unverified test app loses its sign-in every 7 days). Every message is stored with its message id and thread id; each request carries a short reference in the subject (e.g. `[TL-R-1042]`) so replies match; email is sent as "create draft, then send" so the ids come back. A copy of every matched message is kept in Timberline, which is also what makes the office switch-over (D37) possible. |
+| D39 | **One Request record for every office step, from day one (review M2).** Types: transport PO, purchase approval, supplier PO, invoice, credit note, new customer/supplier setup, price change approval. Each keeps: what it is about (order, load, purchase), a **frozen copy of what was asked**, state (draft → asked → answered: approved / approved with changes / declined → accepted by him → closed; also cancelled, superseded by a newer request, overdue), the answer as fields (office document number, amount, date, attachment), who asked, who answered, **who typed the answer in** ("recorded by him on behalf of the office"), channel (email / in app), linked messages, due-by and reminder dates. Bookings (D35) are built on it. |
+| D40 | **How proposals, POs, orders and loads connect (review M4).** The customer's PO is its own record; PO lines link to order lines (one PO can feed several orders). **One order = one plant = one load. One load = one or more orders** (drops, D15). A proposal can produce one or two linked orders (split, D16). Freight on a multi-drop load is shared between its orders by a stated rule (by board feet, plus any extra-stop charge to the plant that caused it). Never put a load id on a PO or a PO id on a load. |
+| D41 | **Changes after the PO are normal (review M5).** Orders and load plans carry a **revision number**; job sheet, loading list and transport PO request print "Rev 2" and what changed. A change to a confirmed order lists who must be re-told (subcontractor, office/carrier, customer) and creates those tasks; an open office request is superseded, not edited. Order states include on hold and cancelled; bookings include cancelled, no-show, and rebooked with the backup carrier. Nothing is deleted: cancel, supersede or retire. |
+| D42 | **The price build-up is stored as lines (review M7).** A price list version keeps an ordered list of lines: name, kind (cost / margin / rounding), basis (per MBF, per load, % of the lines above), amount, plus the planned board feet per load it used. Per-load and per-MBF costs stay separate; "other costs" are costs, not margin; BB Pallets' own rounding ("call it $3,000", rounding each piece up to the cent) is kept but shown as its own line. Price lists are versioned with an effective date; orders keep the price they were taken at. Margin reports compare line by line: planned vs actual lumber, freight (carrier's confirmed price, D35) and board feet loaded. |
+| D43 | **Board feet per load is a planning figure, not a limit (review M1; amends D13).** The real limits are weight, deck/volume and height. "Planned board feet per load" is worked out per plant from trailer type, route and wood weight, and stored on the price list that used it. Wood weight per board foot is a setting per species and dry/green, corrected over time by recorded scale weights. **Waiting on BB Pallets:** the 44,000 bd ft figure (at about 1.5–2.3 lb per board foot dry it would weigh 66,000 lb or more, over a 45,000–48,000 lb payload; maybe it was pounds), and two real loads with board feet and scale weight. |
+| D44 | **The salesperson is the person in the voice notes** (almost 40 years at BB Pallets: sales, pricing, buying, and the stock balancing; account owner, 2026-11-20). So inventory (counts, recounts, average cost, waste) is his own work and stays, **built as a second phase after the core**, as a movement ledger (receipts, issues with waste, transfers, adjustments with reasons; on-hand and average cost worked out, never typed). The purchase log comes first, because pricing and buying gains need it. **Waiting on BB Pallets:** is his stock BB Pallets' official stock, or does the office keep its own? Who counts the yard and checks lumber in when he is remote? |
 
 ---
 
@@ -245,7 +253,7 @@ Worked example (their numbers), per MBF:
 | Lumber | $500 |
 | + subcontractor labor | $135 → $635 |
 | + 5% waste, applied to labor too (the subcontractor charges on wood coming in) | × 1.05 = $666.75 |
-| + freight: $2,300 per load (set between the cheapest carrier, $2,000, and the backup, $2,500–2,600) ÷ 44,000 bd ft | + $52.25 |
+| + freight: $2,300 per load (set between the cheapest carrier, $2,000, and the backup, $2,500–2,600) ÷ 44,000 bd ft | + $52.25 (exactly $52.27; their figure) |
 | **Delivered cost** | **$719** |
 | + margin: target $2,000 per load + $700 of "other costs" for this customer (D18), call it $3,000 ÷ 44,000 | + $68 |
 | **Selling price** | **$787** |
@@ -430,7 +438,7 @@ tabular), **Email**. The same file every way.
 | Every report | ✓ | Anyone, or on a schedule |
 
 Email:
-- **Sent from their own mailbox** (Microsoft 365 or Gmail), so replies thread.
+- **Sent from his own mailbox** (Hotmail/Outlook.com first, then Gmail; D30, D38), so replies thread, and replies are read back in (D38).
 - One Email dialog everywhere: recipients from the account's contacts, a
   template per document, attachments, edit, send.
 - **Logged** on the customer, supplier, subcontractor or order.
