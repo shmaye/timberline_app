@@ -93,13 +93,20 @@ select{border:1px solid var(--line);background:var(--surface);border-radius:var(
     <div>
       <div class="crumb">Loads › 3D Planner · Load L-2418 · example</div>
       <h1>Flatbed, mixed load</h1>
-      <p>Short dunnage, long dunnage, stock lumber and pallets on one flatbed. Turn any bundle across or lengthwise, change how high it stacks, and the load and the gauges update. Drag to turn the view, scroll or pinch to zoom.</p>
+      <p>Short dunnage, long dunnage, stock lumber and pallets on one flatbed, packed tight. Turn any bundle across or lengthwise, stack it higher, or add extra layers (less than a full bundle) on top, and the load and the gauges update. Drag to turn the view, scroll or pinch to zoom.</p>
     </div>
     <div class="ctl">
       <label for="trailer" class="meta">Trailer</label>
       <select id="trailer">
         <option value="636">53' flatbed</option>
         <option value="576">48' flatbed</option>
+      </select>
+      <label for="gap" class="meta">Gap between rows</label>
+      <select id="gap">
+        <option value="0">None, packed tight</option>
+        <option value="1">1"</option>
+        <option value="2">2"</option>
+        <option value="4">4"</option>
       </select>
       <button class="btn" id="best">Best direction for each</button>
     </div>
@@ -128,7 +135,7 @@ select{border:1px solid var(--line);background:var(--surface);border-radius:var(
       <h2>Loading order</h2>
       <div class="sub">First on goes to the nose. Use the arrows to change the order.</div>
       <div id="rows"></div>
-      <div class="foot">Example figures. Real bundle sizes, pieces and weights will come from the catalog. Each block is one bundle; risers (4x4 dunnage) sit under every bundle and every layer.</div>
+      <div class="foot">Example figures. Real bundle sizes, pieces and weights will come from the catalog. Bundles are packed tight: no space between them unless you set a gap between rows. Each block is one bundle, outlined so you can tell them apart. Extra layers (less than a full bundle) go on top of the last bundle and make it taller. Risers (3½" 4x4 dunnage) sit under every bundle and count in the height.</div>
     </div>
   </div>
 </div>
@@ -138,7 +145,8 @@ select{border:1px solid var(--line);background:var(--surface);border-radius:var(
 <script>
 (function(){
 // ---------- data (inches, lb) ----------
-const DECK_W=102, DECK_Y=60, MAX_LOAD_H=102, MAX_LB=48000, BF_CAP=44000, GAP=4, RISER=3.5;
+const DECK_W=102, DECK_Y=60, MAX_LOAD_H=102, MAX_LB=48000, BF_CAP=44000, RISER=3.5;
+let GAP=0; // space between rows along the deck; bundles side by side always touch
 const SPECIES={
   spf:{label:'SPF (spruce-pine-fir)',face:'#e6c792',end:'#d9b47a',grain:'#c29a5c',lbPerBf:2.3},
   hem:{label:'Hemlock',face:'#c99a6c',end:'#b8875a',grain:'#9c6b40',lbPerBf:3.4},
@@ -153,8 +161,11 @@ const ITEMS=[
   {id:'e',name:'Pallet 48×40',kind:'Pallets, stack of 12',sp:'hard',pallet:true,L:48,W:40,H:66,perStack:12,bfEach:24,lbEach:48,dir:'across',stack:1,n:2}
 ];
 ITEMS.forEach(it=>{
-  if(it.pallet){it.pcs=it.perStack;it.bf=it.perStack*it.bfEach;it.lb=it.perStack*it.lbEach}
-  else{it.pcs=Math.floor(it.W/it.w)*Math.floor(it.H/it.t);it.bf=it.pcs*it.t*it.w*it.L/144;it.lb=it.bf*SPECIES[it.sp].lbPerBf}
+  it.xl=0; // extra layers on top of the last bundle (less than a full bundle)
+  if(it.pallet){it.pcs=it.perStack;it.bf=it.perStack*it.bfEach;it.lb=it.perStack*it.lbEach;it.layerT=5.5;it.perLayer=1}
+  else{it.pcs=Math.floor(it.W/it.w)*Math.floor(it.H/it.t);it.bf=it.pcs*it.t*it.w*it.L/144;it.lb=it.bf*SPECIES[it.sp].lbPerBf;it.layerT=it.t;it.perLayer=Math.floor(it.W/it.w)}
+  it.maxXl=Math.floor(it.H/it.layerT/2); // up to half a bundle more on top
+  it.bfLayer=it.bf/(it.pcs/it.perLayer); it.lbLayer=it.lb/(it.pcs/it.perLayer);
 });
 let order=ITEMS.map(i=>i.id), deckLen=636, selected=null;
 const byId=id=>ITEMS.find(i=>i.id===id);
@@ -172,14 +183,16 @@ function pack(){
   order.forEach((id,gi)=>{
     const it=byId(id); const f=footprint(it,it.dir); const rows=Math.ceil(it.n/f.per);
     for(let r=0;r<rows;r++){
-      const k=Math.min(f.per,it.n-r*f.per); const used=k*f.zsize+(k-1)*2; let z=-used/2+f.zsize/2;
+      const k=Math.min(f.per,it.n-r*f.per); const used=k*f.zsize; let z=-used/2+f.zsize/2;
       for(let j=0;j<k;j++){
+        const lastSpot=(r===rows-1&&j===k-1);
         for(let s=0;s<it.stack;s++){
           const yb=DECK_Y+RISER+s*(it.H+RISER);
-          placed.push({it,x:x+f.depth/2,z,y:yb+it.H/2,dir:it.dir,level:s});
-          maxH=Math.max(maxH,yb+it.H-DECK_Y);
+          const h=it.H+(lastSpot&&s===it.stack-1?it.xl*it.layerT:0); // extra layers make the top bundle taller
+          placed.push({it,x:x+f.depth/2,z,y:yb+h/2,h,dir:it.dir,level:s});
+          maxH=Math.max(maxH,yb+h-DECK_Y);
         }
-        z+=f.zsize+2;
+        z+=f.zsize;
       }
       x+=f.depth+GAP;
     }
@@ -187,7 +200,7 @@ function pack(){
   return {placed,len:Math.max(0,x-GAP),maxH};
 }
 function totals(){
-  let bf=0,lb=0; ITEMS.forEach(it=>{const c=it.n*it.stack;bf+=c*it.bf;lb+=c*it.lb}); return {bf,lb};
+  let bf=0,lb=0; ITEMS.forEach(it=>{const c=it.n*it.stack;bf+=c*it.bf+it.xl*it.bfLayer;lb+=c*it.lb+it.xl*it.lbLayer}); return {bf,lb};
 }
 
 // ---------- gauges + list ----------
@@ -209,11 +222,12 @@ function renderPanel(P){
     return `<div class="row${selected===id?' sel':''}" data-id="${id}">
       <div class="ord"><button data-mv="-1" aria-label="Load earlier" ${i===0?'disabled':''}>▲</button><span class="n">${i+1}</span><button data-mv="1" aria-label="Load later" ${i===order.length-1?'disabled':''}>▼</button></div>
       <div><div class="name"><span class="sw" style="background:${it.endPaint||sp.face}"></span>${it.name}</div><div class="meta">${it.kind} · ${sp.label}</div></div>
-      <div class="figs"><b>${c} ${it.pallet?'stacks':'bundles'}</b>${fmt(c*it.bf)} bd ft</div>
+      <div class="figs"><b>${c} ${it.pallet?'stacks':'bundles'}${it.xl?` + ${it.xl} ${it.pallet?'pallet':'layer'}${it.xl>1?'s':''}`:''}</b>${fmt(c*it.pcs+it.xl*it.perLayer)} ${it.pallet?'pallets':'pcs'} · ${fmt(c*it.bf+it.xl*it.bfLayer)} bd ft</div>
       <div class="opts">
         <span class="seg" role="group" aria-label="Direction"><button data-dir="across" aria-pressed="${it.dir==='across'}" ${acr?'':'disabled'}>Across</button><button data-dir="length" aria-pressed="${it.dir==='length'}">Lengthwise</button></span>
-        <span class="step">High <button data-st="-1" aria-label="One layer less">−</button><span>${it.stack}</span><button data-st="1" aria-label="One layer more">+</button></span>
+        <span class="step">Stacked <button data-st="-1" aria-label="One bundle lower">−</button><span>${it.stack}</span><button data-st="1" aria-label="One bundle higher">+</button></span>
         <span class="step">Spots <button data-nn="-1" aria-label="One spot less">−</button><span>${it.n}</span><button data-nn="1" aria-label="One spot more">+</button></span>
+        <span class="step" title="Add less than a bundle: rows of ${it.perLayer} ${it.pallet?'pallet':'pieces'} on top of the last bundle">Extra layers <button data-xl="-1" aria-label="One layer less">−</button><span>${it.xl}</span><button data-xl="1" aria-label="One layer more">+</button>${it.xl?`<em class="meta">+${it.xl*it.perLayer} ${it.pallet?'pallets':'pcs'}</em>`:''}</span>
         ${acr?'':'<span class="lock">Too long to go across</span>'}
       </div></div>`}).join('');
 }
@@ -225,9 +239,11 @@ document.getElementById('rows').addEventListener('click',e=>{
     if(b.dataset.dir) it.dir=b.dataset.dir;
     if(b.dataset.st) it.stack=Math.max(1,Math.min(it.pallet?2:4,it.stack+ +b.dataset.st));
     if(b.dataset.nn) it.n=Math.max(1,Math.min(12,it.n+ +b.dataset.nn));
+    if(b.dataset.xl) it.xl=Math.max(0,Math.min(it.maxXl,it.xl+ +b.dataset.xl));
   }
   update();
 });
+document.getElementById('gap').onchange=e=>{GAP=+e.target.value;update()};
 document.getElementById('trailer').onchange=e=>{deckLen=+e.target.value;buildTruck();update();frame('angle')};
 document.getElementById('best').onclick=()=>{ITEMS.forEach(it=>{
   if(!canAcross(it)){it.dir='length';return}
@@ -326,20 +342,22 @@ function lumberMats(it){
   // Box faces: +x,-x (ends) · +y,-y (top/bottom) · +z,-z (sides). Piece length runs along local x.
   return [endTex,endTex,topTex,topTex,sideTex,sideTex].map(t=>new THREE.MeshStandardMaterial({map:t,roughness:.85}));
 }
-function mats(it){return texCache[it.id]||(texCache[it.id]=lumberMats(it))}
+function mats(it,h){const k=it.id+':'+h;return texCache[k]||(texCache[k]=lumberMats(h===it.H?it:Object.assign({},it,{H:h})))}
+const edgeM=new THREE.LineBasicMaterial({color:0x2b1d0e,transparent:true,opacity:.55});
 const strapM=M(0x1c2a3a,{roughness:.6}), riserM=M(0xb48a5a,{roughness:.9}), hiM=M(0xf2b705,{emissive:0x5a4300,roughness:.6});
 let load=new THREE.Group(); scene.add(load); let pickables=[];
 function buildLoad(P){
   scene.remove(load); load.traverse(o=>{if(o.geometry)o.geometry.dispose()}); load=new THREE.Group(); scene.add(load); pickables=[];
   P.placed.forEach(b=>{
-    const it=b.it,g=new THREE.Group();
-    const m=new THREE.Mesh(new THREE.BoxGeometry(it.L,it.H,it.W),mats(it)); m.castShadow=m.receiveShadow=true; m.userData.id=it.id; g.add(m); pickables.push(m);
+    const it=b.it,g=new THREE.Group(),bh=b.h;
+    const m=new THREE.Mesh(new THREE.BoxGeometry(it.L,bh,it.W),mats(it,bh)); m.castShadow=m.receiveShadow=true; m.userData.id=it.id; g.add(m); pickables.push(m);
+    g.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),edgeM)); // outline, so tight bundles stay readable
     // risers under the bundle, across the pieces
-    [-.32,.32].forEach(f=>{const rr=new THREE.Mesh(new THREE.BoxGeometry(RISER,RISER,it.W+2),riserM);rr.position.set(f*it.L,-it.H/2-RISER/2,0);rr.castShadow=true;g.add(rr)});
+    [-.32,.32].forEach(f=>{const rr=new THREE.Mesh(new THREE.BoxGeometry(RISER,RISER,it.W),riserM);rr.position.set(f*it.L,-bh/2-RISER/2,0);rr.castShadow=true;g.add(rr)});
     // steel straps around the bundle
-    if(!it.pallet){const k=it.L<50?2:it.L<120?3:4;for(let i=0;i<k;i++){const s=new THREE.Mesh(new THREE.BoxGeometry(1.3,it.H+.6,it.W+.6),strapM);s.position.x=(i+.5)/k*it.L-it.L/2;g.add(s)}}
-    else{const s=new THREE.Mesh(new THREE.BoxGeometry(1.3,it.H+.6,it.W+.6),strapM);g.add(s)}
-    if(selected===it.id){const e=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(it.L+1,it.H+1,it.W+1)),new THREE.LineBasicMaterial({color:0xf2b705}));g.add(e)}
+    if(!it.pallet){const k=it.L<50?2:it.L<120?3:4;for(let i=0;i<k;i++){const s=new THREE.Mesh(new THREE.BoxGeometry(1.3,bh+.6,it.W+.6),strapM);s.position.x=(i+.5)/k*it.L-it.L/2;g.add(s)}}
+    else{const s=new THREE.Mesh(new THREE.BoxGeometry(1.3,bh+.6,it.W+.6),strapM);g.add(s)}
+    if(selected===it.id){const e=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(it.L+1,bh+1,it.W+1)),new THREE.LineBasicMaterial({color:0xf2b705}));g.add(e)}
     g.position.set(b.x,b.y,b.z); if(b.dir==='across') g.rotation.y=Math.PI/2;
     load.add(g);
   });

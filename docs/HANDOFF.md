@@ -84,6 +84,8 @@ Assistant that understands them in English (and Yiddish).
 | D29 | **Phone and tablet use**: counts and recounts at the yard, and the owner on the road (look-ups, approvals, Assistant). Every screen must work at phone width. |
 | D30 | **Email: Hotmail (Outlook.com) and Gmail** are confirmed. Send from their own mailbox through Microsoft Graph (personal Microsoft accounts included) and Gmail. |
 | D31 | **Bundles can go across the trailer or lengthwise** (along the length of the truck). The planner lets the user turn each item, offers "best direction for each" (the one that uses less deck), and locks long stock (longer than the trailer is wide) to lengthwise. Loads mix short dunnage, long dunnage, stock lumber and pallets, and on a flatbed the load height above the deck is a fourth gauge. A 3D flatbed example is in `docs/flatbed-3d.html`. |
+| D32 | **Quantities can be less than a full bundle.** A load line is counted in pieces, not only bundles. Besides whole bundles, the planner can add **extra layers** (rows of pieces) on top of a bundle, e.g. a third more, which makes that bundle taller; it can also take single pieces. Board feet, weight and height count them; the loading list and packing slip show "18 bundles + 3 layers (42 pcs)". The limit on how much taller a bundle may get is to be confirmed (demo: up to half a bundle). |
+| D33 | **Bundles are packed tight; every inch counts.** No space between bundles in the plan, along or across the truck. A "gap between rows" setting exists but starts at 0. (The first 3D demo left 4" between rows, which cost about 2 feet of deck; fixed.) Risers (3½" 4x4 dunnage) under each bundle are real and count in the height. |
 
 ---
 
@@ -459,6 +461,11 @@ first milestone is built on the numbers in this file meanwhile.
   4. their **catalog** in whatever form exists (for the day-one import);
   5. a **bill of lading**, **packing slip**, **invoice** and **subcontractor
      job sheet** as they look today.
+
+- **Raised 2026-11-20 (from D32/D33):**
+  - Are there risers (4x4 dunnage) between stacked bundles, or only under the bottom one? How thick are they?
+  - How much taller than standard may a bundle be built (a third more? half?), and is that set per item?
+  - Do partial quantities go on top of a bundle, as a short bundle of their own, or both?
 
 - **B (round 2):**
   - B7: real dimensions, axles and weight limits of each trailer type they
