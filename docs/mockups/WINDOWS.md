@@ -2,6 +2,24 @@
 
 Generated from `docs/mockups/` (the same text as the notes under each window). Open `docs/mockups.html` to see them.
 
+## Today
+
+### Today `#today` (screen)
+
+His day in one place, the first thing he opens. Replies: because Timberline reads his inbox and keeps each thread (D38), the Assistant reads every answer and says what it means (confirmed, asks for more, changed something, declined) with one click to act. Calendar: his Outlook calendar together with Timberline's own dates (ships, pickups, deliveries, split loads due). Tasks: what to do, what he is waiting on from each party, and what to review, with reminders when nobody answers. (Proposed layout.)
+
+To check with BB Pallets:
+- What do you look at first thing in the morning today: email, calendar, a list on paper?
+- Do you keep your appointments in Outlook (Hotmail) or somewhere else?
+- How long before a missing answer should turn into a reminder: a few hours, a day?
+
+Assistant here:
+- Read each reply and say what it means, with the next step ready
+- "What am I waiting on from the office?"
+- Put a ship date or a call on your Outlook calendar
+
+Ref: D46 · D38 · Hand-off 1a · Review "Worth adding"
+
 ## Workflow
 
 ### Workflow diagram `#workflow` (screen)
@@ -326,6 +344,24 @@ Assistant here:
 - Email the papers to the broker before the truck leaves
 
 Ref: Hand-off 7, D26
+
+## Office
+
+### Requests to the office `#office-requests` (screen)
+
+He works for BB Pallets but runs his own day; the office does the official work. Every time he needs the office (a transport PO, approval of a purchase, an invoice, a credit, a new customer set up) it is a request here, with a frozen copy of what he asked, its state (asked, answered, approved with changes, declined, overdue, superseded), the office's answer and number, and the email thread. Today he records the answers; later the office can work this list itself, with a switch per step.
+
+To check with BB Pallets:
+- Who at the office handles each kind of request? One email address, or a person per type?
+- How long is too long to wait for each kind (transport PO, approval, invoice)?
+- When the office changes something (a smaller purchase, another carrier), how do they tell you?
+
+Assistant here:
+- Read the office's reply and fill in the answer for you to check
+- Remind the office when a request is overdue, after your OK
+- "What has the office not answered this week?"
+
+Ref: D36, D37, D39 · Review M2
 
 ## Production
 
@@ -743,6 +779,21 @@ Assistant here:
 - Warn when the weight looks wrong for the size
 
 Ref: Hand-off 5, D6, D21
+
+### Species & weights `#catalog-species` (screen)
+
+Wood weight drives the load (weight usually runs out before space), and it changes with species and moisture. So, like the products, he keeps a list of species, each with an average weight per board foot and how far it can be off, up or down. Every load then shows its weight as light side, average and heavy side, and he decides how much risk to take. Scale weights from real loads, when he has them, show whether the figures are right.
+
+To check with BB Pallets:
+- Which species do you buy, and is the wood dry or green when it ships?
+- Does weight differ enough between suppliers to keep them apart?
+- Do you ever get a scale ticket for a load?
+
+Assistant here:
+- Work out the average and variance from the scale weights you have
+- Warn when a load is only legal on the light side
+
+Ref: D45 · D43 · Review M1, S7
 
 ### Pallets (parts lists) `#catalog-pallets` (screen)
 

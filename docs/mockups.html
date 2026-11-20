@@ -303,7 +303,7 @@ const D = {
   company: { name: 'BB Pallets', addr: '120 Example Industrial Rd, Concord ON  L4K 0A0', phone: '905-555-0100', gst: 'GST/HST 81234 5678 RT0001' },
   user: 'Sales desk',
   // pricing example (notes 4–6)
-  price: { lumber: 500, labor: 135, wastePct: 5, afterWaste: 666.75, freightLoad: 2300, mbfPerLoad: 44, freightMbf: 52.25, delivered: 719,
+  price: { lumber: 500, labor: 135, wastePct: 5, afterWaste: 666.75, freightLoad: 2300, mbfPerLoad: 44, freightMbf: 52.27, delivered: 719,
            margin: 2000, other: 700, marginTotal: 3000, marginMbf: 68, sell: 787, piece: { name: '3x3 × 31"', bf: 1.9375, raw: 1.5248, quoted: 1.53 } },
   // batch offer example (notes 8–9)
   batch: { offered: 225, asked: 300, settled: 235, freight: 20, delivered: 245, tenFt: 294, cut: 305, firstQuality: 345, nextWeek: 325 },
@@ -317,13 +317,19 @@ const D = {
       { id: 'GSS-NWK', name: 'Newark plant', city: 'Newark NJ', loadsYr: '10', cur: 'USD', mode: 'Delivered', freight: 3400, buyer: 'Mike Russo', major: ['3x3 × 37½"','4x4 × 48"'], filler: '2x4 × 40"', other: 400 } ] },
   ],
   items: [
-    { code: 'DN-3331', name: '3x3 × 31"', type: 'Cut dunnage', t: 3, w: 3, l: 31, grooved: false, bf: 1.9375, perBundle: 140, lbPc: 2.6, from: '10\' (3 pcs) · 12\' (4 pcs) · 7\' (2 pcs)' },
-    { code: 'DN-33375', name: '3x3 × 37½"', type: 'Cut dunnage', t: 3, w: 3, l: 37.5, grooved: false, bf: 2.3438, perBundle: 140, lbPc: 3.1, from: '10\' (3 pcs) · 12\' (3 pcs)' },
-    { code: 'DN-33385', name: '3x3 × 38½"', type: 'Cut dunnage', t: 3, w: 3, l: 38.5, grooved: false, bf: 2.4063, perBundle: 140, lbPc: 3.2, from: '10\' (3 pcs) · 12\' (3 pcs)' },
-    { code: 'DN-2339G', name: '2x3 × 39" grooved', type: 'Grooved', t: 2, w: 3, l: 39, grooved: true, bf: 1.625, perBundle: 210, lbPc: 2.1, from: '10\' (3 pcs) · 7\' (2 pcs) · 12\' (3 pcs + 24")' },
-    { code: 'DN-2440', name: '2x4 × 40"', type: 'Cut dunnage (filler)', t: 2, w: 4, l: 40, grooved: false, bf: 2.2222, perBundle: 150, lbPc: 2.9, from: '10\' (3 pcs)' },
-    { code: 'DN-4448', name: '4x4 × 48"', type: 'Cut dunnage', t: 4, w: 4, l: 48, grooved: false, bf: 5.3333, perBundle: 96, lbPc: 7.0, from: '8\' (2 pcs) · 12\' (3 pcs)' },
+    { code: 'DN-3331', name: '3x3 × 31"', type: 'Cut dunnage', t: 3, w: 3, l: 31, grooved: false, bf: 1.9375, perBundle: 140, lbPc: 3.7, from: '10\' (3 pcs) · 12\' (4 pcs) · 7\' (2 pcs)' },
+    { code: 'DN-33375', name: '3x3 × 37½"', type: 'Cut dunnage', t: 3, w: 3, l: 37.5, grooved: false, bf: 2.3438, perBundle: 140, lbPc: 4.5, from: '10\' (3 pcs) · 12\' (3 pcs)' },
+    { code: 'DN-33385', name: '3x3 × 38½"', type: 'Cut dunnage', t: 3, w: 3, l: 38.5, grooved: false, bf: 2.4063, perBundle: 140, lbPc: 4.6, from: '10\' (3 pcs) · 12\' (3 pcs)' },
+    { code: 'DN-2339G', name: '2x3 × 39" grooved', type: 'Grooved', t: 2, w: 3, l: 39, grooved: true, bf: 1.625, perBundle: 210, lbPc: 3.1, from: '10\' (3 pcs) · 7\' (2 pcs) · 12\' (3 pcs + 27")' },
+    { code: 'DN-2440', name: '2x4 × 40"', type: 'Cut dunnage (filler)', t: 2, w: 4, l: 40, grooved: false, bf: 2.2222, perBundle: 150, lbPc: 4.2, from: '10\' (3 pcs)' },
+    { code: 'DN-4448', name: '4x4 × 48"', type: 'Cut dunnage', t: 4, w: 4, l: 48, grooved: false, bf: 5.3333, perBundle: 96, lbPc: 10.1, from: '8\' (2 pcs) · 12\' (3 pcs)' },
     { code: 'PL-4840', name: 'Pallet 48×40', type: 'Pallet', t: 0, w: 0, l: 48, grooved: false, bf: 24, perBundle: 12, lbPc: 48, from: 'Parts list' },
+  ],
+  species: [
+    { name: 'SPF (spruce-pine-fir)', cond: 'Dry', avg: 1.9, var: 0.2, basis: '6 scale weights', items: 5 },
+    { name: 'SPF (spruce-pine-fir)', cond: 'Green', avg: 2.6, var: 0.35, basis: 'typical figure, no loads yet', items: 0 },
+    { name: 'Hemlock', cond: 'Green', avg: 3.0, var: 0.3, basis: '2 scale weights', items: 1 },
+    { name: 'Hardwood mix (pallets)', cond: 'Dry', avg: 4.0, var: 0.5, basis: 'typical figure', items: 1 },
   ],
   stock: ['2x3 × 7\' trim','2x3 × 8\'','2x3 × 10\'','2x3 × 12\'','3x3 × 10\'','3x3 × 12\'','2x4 × 10\'','4x4 × 8\''],
   suppliers: [
@@ -341,11 +347,11 @@ const D = {
     { name: 'Pinegrove Pallet', yard: 'Bolton yard', does: 'Cut · pallets', rate: '$135 / MBF in + $4.50 / pallet', jobs: 1 },
   ],
   trailers: [
-    { name: '53\' dry van', l: '53\'', w: '102"', h: '110"', axles: 'Tandem', lb: '45,000', bf: '44,000' },
-    { name: '48\' flatbed', l: '48\'', w: '102"', h: '8\' 6" load', axles: 'Tandem', lb: '48,000', bf: '44,000' },
-    { name: '53\' flatbed', l: '53\'', w: '102"', h: '8\' 6" load', axles: 'Tandem', lb: '48,000', bf: '44,000' },
-    { name: 'Tri-axle 53\'', l: '53\'', w: '102"', h: '110"', axles: 'Tri-axle', lb: '41,000', bf: '44,000' },
-    { name: 'B-train (28\' + 32\')', l: '28\' + 32\'', w: '102"', h: '8\' 6" load', axles: '8 axles', lb: '86,000', bf: '60,000' },
+    { name: '53\' dry van', l: '53\'', w: '102"', h: '110"', axles: 'Tandem', lb: '45,000', bf: '≈ 23,000' },
+    { name: '48\' flatbed', l: '48\'', w: '102"', h: '8\' 6" load', axles: 'Tandem', lb: '48,000', bf: '≈ 25,000' },
+    { name: '53\' flatbed', l: '53\'', w: '102"', h: '8\' 6" load', axles: 'Tandem', lb: '48,000', bf: '≈ 25,000' },
+    { name: 'Tri-axle 53\'', l: '53\'', w: '102"', h: '110"', axles: 'Tri-axle', lb: '41,000', bf: '≈ 21,500' },
+    { name: 'B-train (28\' + 32\')', l: '28\' + 32\'', w: '102"', h: '8\' 6" load', axles: '8 axles', lb: '86,000', bf: '≈ 45,000' },
   ],
   // the story order used across the walk-through
   story: { order: '24-0318', proposal: 'P-24-0318', load: 'L-2417', po: 'PO 77815', job: 'J-1182', bol: 'BOL-2417', inv: 'INV-24-0611', plant: 'Caldari Road plant, Concord ON', customer: 'Ardent Metals' },
@@ -358,6 +364,9 @@ const money = (n, d = 2) => '$' + Number(n).toLocaleString('en-CA', { minimumFra
 const n0 = n => Number(n).toLocaleString('en-CA', { maximumFractionDigits: 0 });
 const ICON = {
   workflow:'<path d="M4 6h6v4H4zM14 14h6v4h-6zM7 10v4h10"/>',
+  today:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 15l2.5 2.5L16 13"/>',
+  office:'<path d="M4 21V5l8-3 8 3v16"/><path d="M9 21v-5h6v5M8 8h2M14 8h2M8 12h2M14 12h2"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   orders:'<path d="M6 3h9l3 3v15H6z"/><path d="M9 10h6M9 14h6M9 18h4"/>',
   loads:'<rect x="2" y="7" width="13" height="9"/><path d="M15 10h4l3 3v3h-7"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
   production:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
@@ -449,15 +458,17 @@ const H = {
 
 // ---------------- window registry ----------------
 const DEPTS = [
+  { id: 'today', label: 'Today', tabs: [['today', 'My day']] },
   { id: 'workflow', label: 'Workflow', tabs: [['workflow', 'Whole process']] },
   { id: 'orders', label: 'Orders', tabs: [['orders-incoming', 'Incoming'], ['orders-proposals', 'Proposals'], ['orders-orders', 'Orders'], ['orders-pickups', 'Pickups']] },
   { id: 'loads', label: 'Loads', tabs: [['loads-planner', '3D Planner'], ['loads-bookings', 'Carrier bookings'], ['loads-schedule', 'Schedule'], ['loads-bol', 'Bills of lading']] },
+  { id: 'office', label: 'Office', tabs: [['office-requests', 'Requests']] },
   { id: 'production', label: 'Production', tabs: [['production-jobs', 'Jobs'], ['production-subs', 'Subcontractors']] },
   { id: 'purchasing', label: 'Purchasing', tabs: [['purchasing-offers', 'Offers & batch calculator'], ['purchasing-pos', 'Purchase orders'], ['purchasing-suppliers', 'Suppliers']] },
   { id: 'inventory', label: 'Inventory', tabs: [['inventory-onhand', 'On hand'], ['inventory-counts', 'Counts & recounts'], ['inventory-adjustments', 'Adjustments'], ['inventory-waste', 'Waste']] },
   { id: 'pricing', label: 'Pricing', tabs: [['pricing-builder', 'Price builder'], ['pricing-lists', 'Price lists'], ['pricing-whatif', 'What-if']] },
   { id: 'customers', label: 'Customers', tabs: [['customers-accounts', 'Accounts & plants'], ['customers-contacts', 'Contacts'], ['customers-statements', 'Statements & payments']] },
-  { id: 'catalog', label: 'Catalog', tabs: [['catalog-items', 'Items'], ['catalog-pallets', 'Pallets'], ['catalog-lengths', 'Stock lengths']] },
+  { id: 'catalog', label: 'Catalog', tabs: [['catalog-items', 'Items'], ['catalog-species', 'Species & weights'], ['catalog-pallets', 'Pallets'], ['catalog-lengths', 'Stock lengths']] },
   { id: 'reports', label: 'Reports', tabs: [['reports-operations', 'Operations'], ['reports-money', 'Money'], ['reports-scheduled', 'Scheduled']] },
   { id: 'settings', label: 'Settings', tabs: [['settings-users', 'Users & access'], ['settings-email', 'Email'], ['settings-trailers', 'Trailer types'], ['settings-carriers', 'Carriers'], ['settings-taxes', 'Taxes & currency'], ['settings-imports', 'Imports']] },
 ];
@@ -612,6 +623,88 @@ window.addEventListener('DOMContentLoaded', route);
   });
 })();
 
+/* ---- screens-05-today.js ---- */
+/* Today (D46): his day in one place. Three parts:
+   1. Replies: the Assistant reads every reply in the threads Timberline started (D38) and says what it
+      means: confirmed, asks for more information, changed something, or declined. One click to act.
+   2. Calendar: his Outlook calendar together with Timberline's own dates (ship days, pickups, deliveries,
+      split loads coming due), so it is one calendar, not two.
+   3. Tasks: to do, waiting on (by party: office, carriers, customers, suppliers, subcontractors), to review.
+   A task list, not a dashboard of tiles (D3). */
+(function () {
+  const party = { customer: ['Customer', 'brand'], office: ['BB office', 'warn'], carrier: ['Carrier', 'info'], supplier: ['Supplier', ''], sub: ['Subcontractor', ''] };
+  const pchip = k => H.chip(party[k][0], party[k][1]);
+  const meaning = { ok: ['Confirmed', 'ok'], ask: ['Asks for more', 'info'], chg: ['Changed it', 'bad'], no: ['Declined', 'bad'] };
+  const replies = [
+    ['customer', 'Dana Ferreira · Ardent Metals', 'Re: Load proposal 24-0318 · Caldari Road', 'ok', 'Confirmed the proposal and attached <b>PO 77815</b> for one load. Asks for the second half (3x3 × 38½") in 3 weeks.', H.go('Match the PO', 'dlg-pomatch', 'primary sm'), '8:14'],
+    ['carrier', 'Liberty Line dispatch (via the office)', 'Re: Transport PO 5540 · L-2419 Newark', 'chg', 'Can take it <b>Friday, not Thursday</b>. Price stays US$3,400.', H.go('Decide', 'loads-bookings', 'sm'), '9:02'],
+    ['office', 'BB Pallets office · Accounts', 'Re: [TL-R-1043] Purchase approval · Algonquin trim', 'ok', '<b>Approved</b>, office PO 5544. Delivery to Kessler yard next Tuesday.', H.go('Record it', 'office-requests', 'sm'), '9:40'],
+    ['supplier', 'Muskoka Sawmill', 'Re: 2x4 × 10\' price for December', 'ask', 'Asks how many loads you want before they quote ($475 last time).', H.btn('Draft answer', 'sm'), '10:15'],
+    ['sub', 'Kessler Wood Works', 'Re: Job J-1182 loaded', 'chg', 'Loaded <b>26 bundles</b> of 3x3 × 31" for Caldari Road, not 27; filler 5 bundles.', H.go('Enter quantities', 'dlg-loaded', 'sm'), '11:20'],
+  ];
+  const replyList = () => `<div class="list">${replies.map(([p, who, subj, m, sum, act, t], i) => `<div class="li" style="${i ? '' : 'border-top:0'};align-items:flex-start">
+      <div class="grow"><div class="btns" style="gap:6px">${pchip(p)}${H.chip(meaning[m][0], meaning[m][1])}<span class="small muted">${t}</span></div>
+      <div style="margin-top:4px"><b>${who}</b><div class="small muted">${subj}</div></div>
+      <div class="small" style="margin-top:4px">${H.icon('spark', 13)} ${sum}</div></div>
+      <div style="flex:none">${act}</div></div>`).join('')}</div>`;
+
+  // calendar: Outlook events (outline) and Timberline dates (filled), one week
+  const days = [
+    ['Thu 19', [['9:00', 'Call Dana: January prices', 'o'], ['14:00', 'North Shore visit (yard)', 'o'], ['', 'Count sheet reminder: Kessler yard', 't']]],
+    ['Fri 20', [['', 'L-2419 ships (moved?)', 't'], ['11:00', 'Weekly call, BB office', 'o']]],
+    ['Mon 23', [['', 'L-2414 pickup · Lakeshore', 't']]],
+    ['Tue 24', [['7:00', 'L-2417 loads at Kessler', 't'], ['', 'L-2417 delivers · 2 drops', 't']]],
+    ['Wed 25', [['10:00', 'Dentist', 'o']]],
+  ];
+  const ev = ([t, label, k]) => `<div style="border-radius:5px;padding:5px 7px;font-size:12px;margin-top:5px;${k === 't' ? 'background:var(--brand-soft);color:var(--fg)' : 'border:1px solid var(--line-2)'}">${t ? `<b class="num">${t}</b> ` : ''}${label}</div>`;
+  const calendar = () => `<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px">${days.map(([d, es], i) => `<div style="min-width:0"><div class="small" style="font-weight:600;${i === 0 ? 'color:var(--brand)' : ''}">${d}</div>${es.map(ev).join('')}</div>`).join('')}</div>
+    <div class="btns small muted" style="margin-top:12px"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:var(--brand-soft)"></span> from Timberline (ships, pickups, deliveries, split loads due)<span style="display:inline-block;width:12px;height:12px;border-radius:3px;border:1px solid var(--line-2);margin-left:10px"></span> from your Outlook calendar</div>`;
+
+  const waiting = [
+    ['office', 'Transport PO for L-2421 · Jane Street', 'asked yesterday 4:10 pm', 'warn', 'Remind'],
+    ['office', '[TL-R-1042] Purchase approval · North Shore 2 loads', 'asked 2 days ago · overdue', 'bad', 'Remind'],
+    ['carrier', 'Confirmation of L-2419 (Liberty Line)', 'PO sent 3 h ago', '', 'Open'],
+    ['customer', 'PO for proposal P-24-0322 · Garden State', 'sent 6 days ago', 'bad', 'Nudge'],
+    ['supplier', 'Algonquin: trim load price for January', 'asked Monday', '', 'Open'],
+    ['sub', 'Kessler: ready date for J-1185', 'asked this morning', '', 'Open'],
+  ];
+  const todo = [
+    ['Send the Jane Street proposal (2 lines, 41% of a truck)', 'today', 'orders-proposals'],
+    ['Book the truck for L-2422 · ask the office', 'today', 'loads-bookings'],
+    ['Re-price Lakeshore: list is stale (built on $440)', 'this week', 'pricing-lists'],
+    ['Count sheet for Kessler yard due Nov 30', 'Nov 30', 'inventory-counts'],
+  ];
+  const review = [
+    ['Loaded quantities from Kessler (read by the Assistant)', 'dlg-loaded'],
+    ['Customer PO 77815 vs proposal (1 line differs)', 'dlg-pomatch'],
+    ['Carrier changed L-2420 to $2,450', 'loads-bookings'],
+  ];
+  const tasks = () =>
+    `<div class="btns" style="margin-bottom:10px">${H.seg(['Waiting on 6', 'To do 4', 'To review 3'], 0)}</div>` +
+    `<div class="list">${waiting.map(([p, what, since, st, act], i) => `<div class="li" style="${i ? '' : 'border-top:0'};padding-left:0;padding-right:0">${H.dot(st || 'info')}<div class="grow"><div>${what}</div><div class="small muted">${pchip(p)} ${since}</div></div>${H.btn(act, 'sm')}</div>`).join('')}</div>` +
+    `<h4 style="font-size:13px;margin:16px 0 4px">To do</h4><div class="list">${todo.map(([t, when, id]) => `<div class="li" style="padding-left:0;padding-right:0">${H.box(false)}<div class="grow"><a href="#${id}" style="color:var(--fg);text-decoration:none">${t}</a></div><span class="small muted nowrap">${when}</span></div>`).join('')}</div>` +
+    `<h4 style="font-size:13px;margin:16px 0 4px">To review</h4><div class="list">${review.map(([t, id]) => `<div class="li" style="padding-left:0;padding-right:0">${H.dot('warn')}<div class="grow"><a href="#${id}" style="color:var(--fg);text-decoration:none">${t}</a></div>${H.go('Review', id, 'sm')}</div>`).join('')}</div>`;
+
+  S({
+    id: 'today', dept: 'today', title: 'Today',
+    intent: 'His day in one place, the first thing he opens. <b>Replies:</b> because Timberline reads his inbox and keeps each thread (D38), the Assistant reads every answer and says what it means (confirmed, asks for more, changed something, declined) with one click to act. <b>Calendar:</b> his Outlook calendar together with Timberline\'s own dates (ships, pickups, deliveries, split loads due). <b>Tasks:</b> what to do, what he is waiting on from each party, and what to review, with reminders when nobody answers. (Proposed layout.)',
+    ref: 'D46 · D38 · Hand-off 1a · Review "Worth adding"',
+    check: ['What do you look at first thing in the morning today: email, calendar, a list on paper?', 'Do you keep your appointments in Outlook (Hotmail) or somewhere else?', 'How long before a missing answer should turn into a reminder: a few hours, a day?'],
+    assistant: ['Read each reply and say what it means, with the next step ready', '"What am I waiting on from the office?"', 'Put a ship date or a call on your Outlook calendar'],
+    dock: H.assistant([
+      ['me', 'What am I waiting on from the office?'],
+      ['ai', 'Two things: the transport PO for L-2421 (asked yesterday) and approval R-1042 for the North Shore loads (2 days, overdue).'],
+      ['propose', 'Send one reminder to the office for both, with the details again.'],
+    ]),
+    html: () => H.head('Thursday, November 19', 'Good morning', '5 new replies · 6 waiting on others · 4 to do · 3 to review', H.btn('New task', '', 'plus') + H.go('Office requests', 'office-requests', 'primary')) +
+      `<div class="split">` +
+      H.panel('New replies, read for you', replyList(), `<span class="small muted">from your inbox</span>`, true).replace('class="bd flush"', 'class="bd" style="padding-top:0"') +
+      H.panel('Tasks', tasks()) +
+      `</div>` +
+      H.panel('This week', calendar(), `<span class="small muted">Outlook calendar + Timberline</span>${H.btn('Month', 'sm', 'cal')}`),
+  });
+})();
+
 /* ---- screens-10-orders-customers.js ---- */
 /* Orders (Incoming, Proposals, Orders, Pickups) and Customers (Accounts & plants, Contacts,
    Statements & payments), plus the import, PO-match and plant dialogs. */
@@ -622,18 +715,18 @@ window.addEventListener('DOMContentLoaded', route);
 
   // ---------- shared bits ----------
   const truckTiles = (bf, lb, floor, note) => H.kpis([
-    H.gauge('Board feet', `${n0(bf)} <small>/ 44,000</small>`, bf / 440, `${Math.round(bf / 440)}% of a truck`, bf > 44000 ? 'bad' : bf / 440 > 92 ? 'warn' : 'ok'),
-    H.gauge('Weight', `${n0(lb)} <small>/ 45,000 lb</small>`, lb / 450, lb > 45000 ? `${n0(lb - 45000)} lb over` : `${n0(45000 - lb)} lb to spare`, lb > 45000 ? 'bad' : lb / 450 > 92 ? 'warn' : 'ok'),
+    H.gauge('Board feet', `${n0(bf)} <small>/ ≈ 23,000 planned</small>`, bf / 230, `${Math.round(bf / 230)}% of this plant\'s planned load (D43)`, bf / 230 > 100 ? 'warn' : 'ok'),
+    H.gauge('Weight, average', `${n0(lb)} <small>/ 45,000 lb</small>`, lb / 450, `could be ${n0(lb * 1.7 / 1.9)} to ${n0(lb * 2.1 / 1.9)} lb (species ± variance)`, lb > 45000 ? 'bad' : lb * 2.1 / 1.9 > 45000 ? 'warn' : 'ok'),
     H.gauge('Floor', `${floor}%`, floor, '53\' dry van, 2 high', floor > 100 ? 'bad' : floor > 92 ? 'warn' : 'ok'),
     H.gauge('Fills', note, null, 'whichever runs out first (D13)'),
   ]);
 
   const needRows = [
-    ['DN-3331', '3x3 × 31"', 'Major', 2400, 1.9375, 2.6],
-    ['DN-33375', '3x3 × 37½"', 'Major', 1800, 2.3438, 3.1],
-    ['DN-33385', '3x3 × 38½"', 'Major', 1400, 2.4063, 3.2],
-    ['DN-2339G', '2x3 × 39" grooved', '', 2100, 1.625, 2.1],
-    ['DN-4448', '4x4 × 48"', '', 480, 5.3333, 7.0],
+    ['DN-3331', '3x3 × 31"', 'Major', 2400, 1.9375, 3.7],
+    ['DN-33375', '3x3 × 37½"', 'Major', 1800, 2.3438, 4.5],
+    ['DN-33385', '3x3 × 38½"', 'Major', 1400, 2.4063, 4.6],
+    ['DN-2339G', '2x3 × 39" grooved', '', 2100, 1.625, 3.1],
+    ['DN-4448', '4x4 × 48"', '', 480, 5.3333, 10.1],
   ];
   const needBf = needRows.reduce((a, r) => a + r[3] * r[4], 0);
   const needLb = needRows.reduce((a, r) => a + r[3] * r[5], 0);
@@ -669,7 +762,7 @@ window.addEventListener('DOMContentLoaded', route);
     html: incomingPage,
     dock: H.assistant([
       ['me', 'What came in from Ardent this morning?'],
-      ['ai', 'Two needs sheets from Dana: Caldari Road (5 lines, about 96% of a truck) and Jane Street (2 lines, 41%). Jane Street is 8 miles away; it could ride on the Caldari Road load as a second drop.'],
+      ['ai', 'Two needs sheets from Dana: Caldari Road (5 lines, about 78% of a truck by weight) and Jane Street (2 lines, 41%). Jane Street is 8 miles away; it could ride on the Caldari Road load as a second drop.'],
       ['propose', 'Build proposal P-24-0318 for Caldari Road from Nov-Dec.xlsx, topped up to a full truck with major sizes.'],
     ]),
   });
@@ -687,7 +780,7 @@ window.addEventListener('DOMContentLoaded', route);
       `<div class="grid2">${H.panel('1. Columns', H.table(['Their column', 'Means'], [
         ['Part #', H.chip('Their part number', 'brand')], ['Description', H.chip('Item', 'brand')], ['Qty', H.chip('Pieces', 'brand')], ['Need by', H.chip('Date', 'brand')], ['Notes', H.chip('Ignore', '')],
       ]), H.chip('Saved for Ardent', 'ok'), true)}
-      ${H.panel('2. Truck while importing', `<div style="padding:4px 0 0">${H.kpis([H.gauge('Board feet', `${n0(needBf)}`, needBf / 440, `${Math.round(needBf / 440)}% of a truck`, 'ok'), H.gauge('Weight', `${n0(needLb)} lb`, needLb / 450, 'of 45,000 lb', 'ok')])}</div>`)}</div>` +
+      ${H.panel('2. Truck while importing', `<div style="padding:4px 0 0">${H.kpis([H.gauge('Board feet', `${n0(needBf)}`, needBf / 230, `${Math.round(needBf / 230)}% of the ≈ 23,000 planned (D43)`, 'ok'), H.gauge('Weight', `${n0(needLb)} lb`, needLb / 450, 'of 45,000 lb', 'ok')])}</div>`)}</div>` +
       H.panel('3. Lines matched to the catalog', H.table(['Their part', 'Their description', 'Our item', { t: 'Pieces', num: true }, { t: 'Bd ft', num: true }, 'Check'], [
         ['ARD-0331', 'Dunnage 3x3x31', 'DN-3331 · 3x3 × 31"', '2,400', n0(2400 * 1.9375), H.chip('Matched', 'ok')],
         ['ARD-0375', '3X3 37.5 IN', 'DN-33375 · 3x3 × 37½"', '1,800', n0(1800 * 2.3438), H.chip('Matched', 'ok')],
@@ -718,9 +811,9 @@ window.addEventListener('DOMContentLoaded', route);
     html: () => H.head(`Orders › Proposals · ${st.proposal}`, `${st.customer} · ${st.plant}`, 'From needs sheet Nov-Dec.xlsx, received today 8:14',
       H.btn('Split into 2 loads') + H.btn('Cut items') + H.go('Plan in 3D', 'loads-planner', '', 'loads') + H.go('Send proposal', 'doc-proposal', 'primary', 'mail')) +
       H.stages(D.stages, 1) +
-      truckTiles(40990, 43350, 97, 'Weight first') +
+      truckTiles(21030, 39960, 61, 'Weight first') +
       `<div class="split">${H.panel('Lines', H.table(['Item', { t: 'Asked', num: true }, { t: 'Proposed', num: true }, { t: 'Change', num: true }, { t: 'Bundles', num: true }, { t: 'Bd ft', num: true }, ''],
-        propLines, { foot: ['Total', '7,780', '8,830', '+980', '62', '40,990', ''] }), H.btn('Add line', 'sm', 'plus'), true)}
+        propLines, { foot: ['Total', '8,180', '9,160', '+980', '64+', '≈ 21,030', ''] }), H.btn('Add line', 'sm', 'plus'), true)}
       <div style="display:flex;flex-direction:column;gap:20px">
       ${H.panel('Suggestions', `<div class="list">
         <div class="li" style="border-top:0;padding-left:0">${H.dot('ok')}<div class="grow"><b>Topped up 980 pcs</b><div class="small muted">Spread over the 3 major sizes, in proportion.</div></div></div>
@@ -909,10 +1002,9 @@ window.addEventListener('DOMContentLoaded', route);
     b: { name: '3x3 × 37½"', L: 37.5, cls: '', fill: 'var(--wood-2)', bf: 328 },
     f: { name: '2x4 × 40" filler', L: 40, cls: 'fill', fill: 'var(--wood-4)', bf: 333, filler: true },
   };
-  const BW = 42, BH = 28, GAP = 3, TL = 636, TW = 102;
+  const BW = 42, BH = 28, GAP = 0, TL = 636, TW = 102; // packed tight (D33)
+  const LB_PER_BF = 1.9; // dry SPF, about; set per species and dry/green (D43)
   const ROWS = [
-    { k: 'a', dir: 'across', per: 3, high: 3, drop: 2, step: 1 },
-    { k: 'a', dir: 'across', per: 3, high: 3, drop: 2, step: 1 },
     { k: 'a', dir: 'across', per: 3, high: 3, drop: 2, step: 1 },
     { k: 'g', dir: 'length', per: 2, high: 3, drop: 1, step: 2 },
     { k: 'g', dir: 'length', per: 2, high: 3, drop: 1, step: 2 },
@@ -929,11 +1021,13 @@ window.addEventListener('DOMContentLoaded', route);
   ROWS.forEach(r => {
     const it = IT[r.k];
     const depth = r.dir === 'across' ? BW : it.L, zs = r.dir === 'across' ? it.L : BW;
-    const used = r.per * zs + (r.per - 1) * 2; let z = (TW - used) / 2;
+    const used = r.per * zs; let z = (TW - used) / 2;
     for (let j = 0; j < r.per; j++) { for (let h = 0; h < r.high; h++) BOXES.push({ x0: cx, x1: cx + depth, z0: z, z1: z + zs, y0: h * (BH + 3.5) + 3.5, y1: h * (BH + 3.5) + 3.5 + BH, it, dir: r.dir, step: r.step }); z += zs + 2; }
     cx += depth + GAP;
   });
   const USED = cx - GAP;
+  const BF = ROWS.reduce((a, r) => a + r.per * r.high * IT[r.k].bf, 0), LB = BF * LB_PER_BF;
+  const BUNDLES = ROWS.reduce((a, r) => a + r.per * r.high, 0);
 
   // ---------- isometric-style drawing ----------
   const AX = [0.92, 0.29], AZ = [-0.6, 0.4];
@@ -1010,18 +1104,19 @@ window.addEventListener('DOMContentLoaded', route);
   }
 
   const gauges = () => H.kpis([
-    H.gauge('Board feet', `38,750 <small>/ 44,000</small>`, 88, '88% · room for 13 more bundles of 3x3 × 31"'),
-    H.gauge('Weight', `43,100 <small>/ 45,000 lb</small>`, 96, '96% · weight runs out first', 'warn'),
-    H.gauge('Floor', `82%`, 82, `${Math.round(USED / 12)}' of 53' used · 3 high`),
+    H.gauge('Weight, average', `${n0(LB)} <small>/ 45,000 lb</small>`, LB / 450, `${Math.round(LB / 450)}% · could be ${n0(BF * 1.7)} to ${n0(BF * 2.1)} lb`, BF * 2.1 > 45000 ? 'warn' : 'ok'),
+    H.gauge('Board feet', `${n0(BF)} <small>/ ≈ 23,000 planned</small>`, BF / 230, `${Math.round(BF / 230)}% of the planned load for this plant (D43)`),
+    H.gauge('Floor', `${Math.round(USED / TL * 100)}%`, USED / TL * 100, `${Math.round(USED / 12)}' of 53' used · packed tight, 3 high`),
     H.gauge('Weight over axles', `47% <small>/ 53%</small>`, null, 'Front / rear · balanced', 'ok'),
   ]);
+  const weightRisk = () => `<div class="btns small"><span class="muted">Plan the weight on</span>${H.seg(['Light side', 'Average', 'Heavy side'], 1)}<span class="muted">SPF dry: 1.90 ± 0.20 lb per bd ft. On the heavy side this load is <b>${n0(BF * 2.1)} lb</b>, ${BF * 2.1 > 45000 ? 'over' : 'still under'} the 45,000 limit.</span>${H.go('Species & weights', 'catalog-species', 'ghost sm')}</div>`;
   const trailerPick = () => `<div class="btns">${D.trailers.map((t, i) => `<span class="filter ${i === 0 ? 'on' : ''}">${t.name}</span>`).join('')}${H.go('Trailer types', 'settings-trailers', 'ghost sm')}</div>`;
   const plannerHead = () => H.head(`Load ${st.load} · Proposal ${st.proposal} · ${st.customer}`, 'Two drops: Caldari Road and Jane Street',
     'Ardent Metals, one buyer, two plants 8 miles apart. Drop 1 goes last on, nearest the doors.',
     H.btn('Split into 2 loads') + H.go('Loading list', 'doc-loadlist', '', 'print') + H.go('Confirm load', 'dlg-confirmload', 'primary', 'check'));
 
   const orderRows = [
-    ['a', 2, 27, 'across', 'Jane Street', 1],
+    ['a', 2, 9, 'across', 'Jane Street', 1],
     ['g', 1, 18, 'length', 'Caldari Road', 2],
     ['a', 1, 27, 'across', 'Caldari Road', 3],
     ['b', 1, 12, 'length', 'Caldari Road', 4],
@@ -1035,7 +1130,7 @@ window.addEventListener('DOMContentLoaded', route);
       H.chip(`${drop} · ${plant}`, drop === 1 ? 'now' : 'info'),
       H.seg(['Across', 'Lengthwise'], dir === 'across' ? 0 : 1),
       n, n === '4+' ? '1,332+' : n0(n * IT[k].bf)]),
-    { foot: ['', '', 'Total', '', '', '88+', '38,750'] });
+    { foot: ['', '', 'Total', '', '', `${BUNDLES - 4}+`, n0(BF)] });
 
   // ---------- Loads › 3D Planner ----------
   S({
@@ -1046,18 +1141,18 @@ window.addEventListener('DOMContentLoaded', route);
     assistant: ['Plan the load from the proposal ("fill this up for Concord, mostly major sizes")', 'Suggest a split or a top-up and show the result before you approve', 'Turn every item to its best direction'],
     dock: H.assistant([
       ['me', 'Fill this truck up for Concord, mostly their major sizes.'],
-      ['ai', 'Weight runs out before board feet. 3 bundles of 3x3 × 37½" fit, then filler for the rest.'],
-      ['propose', '+3 bundles 3x3 × 37½" (major size)<br>2x4 × 40" filler: as many as fit<br><span class="num">Weight → 44,850 lb (99.7%)</span>'],
+      ['ai', 'Weight runs out first. On average, 6 more bundles of 3x3 × 37½" fit. If the wood is on the heavy side, none do. How much risk do you want to take?'],
+      ['propose', '+6 bundles 3x3 × 37½" (major size)<br><span class="num">Weight → 43,947 lb on average</span><br><span class="small">light side 39,321 · heavy side 48,573 lb: over the limit if the wood is heavy</span>'],
     ]),
     html: () => plannerHead() +
       H.stages(D.stages, 1) +
-      gauges() +
+      gauges() + weightRisk() +
       `<div class="panel"><div class="hd"><h3>3D view</h3>${trailerPick()}</div><div class="bd">${iso3d()}
         <div class="btns small" style="justify-content:space-between"><span class="muted">Drag to turn, pinch or scroll to zoom. The live version works like the <a href="https://claude.ai/artifact/B8tH5FtyJjvUaC5yp4ws7R" target="_blank" rel="noopener">3D flatbed demo</a>.</span>
         <span class="btns">${H.btn('Angle', 'sm')}${H.btn('Side', 'sm')}${H.btn('Top', 'sm')}${H.btn('Doors end', 'sm')}</span></div></div></div>` +
       H.panel('Loading order · nose to doors', loadTable(), H.btn('Best direction for each', 'sm') + H.btn('Add item', 'sm', 'plus'), true) +
       `<div class="grid2" style="gap:12px">` +
-      H.callout('warn', '<b>1,900 lb left before the weight limit.</b> Add 3 bundles of 3x3 × 37½" (a major size for Caldari Road), then fill the rest with 2x4 × 40" filler.', H.btn('Apply', 'sm')) +
+      H.callout('warn', '<b>4,792 lb left on average, but only 560 lb on the heavy side.</b> Planning on the average, 6 more bundles of 3x3 × 37½" fit (a major size for Caldari Road), but the load could then weigh up to 48,573 lb. Planning on the heavy side, add nothing.', H.btn('Apply', 'sm')) +
       H.callout('info', '<b>Too much for one truck?</b> Split into 2 loads: the second becomes its own order (24-0318-B) shipping in 3 weeks or 1 month. Or cut items.', H.btn('Split', 'sm')) +
       H.callout('info', '<b>2x3 × 39" grooved goes lengthwise.</b> Across, it would use 9" more floor for the same 18 bundles.') +
       H.callout('', '<b>Filler: as many as fit.</b> The packing slip leaves the filler quantity blank, to be filled in at loading.') +
@@ -1074,7 +1169,7 @@ window.addEventListener('DOMContentLoaded', route);
     assistant: ['List what will be created before you confirm', 'Warn if a gauge is over its limit'],
     under: () => plannerHead() + gauges(),
     html: () => H.dialog(`Confirm load ${st.load}`,
-      H.callout('ok', `<b>All gauges are inside their limits.</b> Board feet 88%, weight 96%, floor 82%, axles balanced.`) +
+      H.callout('ok', `<b>All gauges are inside their limits.</b> Weight ${Math.round(LB / 450)}%, board feet ${Math.round(BF / 230)}% of the planned load, floor ${Math.round(USED / TL * 100)}%, axles balanced.`) +
       H.table(['', 'What happens', 'Result'], [
         [H.box(true), 'Lock the 3D plan and the loading order', 'Plan v3, locked'],
         [H.box(true), 'Make the packing slip (filler quantity left blank)', 'Packing slip for 24-0318'],
@@ -1088,10 +1183,10 @@ window.addEventListener('DOMContentLoaded', route);
 
   // ---------- document: loading list ----------
   const llRows = [
-    [1, 'Nose', '3x3 × 31"', 27, 'Across, 3 per row, 3 high', '2 · Jane Street'],
-    [2, 'Rows 4–6', '2x3 × 39" grooved', 18, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
-    [3, 'Rows 7–9', '3x3 × 31"', 27, 'Across, 3 per row, 3 high', '1 · Caldari Road'],
-    [4, 'Rows 10–11', '3x3 × 37½"', 12, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
+    [1, 'Nose', '3x3 × 31"', 9, 'Across, 1 row of 3, 3 high', '2 · Jane Street'],
+    [2, 'Rows 2–4', '2x3 × 39" grooved', 18, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
+    [3, 'Rows 5–7', '3x3 × 31"', 27, 'Across, 3 per row, 3 high', '1 · Caldari Road'],
+    [4, 'Rows 8–9', '3x3 × 37½"', 12, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
     [5, 'Doors', '2x4 × 40" filler', '<span class="blank"></span>', 'Lengthwise, as many as fit', '1 · Caldari Road'],
   ];
   S({
@@ -1117,7 +1212,7 @@ window.addEventListener('DOMContentLoaded', route);
     check: ['How far ahead do you plan loads: one week, two?', 'Should pickups and delivered loads sit on the same calendar?', 'Do you want Jewish holidays and Shabbos marked when scheduling?'],
     assistant: ['"What ships next week?"', 'Remind you when a split load is coming due', 'Move a load to another day and tell the subcontractor and carrier'],
     html: () => H.head('Loads', 'Schedule', 'Week of Nov 23, 2026', H.seg(['Week', 'Month', 'List'], 0) + H.btn('‹') + H.btn('Today') + H.btn('›') + H.btn('Excel', '', 'xls')) +
-      H.kpis([H.gauge('This week', '5 <small>loads</small>', null, '4 delivered · 1 pickup'), H.gauge('Board feet out', '186,400', null, 'Across 5 loads'), H.gauge('Split loads due', '2', null, 'In the next 30 days', 'warn'), H.gauge('Backup carrier', '1 of 4', null, 'Bluewater on Thursday')]) +
+      H.kpis([H.gauge('This week', '5 <small>loads</small>', null, '4 delivered · 1 pickup'), H.gauge('Board feet out', '104,800', null, 'Across 5 loads'), H.gauge('Split loads due', '2', null, 'In the next 30 days', 'warn'), H.gauge('Backup carrier', '1 of 4', null, 'Bluewater on Thursday')]) +
       `<div class="grid3" style="grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr))">` +
       day('Mon Nov 23', [['L-2414 · Lakeshore', 'Toronto plant · pickup', H.chip('Pickup', 'info'), 'info']]) +
       day('Tue Nov 24', [[`${st.load} · Ardent`, 'Caldari Road + Jane Street', H.chip('Confirmed', 'ok') + ' ' + H.chip('2 drops'), 'now'], ['L-2416 · Ardent', 'Caldari Road · Trans-Ontario', H.chip('At subcontractor', 'info'), '']]) +
@@ -1142,7 +1237,7 @@ window.addEventListener('DOMContentLoaded', route);
     assistant: ['Email the BOL to the carrier', 'Find loads still missing a signed BOL'],
     html: () => H.head('Loads', 'Bills of lading', '', H.btn('Excel', '', 'xls')) +
       H.panel('', H.filters(['*All', 'Draft', 'Sent to carrier', 'Signed', 'US loads']) + H.table(['BOL', 'Load', 'Ship date', 'Consignee', 'Carrier', { t: 'Bundles', num: true }, { t: 'Weight lb', num: true }, 'Status', ''], [
-        [`<a href="#doc-bol">${st.bol}</a>`, st.load, 'Nov 24', 'Ardent · Caldari Road + Jane Street', 'Trans-Ontario Freight', '88+', '43,100', H.chip('Ready', 'info'), H.go('Open', 'doc-bol', 'sm')],
+        [`<a href="#doc-bol">${st.bol}</a>`, st.load, 'Nov 24', 'Ardent · Caldari Road + Jane Street', 'Trans-Ontario Freight', '70+', '40,200', H.chip('Ready', 'info'), H.go('Open', 'doc-bol', 'sm')],
         ['BOL-2419', 'L-2419', 'Nov 26', 'Garden State · Newark NJ', 'Bluewater Carriers', 96, '44,200', H.chip('Needs broker', 'warn'), H.btn('Open', 'sm')],
         ['BOL-2416', 'L-2416', 'Nov 24', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 92, '42,700', H.chip('Sent to carrier'), H.btn('Open', 'sm')],
         ['BOL-2411', 'L-2411', 'Nov 17', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 90, '43,900', H.chip('Signed', 'ok'), H.btn('Open', 'sm')],
@@ -1162,9 +1257,9 @@ window.addEventListener('DOMContentLoaded', route);
       `<div class="cols"><div class="box2"><div class="k">Shipper · pick up at</div>BB Pallets c/o Kessler Wood Works<br>Concord yard, Concord ON</div><div class="box2"><div class="k">Carrier</div>Trans-Ontario Freight<br>Trailer 53' dry van · # ________ · Seal # ________</div><div class="box2"><div class="k">Freight terms</div>Prepaid · bill to BB Pallets</div></div>` +
       `<div class="cols"><div class="box2"><div class="k">Stop 1 · consignee</div>Ardent Metals, Caldari Road plant<br>Concord ON · Receiving: Dana Ferreira</div><div class="box2"><div class="k">Stop 2 · consignee</div>Ardent Metals, Jane Street plant<br>Vaughan ON · same buyer</div></div>` +
       `<table><thead><tr><th>Stop</th><th class="num">Bundles</th><th>Description</th><th class="num">Weight lb</th></tr></thead><tbody>
-        <tr><td>1</td><td class="num">61+</td><td>Wood dunnage, untreated softwood (3x3, 2x3 grooved, 2x4 filler)</td><td class="num">30,200</td></tr>
-        <tr><td>2</td><td class="num">27</td><td>Wood dunnage, untreated softwood (3x3)</td><td class="num">12,900</td></tr>
-        <tr><td></td><td class="num"><b>88+</b></td><td><b>Total</b></td><td class="num"><b>43,100</b></td></tr></tbody></table>` +
+        <tr><td>1</td><td class="num">61+</td><td>Wood dunnage, untreated softwood (3x3, 2x3 grooved, 2x4 filler)</td><td class="num">35,600</td></tr>
+        <tr><td>2</td><td class="num">9</td><td>Wood dunnage, untreated softwood (3x3)</td><td class="num">4,600</td></tr>
+        <tr><td></td><td class="num"><b>70+</b></td><td><b>Total</b></td><td class="num"><b>40,200</b></td></tr></tbody></table>` +
       `<div class="box2" style="opacity:.55"><div class="k">US loads only · customs broker</div>Broker: ______________ · PARS / entry #: ______________ · Commercial invoice attached ☐</div>` +
       `<div class="fine">Received, subject to the classifications and tariffs in effect on the date of issue, the property described above in apparent good order.</div>` +
       `<div class="sig"><div>Shipper signature · date</div><div>Driver signature · date</div><div>Consignee stop 1 · date</div><div>Consignee stop 2 · date</div></div>`, false),
@@ -1224,7 +1319,7 @@ window.addEventListener('DOMContentLoaded', route);
     html: () => H.doc('Packing slip · ' + st.order, H.letterhead('PACKING SLIP', [['Order', st.order], ['Customer PO', st.po], ['Load', st.load], ['Ship date', 'Nov 24, 2026']]) +
       `<div class="cols"><div class="box2"><div class="k">Ship to (drop 1)</div>Ardent Metals, Caldari Road plant<br>Concord ON</div><div class="box2"><div class="k">Ship to (drop 2)</div>Ardent Metals, Jane Street plant<br>Vaughan ON</div></div>` +
       `<table><thead><tr><th>Item</th><th>Drop</th><th class="num">Bundles ordered</th><th class="num">Pieces</th><th class="num">Bundles loaded</th></tr></thead><tbody>
-        <tr><td>3x3 × 31"</td><td>2</td><td class="num">27</td><td class="num">3,780</td><td class="num"><span class="blank"></span></td></tr>
+        <tr><td>3x3 × 31"</td><td>2</td><td class="num">9</td><td class="num">1,260</td><td class="num"><span class="blank"></span></td></tr>
         <tr><td>2x3 × 39" grooved</td><td>1</td><td class="num">18</td><td class="num">3,780</td><td class="num"><span class="blank"></span></td></tr>
         <tr><td>3x3 × 31"</td><td>1</td><td class="num">27</td><td class="num">3,780</td><td class="num"><span class="blank"></span></td></tr>
         <tr><td>3x3 × 37½"</td><td>1</td><td class="num">12</td><td class="num">1,680</td><td class="num"><span class="blank"></span></td></tr>
@@ -1243,14 +1338,14 @@ window.addEventListener('DOMContentLoaded', route);
     html: () => H.dialog(`Loaded quantities · ${st.job} · ${st.order}`,
       `<div class="btns"><span class="muted small">Reported by</span>${H.seg(['Phone', 'Email', 'Packing slip'], 0)}<span class="muted small">Nov 24, 2026 · 11:20 am · Kessler Wood Works</span></div>` +
       H.table(['Item', 'Drop', { t: 'Ordered', num: true }, { t: 'Loaded', num: true }, { t: 'Difference', num: true }, { t: 'Bd ft', num: true }], [
-        ['3x3 × 31"', '2', 27, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">27</span>', H.chip('0', 'ok'), '7,317'],
+        ['3x3 × 31"', '2', 9, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">9</span>', H.chip('0', 'ok'), '2,439'],
         ['2x3 × 39" grooved', '1', 18, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">18</span>', H.chip('0', 'ok'), '6,138'],
         ['3x3 × 31"', '1', 27, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">26</span>', H.chip('−1', 'warn'), '7,046'],
         ['3x3 × 37½"', '1', 12, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">12</span>', H.chip('0', 'ok'), '3,936'],
         ['2x4 × 40" filler', '1', 'Fill', '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end;border-color:var(--brand)">5</span>', H.chip('Filled in', 'info'), '1,665'],
-      ], { cls: ['', '', 'diff', '', ''], foot: ['Total', '', '84+', '88', '', '26,102'] }) +
+      ], { cls: ['', '', 'diff', '', ''], foot: ['Total', '', '66+', '70', '', '21,224'] }) +
       H.callout('warn', '<b>One bundle of 3x3 × 31" short for Caldari Road.</b> The order and invoice use the loaded quantity. Add a note for the customer?') +
-      H.callout('info', 'Inventory: 26,102 bd ft shipped is booked as 27,407 bd ft out (5% waste added at shipping).'),
+      H.callout('info', 'Inventory: 21,224 bd ft shipped is booked as 22,285 bd ft out (5% waste added at shipping).'),
       H.btn('Cancel') + H.btn('Save draft') + H.go('Update order for invoicing', 'doc-invoice', 'primary', 'check'), true),
   });
 
@@ -1336,7 +1431,7 @@ window.addEventListener('DOMContentLoaded', route);
         <div class="box2"><div class="k">Deliver</div>1. Ardent Metals, Caldari Road plant, Concord ON<br>2. Ardent Metals, Jane Street plant, Vaughan ON<br>Tue Nov 24 · by 15:00</div>
       </div>
       <table><thead><tr><th>Equipment</th><th>Load</th><th class="num">Bundles</th><th class="num">Weight lb</th><th class="num">Drops</th></tr></thead>
-      <tbody><tr><td>53' dry van, tandem</td><td>Wood dunnage, untreated softwood</td><td class="num">88+</td><td class="num">43,100</td><td class="num">2</td></tr></tbody></table>
+      <tbody><tr><td>53' dry van, tandem</td><td>Wood dunnage, untreated softwood</td><td class="num">70+</td><td class="num">40,200</td><td class="num">2</td></tr></tbody></table>
       <table class="tot"><tbody><tr><td>Line haul, per load</td><td class="num">$2,150.00</td></tr><tr><td>Second drop</td><td class="num">$150.00</td></tr><tr><td>Price to put on the PO (CAD)</td><td class="num">$2,300.00</td></tr></tbody></table>
       <p>The carrier's confirmation books the date and accepts this price. Please forward it to me, or ask them to copy me.</p>
       <div class="sig"><div>Requested by: Sales, BB Pallets</div><div>Office PO no. · issued by · date</div></div>
@@ -1357,9 +1452,69 @@ window.addEventListener('DOMContentLoaded', route);
         ['Date', 'Tue Nov 24', 'Tue Nov 24', H.chip('Same', 'ok')],
         ['Price', '$2,300.00', '$2,300.00', H.chip('Same', 'ok')],
         ['Equipment', '53\' dry van', '53\' dry van', H.chip('Same', 'ok')]])}
-      ${H.callout('info', 'Freight on this load: <b>$2,300</b>, the same as the price list was built on ($2,300 ÷ 44 MBF = $52.25 per MBF). Margin unchanged.')}
+      ${H.callout('info', 'Freight on this load: <b>$2,300</b>, the same as the price list was built on ($2,300 ÷ 44 MBF = $52.27 per MBF). Margin unchanged.')}
       <div class="small muted">Attached: the forwarded email (saved on order ${st.order} and on Trans-Ontario Freight).</div>`,
       H.btn('Cancel') + H.btn('Mark as confirmed', 'primary')),
+  });
+})();
+
+/* ---- screens-26-office.js ---- */
+/* Office › Requests (D37, D39): every request to the BB Pallets office in one place (transport POs,
+   purchase approvals, invoices, credit notes, new customer setup, price changes), with its state,
+   a frozen copy of what was asked, the answer, and the email thread. Today he records the office's
+   answers; when the office switches over, this becomes their work queue, with nothing else changing. */
+(function () {
+  const ST = {
+    asked: H.chip('Asked', 'warn'), over: H.chip('Overdue', 'bad'), ok: H.chip('Approved', 'ok'), chg: H.chip('Approved with changes', 'info'),
+    no: H.chip('Declined', 'bad'), closed: H.chip('Closed'), sup: H.chip('Superseded'), draft: H.chip('Draft'),
+  };
+  const rows = [
+    ['R-1043', 'Purchase approval', 'Algonquin · trim 6–7\', 1 load at $440', 'Nov 17', ST.ok, 'PO 5544', 'He recorded'],
+    ['R-1042', 'Purchase approval', 'North Shore · 2 loads 10s at $525', 'Nov 17', ST.over, '—', ''],
+    ['R-1041', 'Transport PO', 'L-2421 · Jane Street · Trans-Ontario $2,100', 'Nov 18', ST.asked, '—', ''],
+    ['R-1040', 'Invoice', 'Order 24-0309 · Garden State · loaded quantities', 'Nov 16', ST.closed, 'INV 61022', 'He recorded'],
+    ['R-1039', 'Transport PO', 'L-2420 · Caldari Road · $2,300', 'Nov 15', ST.chg, 'TPO 5542 at $2,450', 'He recorded'],
+    ['R-1036', 'Transport PO', 'L-2420 · Caldari Road · $2,300, Thu', 'Nov 14', ST.sup, '—', 'Replaced by R-1039'],
+    ['R-1035', 'New customer setup', 'Midland Bar & Tube · 1 plant, CAD', 'Nov 12', ST.asked, '—', ''],
+    ['R-1031', 'Credit note', 'Order 24-0297 · 1 bundle short', 'Nov 9', ST.closed, 'CN 2210', 'He recorded'],
+  ];
+  const steps = [
+    ['Transport PO to the carrier', 0], ['Approve a purchase', 0], ['Purchase order to the supplier', 0],
+    ['Invoice to the customer', 0], ['Credit note', 0], ['New customer or supplier setup', 0], ['Payment received', 0],
+  ];
+  const page = () =>
+    H.head('Office', 'Requests to the BB Pallets office', 'Everything you have asked the office for, and what they answered. Replies are matched by the reference in the subject, e.g. [TL-R-1042].',
+      H.btn('Excel', '', 'xls') + H.btn('New request', 'primary', 'plus')) +
+    H.kpis([
+      H.gauge('Waiting on the office', '3', null, '1 overdue (R-1042, 2 days)', 'warn'),
+      H.gauge('Answered, to record', '1', null, 'R-1043 approval read from your inbox'),
+      H.gauge('Usual answer time', '5 h', null, 'transport PO · 1 day for approvals'),
+      H.gauge('Office works', 'By email', null, 'see "Who does each step" below'),
+    ]) +
+    `<div class="split">` +
+    H.panel('', H.filters(['*All', 'Waiting 3', 'Overdue 1', 'To record 1', 'Transport PO', 'Approval', 'Invoice', 'Closed']) +
+      H.table(['Ref', 'Type', 'About', 'Asked', 'State', 'Office no.', ''], rows.map(r => [`<b>${r[0]}</b>`, r[1], r[2], r[3], r[4], r[5], `<span class="small muted">${r[6]}</span>`]), { sel: 1 }), '', '', true) +
+    H.panel('R-1042 · Purchase approval', `
+      ${H.stages(['Draft', 'Asked', 'Answered', 'Accepted by you', 'Closed'], 1)}
+      <div style="margin-top:12px">${H.table(['', 'What you asked (frozen)'], [
+        ['Supplier', 'North Shore Forest Products'], ['What', '2 loads, 2x3 × 10\', #2 & better'], ['Price', '$525 / MBF delivered (plan $545)'],
+        ['Why', 'Buying gain ≈ $1,100 a load (D42)'], ['Asked', 'Nov 17, 4:02 pm · by email to accounts@bbpallets (example)'], ['Due by', 'Nov 18 · reminder sent Nov 19, 9:00']])}</div>
+      <div class="small muted" style="margin:10px 0 6px">Thread</div>
+      <div class="list" style="font-size:13px">
+        <div class="li" style="padding-left:0;border-top:0">${H.icon('mail', 15)}<div class="grow"><b>You → office</b> · Purchase approval [TL-R-1042]<div class="small muted">Nov 17, 4:02 pm</div></div></div>
+        <div class="li" style="padding-left:0">${H.icon('mail', 15)}<div class="grow"><b>You → office</b> · Reminder [TL-R-1042]<div class="small muted">Nov 19, 9:00 am · sent after your OK</div></div></div>
+      </div>
+      <div class="btns" style="margin-top:12px">${H.btn('Record the answer', 'primary')}${H.btn('Remind again')}${H.btn('Change the request')}${H.btn('Cancel', 'danger')}</div>
+      <div class="small muted" style="margin-top:8px">Changing it makes a new request (R-1044) and marks this one superseded, so the history stays.</div>`) +
+    `</div>` +
+    H.panel('Who does each step', H.table(['Step', 'Done by', 'Today'], steps.map(([s, on]) => [s, H.seg(['The office, by email', 'The office, in Timberline'], on), '<span class="small muted">You send the request and record their answer</span>'])) +
+      `<div class="toolbar" style="padding-top:12px">${H.callout('info', 'When the office starts using Timberline, switch a step to <b>in Timberline</b> and give them a login: the same requests then land in their queue and they answer here. The records, states and history stay the same; their screens for issuing POs and invoices are switched on (D37, D39).')}</div>`, '', true);
+  S({
+    id: 'office-requests', dept: 'office', title: 'Requests to the office', html: page,
+    intent: 'He works for BB Pallets but runs his own day; the office does the official work. Every time he needs the office (a transport PO, approval of a purchase, an invoice, a credit, a new customer set up) it is a request here, with a frozen copy of what he asked, its state (asked, answered, approved with changes, declined, overdue, superseded), the office\'s answer and number, and the email thread. Today he records the answers; later the office can work this list itself, with a switch per step.',
+    ref: 'D36, D37, D39 · Review M2',
+    check: ['Who at the office handles each kind of request? One email address, or a person per type?', 'How long is too long to wait for each kind (transport PO, approval, invoice)?', 'When the office changes something (a smaller purchase, another carrier), how do they tell you?'],
+    assistant: ['Read the office\'s reply and fill in the answer for you to check', 'Remind the office when a request is overdue, after your OK', '"What has the office not answered this week?"'],
   });
 })();
 
@@ -1375,7 +1530,7 @@ window.addEventListener('DOMContentLoaded', route);
   const yieldRows = [
     ['10\'', '3 × 39"', '3" waste', H.chip('Best', 'ok') + ' 97.5%'],
     ['7\' trim (84")', '2 × 39"', '6" waste', H.chip('Good', 'ok') + ' 92.9%'],
-    ['12\'', '3 × 39"', '24" offcut kept', H.chip('Leftover', 'warn') + ' 81.3%'],
+    ['12\'', '3 × 39"', '27" offcut kept', H.chip('Leftover', 'warn') + ' 81.3%'],
     ['8\'', '2 × 39"', '18" waste', H.chip('Poor', 'bad') + ' 81.3%'],
   ];
   const offersPage = () => H.head('Purchasing › Offers', 'Offer from Muskoka Sawmill: 3 loads, paper-wrapped', 'Old stock the mill can\'t sell as premium. Asking $300 / MBF, not delivered.', H.btn('Save offer') + H.btn('Send counter-offer', 'primary', 'mail')) +
@@ -1403,7 +1558,7 @@ window.addEventListener('DOMContentLoaded', route);
       H.go('Log as purchase', 'dlg-purchase', 'sm')) +
     `<div class="grid2">` +
     H.panel('Yield into the sizes customers buy · 2x3 × 39"', H.table(['Stock', 'Cuts', 'Waste or leftover', 'Yield'], yieldRows) +
-      `<div class="toolbar small muted" style="padding-top:10px">Ardent Metals takes about half a load of 2x3 × 39" a week. Leftover 24" pieces go into inventory as offcuts (D21).</div>`, H.seg(['2x3 × 39"', '3x3 × 31"', '3x3 × 37½"'], 0), true) +
+      `<div class="toolbar small muted" style="padding-top:10px">Ardent Metals takes about half a load of 2x3 × 39" a week. Leftover 27" pieces go into inventory as offcuts (D21).</div>`, H.seg(['2x3 × 39"', '3x3 × 31"', '3x3 × 37½"'], 0), true) +
     H.panel('Buying gains this quarter', H.table(['Load', { t: 'Paid', num: true }, { t: 'Plan', num: true }, { t: 'Gain / load', num: true }], [
       ['North Shore 10s · Oct 2', '$545', '$500', '<span style="color:var(--bad)">−$1,980</span>'],
       ['Algonquin trim · Oct 9', '$440', '$500', '<span style="color:var(--ok)">+$2,640</span>'],
@@ -1426,7 +1581,7 @@ window.addEventListener('DOMContentLoaded', route);
     html: offersPage,
     dock: H.assistant([
       ['me', 'Muskoka has 3 loads of old 12s, wrapped. What can I offer?'],
-      ['ai', 'At $225 + $20 freight, on a 10-foot count that\'s $294, about $305 with the extra cutting. First-quality 10s are $345 this week, maybe $325 next. 12s give three 39s plus a 24" offcut.'],
+      ['ai', 'At $225 + $20 freight, on a 10-foot count that\'s $294, about $305 with the extra cutting. First-quality 10s are $345 this week, maybe $325 next. 12s give three 39s plus a 27" offcut.'],
       ['propose', 'Counter-offer to Muskoka Sawmill:<br><b>$225 / MBF</b>, 3 loads, FOB their yard'],
     ]),
   });
@@ -1514,7 +1669,7 @@ window.addEventListener('DOMContentLoaded', route);
     ['3x3 × 12\'', 'Kessler yard', '41,200', '18,000', '23,200', '$245 *'],
     ['3x3 × 10\'', 'Concord yard', '12,600', '6,400', '6,200', '$520'],
     ['2x4 × 10\'', 'Pinegrove yard', '8,900', '2,200', '6,700', '$475'],
-    ['Offcuts 2x3 × 24"', 'Kessler yard', '1,150', '0', '1,150', '$0'],
+    ['Offcuts 2x3 × 27"', 'Kessler yard', '1,150', '0', '1,150', '$0'],
   ];
   const onhandPage = () => H.head('Inventory', 'On hand', 'Board feet by size, length and yard, valued at the average cost of loads bought.', H.btn('Excel', '', 'xls') + H.btn('Valuation PDF', '', 'pdf')) +
     H.kpis([
@@ -1564,7 +1719,7 @@ window.addEventListener('DOMContentLoaded', route);
     html: countsPage,
   });
 
-  const countRows = ['2x3 × 7\' trim', '2x3 × 8\'', '2x3 × 10\'', '2x3 × 12\'', '3x3 × 10\'', '3x3 × 12\'', '2x4 × 10\'', '4x4 × 8\'', 'Offcuts 2x3 × 24"'];
+  const countRows = ['2x3 × 7\' trim', '2x3 × 8\'', '2x3 × 10\'', '2x3 × 12\'', '3x3 × 10\'', '3x3 × 12\'', '2x4 × 10\'', '4x4 × 8\'', 'Offcuts 2x3 × 27"'];
   S({
     id: 'doc-count', dept: 'inventory', tab: 'inventory-counts', kind: 'document', title: 'Count sheet (blank)',
     intent: 'The blank sheet for whoever counts: one line per size and length at that yard, with space for pieces or bundles. It reminds the counter to leave the subcontractor\'s own pile out, because only BB Pallets\' wood is tracked.',
@@ -1631,12 +1786,12 @@ window.addEventListener('DOMContentLoaded', route);
       H.gauge('Booked at shipping', '5.0%', null, '40,000 ft shipped → 42,000 ft out of stock'),
       H.gauge('Actual since Sept 30', '3.4%', 68, 'from the Nov 15 count', 'ok'),
       H.gauge('Over-booked', '+3,150 <small>bd ft</small>', null, 'came back at the count'),
-      H.gauge('Offcuts kept', '1,150 <small>bd ft</small>', null, 'usable 24" pieces (D21)'),
+      H.gauge('Offcuts kept', '1,150 <small>bd ft</small>', null, 'usable 27" pieces (D21)'),
     ]) +
     `<div class="grid2">` + H.panel('Waste by size cut', H.table(['Size cut', 'From', { t: 'Booked', num: true }, { t: 'Actual', num: true }, 'Why'], [
       ['3x3 × 31"', '10\'', '5%', '3.1%', 'Offcut usable: 2" thrown away instead of 3"'],
       ['2x3 × 39"', '7\' trim', '5%', '7.1%', '6" waste on each piece'],
-      ['2x3 × 39"', '12\'', '5%', '2.0%', '24" leftovers kept as offcuts'],
+      ['2x3 × 39"', '12\'', '5%', '2.0%', '27" leftovers kept as offcuts'],
       ['3x3 × 37½"', '10\'', '5%', '4.2%', ''],
       ['All sizes, good wood', '', '5%', '1–2%', 'quality of the wood'],
     ]), '', true) +
@@ -1657,23 +1812,23 @@ window.addEventListener('DOMContentLoaded', route);
     H.panel('Cost per 1,000 board feet (MBF)', H.form([
       `<div class="field"><label>Lumber cost basis (chosen per price list)</label><div>${H.seg(['Planning number', 'Average on hand', 'Today\'s market'], 0)}</div></div>`,
       H.field('Lumber', '$500.00', '/ MBF'), H.field('Subcontractor labor', '$135.00', '/ MBF'), H.field('Waste (charged on wood in)', '5', '%'),
-      H.field('Freight per load', '$2,300', 'cheapest $2,000 · backup $2,550'), H.field('Board feet per load', '44,000', 'bd ft'),
+      H.field('Freight per load', '$2,300', 'cheapest $2,000 · backup $2,550'), H.field('Board feet per load', '44,000', 'to confirm (D43)'),
       H.field('Target margin per load', '$2,000'), H.field('Other costs per load (this plant)', '$700', 'D18'),
     ]) + `<div class="small muted" style="margin-top:10px">Beside the planning number: average on hand <b>$510</b> · market this week <b>$545</b></div>` +
       `<div style="margin:16px -18px 0">` + H.table(['Step', { t: 'Per MBF', num: true }, 'How'], [
         ['Lumber', '$500.00', 'planning number'],
         ['+ subcontractor labor', '$635.00', '+ $135'],
         ['+ 5% waste (on labor too)', '$666.75', '× 1.05'],
-        ['+ freight', '$719.00', '$2,300 ÷ 44 MBF = $52.25'],
-        ['<b>Delivered cost</b>', '<b>$719.00</b>', ''],
-        ['+ margin & other costs', '$787.00', '($2,000 + $700, call it $3,000) ÷ 44 = $68'],
+        ['+ freight', '$719.02', '$2,300 ÷ 44 MBF = $52.27 (their figure: $52.25)'],
+        ['<b>Delivered cost</b>', '<b>$719.02</b>', 'they call it $719'],
+        ['+ margin & other costs', '$787.20', '($2,000 + $700 + $300 rounding = $3,000) ÷ 44 = $68.18'],
       ], { foot: ['Selling price', '$787.00', 'per MBF'] }) + `</div>`) +
     `<div style="display:flex;flex-direction:column;gap:20px">` +
     H.panel('Per piece', `<div class="g" style="border:0;padding:0"><div class="k">3x3 × 31"</div><div class="v">$1.53 <small>/ piece, quoted</small></div><div class="note">3 × 3 × 31 ÷ 144 = 1.9375 bd ft × $0.787 = $1.5248 → rounded up to $1.53</div></div>`) +
-    H.panel('This plant\'s list, re-priced', H.table(['Item', { t: 'Bd ft / pc', num: true }, { t: 'Now', num: true }, { t: 'New', num: true }], [
-      ['3x3 × 31"', '1.9375', '$1.53', '$1.53'], ['3x3 × 37½"', '2.3438', '$1.82', '$1.85'], ['3x3 × 38½"', '2.4063', '$1.87', '$1.90'], ['2x4 × 40" (filler)', '2.2222', '$1.72', '$1.75'],
+    H.panel('This plant\'s list, re-priced', H.table(['Item', { t: 'Bd ft / pc', num: true }, { t: 'At $787', num: true }, { t: 'Quoted', num: true }], [
+      ['3x3 × 31"', '1.9375', '$1.5248', '$1.53'], ['3x3 × 37½"', '2.3438', '$1.8446', '$1.85'], ['3x3 × 38½"', '2.4063', '$1.8938', '$1.90'], ['2x4 × 40" (filler)', '2.2222', '$1.7489', '$1.75'],
     ]), H.seg(['Per piece', 'Per bundle', 'Per MBF'], 0), true) +
-    H.panel('Margin per load', `<div class="small">$2,000 margin + $700 other costs = <b>$2,700</b> planned; $3,000 used in the price for rounding. The Money report compares this with what each load really made.</div>`) +
+    H.panel('Margin per load', `<div class="small">$2,000 margin + $700 other costs = <b>$2,700</b> planned; $3,000 used in the price, so <b>$300 a load is rounding</b>, and rounding each piece up to the cent adds a little more. Both show as their own lines (D42). <b>To confirm (D43):</b> at about 1.9 lb per board foot, a 45,000 lb load carries about 23,000 bd ft, not 44,000. If so, the per-load costs come to about $130 per MBF instead of $120. The Money report compares this with what each load really made.</div>`) +
     `</div></div>`;
   S({
     id: 'pricing-builder', dept: 'pricing', title: 'Price builder',
@@ -1692,7 +1847,7 @@ window.addEventListener('DOMContentLoaded', route);
       ['Lakeshore Tube & Bar · Toronto', 'Average on hand', '$440', '$613', '$680', 'Per bundle', 'CAD', 'Jun 12', H.chip('Stale', 'warn')],
       ['Garden State Steel · Newark', 'Today\'s market', '$460', '$718', '$795 → US$575', 'Per MBF', 'USD', 'Jul 3', H.chip('Stale', 'warn')],
     ], { cls: ['', '', 'diff', 'diff'] }), '', true) +
-    `<div class="grid2">` + H.panel('Caldari Road plant · 4 items', H.table(['Item', { t: 'Price', num: true }, 'Unit'], [['3x3 × 31"', '$1.53', 'piece'], ['3x3 × 37½"', '$1.82', 'piece'], ['3x3 × 38½"', '$1.87', 'piece'], ['2x4 × 40" (filler)', '$1.72', 'piece']]), H.docActions(), true) +
+    `<div class="grid2">` + H.panel('Caldari Road plant · 4 items', H.table(['Item', { t: 'Price', num: true }, 'Unit'], [['3x3 × 31"', '$1.53', 'piece'], ['3x3 × 37½"', '$1.85', 'piece'], ['3x3 × 38½"', '$1.90', 'piece'], ['2x4 × 40" (filler)', '$1.75', 'piece']]), H.docActions(), true) +
     H.panel('Why lists differ', '<p>Same item, different prices: "almost no standard". Margin depends on how often a plant orders and how good a customer it is. The Jane Street plant takes 4 loads a year against 20–24 at Caldari Road, so it carries more margin per MBF.</p>') + `</div>`;
   S({
     id: 'pricing-lists', dept: 'pricing', title: 'Price lists',
@@ -1708,12 +1863,12 @@ window.addEventListener('DOMContentLoaded', route);
       H.field('Lumber', '$545.00', '/ MBF (from $500)'), H.field('Subcontractor labor', '$135.00', '/ MBF'), H.field('Freight per load', '$2,300'), H.field('Keep margin per load', 'Yes'),
     ])) +
     H.panel('Effect on every plant', H.table(['Customer · plant', { t: 'Loads / yr', num: true }, { t: 'Sell now', num: true }, { t: 'Sell at $545', num: true }, { t: '3x3 × 31" now', num: true }, { t: 'New', num: true }, { t: 'Margin / load if not re-priced', num: true }], [
-      ['Ardent Metals · Caldari Road', '20–24', '$787', '$837', '$1.53', '$1.63', '<span style="color:var(--bad)">$700</span>'],
-      ['Ardent Metals · Jane Street', '4', '$812', '$862', '$1.58', '$1.68', '<span style="color:var(--bad)">$1,800</span>'],
-      ['Lakeshore Tube & Bar · Toronto', '12', '$680', '$730', '—', '—', '<span style="color:var(--bad)">$700</span>'],
-      ['Garden State Steel · Newark', '10', '$795', '$845', '—', '—', '<span style="color:var(--bad)">$1,200</span>'],
-    ]) + `<div class="toolbar small muted" style="padding-top:10px">$45 more lumber, plus 5% waste and on labor: about +$50 / MBF, or $2,200 per 44,000 bd ft load.</div>`, '', true) +
-    `<div class="grid2">` + H.panel('Margin per load vs lumber cost · Caldari Road', H.lines(['$450', '$475', '$500', '$525', '$550', '$575'], [{ values: [5000, 3900, 2700, 1600, 500, -600] }], { h: 170 }) + '<div class="small muted">Margin per load at today\'s prices, before re-pricing</div>') +
+      ['Ardent Metals · Caldari Road', '20–24', '$787', '$834.25', '$1.53', '$1.62', '<span style="color:var(--warn)">$921</span>'],
+      ['Ardent Metals · Jane Street', '4', '$812', '$859.25', '$1.58', '$1.67', '$2,012'],
+      ['Lakeshore Tube & Bar · Toronto', '12', '$680', '$727.25', '—', '—', '<span style="color:var(--bad)">−$1,496</span>'],
+      ['Garden State Steel · Newark', '10', '$795', '$842.25', '—', '—', '<span style="color:var(--bad)">$164</span>'],
+    ]) + `<div class="toolbar small muted" style="padding-top:10px">$45 more lumber, plus 5% waste: +$47.25 / MBF (45 × 1.05), or $2,079 per 44,000 bd ft load. Margin if not re-priced = today's margin per load minus $2,079 (Toronto is a pickup, so no freight in its cost).</div>`, '', true) +
+    `<div class="grid2">` + H.panel('Margin per load vs lumber cost · Caldari Road', H.lines(['$450', '$475', '$500', '$525', '$550', '$575'], [{ values: [5310, 4155, 3000, 1845, 690, -465] }], { h: 170 }) + '<div class="small muted">Margin per load at today\'s prices, before re-pricing</div>') +
     H.callout('info', 'Also works the other way: "if we buy at $475 (every $25 under plan = $1,100 per load), what does each plant make?"') + `</div>`;
   S({
     id: 'pricing-whatif', dept: 'pricing', title: 'What-if',
@@ -1783,7 +1938,7 @@ window.addEventListener('DOMContentLoaded', route);
         `<div class="btns">${H.box(true)} Grooved (costs more to make) &nbsp; ${H.toggle(true)} Active</div>` +
         `<div><div class="small muted" style="margin-bottom:6px">Stock lengths it can be cut from</div>` + H.table(['Stock length', { t: 'Pieces', num: 1 }, { t: 'Waste', num: 1 }, 'Leftover', 'Best'], [
           ['10\' (120")', 3, '3"', '—', H.chip('best', 'ok')], ['7\' trim (84")', 2, '6"', '—', ''], ['12\' (144")', 3, '—', '27" offcut → item DN-2427 (usable)', H.chip('offcut', 'warn')]]) + '</div>' +
-        H.form([H.field('Pieces per bundle', '210', '14 across × 15 high'), H.field('Bundle size', '39 × 42 × 30', 'in (L × W × H)'), H.field('Weight per piece', '2.1', 'lb'), H.field('Weight per bundle', '441', 'lb', true)]) +
+        H.form([H.field('Pieces per bundle', '210', '14 across × 15 high'), H.field('Bundle size', '39 × 42 × 30', 'in (L × W × H)'), H.field('Species', 'SPF dry · 1.90 ± 0.20 lb / bd ft'), H.field('Weight per piece', '3.09', 'lb (2.76–3.41), from species', true), H.field('Weight per bundle', '648', 'lb (580–716)', true)]) +
         `<div class="grid2"><div class="drop" style="padding:16px">Image (later): drop a photo of the bundle</div>${H.callout('info', 'The 3D planner draws this bundle as a 39" × 42" × 30" box. It can go across the trailer or lengthwise.')}</div>`,
         H.btn('Retire item', 'danger') + '<span style="flex:1"></span>' + H.btn('Cancel') + H.btn('Save', 'primary'), true);
     },
@@ -2036,6 +2191,54 @@ window.addEventListener('DOMContentLoaded', route);
       `<div class="m ai small">Nothing is sent or changed until you click Approve. You can ask me to do what your own access allows: Orders, Loads, Customers (write) · Reports (view).</div></div>` +
       `<div class="btns small">${H.chip('Try: "what did the last Toronto load make?"')} ${H.chip('"which customers are priced on lumber over $520?"')} ${H.chip('"what can I offer for this batch?"')}</div>`,
       `<div class="input muted" style="flex:1">Ask in English or Yiddish…</div>${H.btn('🎤 Speak')}${H.btn('Send', 'primary')}`, true),
+  });
+})();
+
+/* ---- screens-45-species.js ---- */
+/* Catalog › Species & weights (D45). Wood weight is kept per species and condition (dry / green) as an
+   average pounds per board foot plus a variance up or down. Every load's weight is then shown as a
+   range (light side · average · heavy side), and the planner lets him choose which one to plan on. */
+(function () {
+  const SP = D.species;
+  const f2 = n => n.toFixed(2);
+  const rows = SP.map((s, i) => [
+    `<b>${s.name}</b>`, H.chip(s.cond, s.cond === 'Dry' ? 'brand' : 'info'),
+    f2(s.avg), '± ' + f2(s.var), `${f2(s.avg - s.var)} – ${f2(s.avg + s.var)}`,
+    Math.round(s.var / s.avg * 100) + '%', s.basis, s.items ? String(s.items) : '—', H.btn('Edit', 'sm')]);
+  const ex = { bf: 21162 }; const spf = SP[0];
+  const lo = ex.bf * (spf.avg - spf.var), av = ex.bf * spf.avg, hi = ex.bf * (spf.avg + spf.var);
+  const scale = [
+    ['L-2398', 'Oct 28', 'Ardent · Caldari Road', '21,480', '41,300', '1.92'],
+    ['L-2402', 'Nov 2', 'Garden State · Newark', '20,950', '38,700', '1.85'],
+    ['L-2405', 'Nov 6', 'Ardent · Caldari Road', '22,100', '43,600', '1.97'],
+    ['L-2409', 'Nov 11', 'Lakeshore · Toronto (pickup)', '18,300', '33,500', '1.83'],
+    ['L-2411', 'Nov 13', 'Ardent · Jane Street', '9,800', '18,900', '1.93'],
+    ['L-2414', 'Nov 17', 'Ardent · Caldari Road', '21,900', '41,000', '1.87'],
+  ];
+  const page = () =>
+    H.head('Catalog', 'Species & weights', 'How much the wood weighs: an average per board foot, and how far it can be off, up or down. Every item belongs to one species.',
+      H.btn('Excel', '', 'xls') + H.btn('New species', 'primary', 'plus')) +
+    H.panel('', H.table(['Species', 'Condition', { t: 'Average lb / bd ft', num: true }, { t: 'Variance', num: true }, { t: 'Range', num: true }, { t: '±', num: true }, 'Based on', { t: 'Items', num: true }, ''], rows, { sel: 0 }), '', '', true) +
+    `<div class="grid2">` +
+    H.panel('Edit · SPF dry', H.form([
+      H.field('Species', 'SPF (spruce-pine-fir)'), H.field('Condition', 'Dry (kiln or air dried)'),
+      H.field('Average weight', '1.90', 'lb per bd ft'), H.field('Can vary by', '± 0.20', 'lb per bd ft (± 11%)'),
+    ]) + `<div class="small muted" style="margin-top:10px">Light side 1.70 · average 1.90 · heavy side 2.10 lb per board foot. Wetter wood after rain, or a different supplier, moves it toward the heavy side.</div>`) +
+    H.panel('What it means for a load', H.kpis([
+      H.gauge('Light side', `${n0(lo)} <small>lb</small>`, lo / 450, 'at 1.70 lb / bd ft', 'ok'),
+      H.gauge('Average', `${n0(av)} <small>lb</small>`, av / 450, 'at 1.90 lb / bd ft', 'ok'),
+      H.gauge('Heavy side', `${n0(hi)} <small>lb</small>`, hi / 450, 'at 2.10 lb / bd ft', hi > 45000 ? 'bad' : hi / 450 > 95 ? 'warn' : 'ok'),
+    ]) + `<div class="small muted" style="margin-top:10px">Example: load L-2417, ${n0(ex.bf)} bd ft of SPF on a 53' dry van (45,000 lb). The planner shows all three and lets you choose what to plan on.</div>`) +
+    `</div>` +
+    H.panel('Scale weights recorded · SPF dry', H.table(['Load', 'Date', 'Deliver to', { t: 'Bd ft', num: true }, { t: 'Scale lb', num: true }, { t: 'lb / bd ft', num: true }], scale) +
+      `<div class="toolbar" style="padding-top:12px">${H.callout('info', 'Six loads weighed: average <b>1.90</b>, lowest 1.83, highest 1.97 lb per board foot. Your variance of ± 0.20 covers all of them.', H.btn('Use these figures', 'sm'))}</div>`,
+      H.btn('Add a scale weight', 'sm', 'plus'), true);
+  S({
+    id: 'catalog-species', dept: 'catalog', title: 'Species & weights', html: page,
+    intent: 'Wood weight drives the load (weight usually runs out before space), and it changes with species and moisture. So, like the products, he keeps a list of species, each with an average weight per board foot and how far it can be off, up or down. Every load then shows its weight as light side, average and heavy side, and he decides how much risk to take. Scale weights from real loads, when he has them, show whether the figures are right.',
+    ref: 'D45 · D43 · Review M1, S7',
+    check: ['Which species do you buy, and is the wood dry or green when it ships?', 'Does weight differ enough between suppliers to keep them apart?', 'Do you ever get a scale ticket for a load?'],
+    assistant: ['Work out the average and variance from the scale weights you have', 'Warn when a load is only legal on the light side'],
   });
 })();
 

@@ -9,7 +9,7 @@
   const yieldRows = [
     ['10\'', '3 × 39"', '3" waste', H.chip('Best', 'ok') + ' 97.5%'],
     ['7\' trim (84")', '2 × 39"', '6" waste', H.chip('Good', 'ok') + ' 92.9%'],
-    ['12\'', '3 × 39"', '24" offcut kept', H.chip('Leftover', 'warn') + ' 81.3%'],
+    ['12\'', '3 × 39"', '27" offcut kept', H.chip('Leftover', 'warn') + ' 81.3%'],
     ['8\'', '2 × 39"', '18" waste', H.chip('Poor', 'bad') + ' 81.3%'],
   ];
   const offersPage = () => H.head('Purchasing › Offers', 'Offer from Muskoka Sawmill: 3 loads, paper-wrapped', 'Old stock the mill can\'t sell as premium. Asking $300 / MBF, not delivered.', H.btn('Save offer') + H.btn('Send counter-offer', 'primary', 'mail')) +
@@ -37,7 +37,7 @@
       H.go('Log as purchase', 'dlg-purchase', 'sm')) +
     `<div class="grid2">` +
     H.panel('Yield into the sizes customers buy · 2x3 × 39"', H.table(['Stock', 'Cuts', 'Waste or leftover', 'Yield'], yieldRows) +
-      `<div class="toolbar small muted" style="padding-top:10px">Ardent Metals takes about half a load of 2x3 × 39" a week. Leftover 24" pieces go into inventory as offcuts (D21).</div>`, H.seg(['2x3 × 39"', '3x3 × 31"', '3x3 × 37½"'], 0), true) +
+      `<div class="toolbar small muted" style="padding-top:10px">Ardent Metals takes about half a load of 2x3 × 39" a week. Leftover 27" pieces go into inventory as offcuts (D21).</div>`, H.seg(['2x3 × 39"', '3x3 × 31"', '3x3 × 37½"'], 0), true) +
     H.panel('Buying gains this quarter', H.table(['Load', { t: 'Paid', num: true }, { t: 'Plan', num: true }, { t: 'Gain / load', num: true }], [
       ['North Shore 10s · Oct 2', '$545', '$500', '<span style="color:var(--bad)">−$1,980</span>'],
       ['Algonquin trim · Oct 9', '$440', '$500', '<span style="color:var(--ok)">+$2,640</span>'],
@@ -60,7 +60,7 @@
     html: offersPage,
     dock: H.assistant([
       ['me', 'Muskoka has 3 loads of old 12s, wrapped. What can I offer?'],
-      ['ai', 'At $225 + $20 freight, on a 10-foot count that\'s $294, about $305 with the extra cutting. First-quality 10s are $345 this week, maybe $325 next. 12s give three 39s plus a 24" offcut.'],
+      ['ai', 'At $225 + $20 freight, on a 10-foot count that\'s $294, about $305 with the extra cutting. First-quality 10s are $345 this week, maybe $325 next. 12s give three 39s plus a 27" offcut.'],
       ['propose', 'Counter-offer to Muskoka Sawmill:<br><b>$225 / MBF</b>, 3 loads, FOB their yard'],
     ]),
   });
@@ -148,7 +148,7 @@
     ['3x3 × 12\'', 'Kessler yard', '41,200', '18,000', '23,200', '$245 *'],
     ['3x3 × 10\'', 'Concord yard', '12,600', '6,400', '6,200', '$520'],
     ['2x4 × 10\'', 'Pinegrove yard', '8,900', '2,200', '6,700', '$475'],
-    ['Offcuts 2x3 × 24"', 'Kessler yard', '1,150', '0', '1,150', '$0'],
+    ['Offcuts 2x3 × 27"', 'Kessler yard', '1,150', '0', '1,150', '$0'],
   ];
   const onhandPage = () => H.head('Inventory', 'On hand', 'Board feet by size, length and yard, valued at the average cost of loads bought.', H.btn('Excel', '', 'xls') + H.btn('Valuation PDF', '', 'pdf')) +
     H.kpis([
@@ -198,7 +198,7 @@
     html: countsPage,
   });
 
-  const countRows = ['2x3 × 7\' trim', '2x3 × 8\'', '2x3 × 10\'', '2x3 × 12\'', '3x3 × 10\'', '3x3 × 12\'', '2x4 × 10\'', '4x4 × 8\'', 'Offcuts 2x3 × 24"'];
+  const countRows = ['2x3 × 7\' trim', '2x3 × 8\'', '2x3 × 10\'', '2x3 × 12\'', '3x3 × 10\'', '3x3 × 12\'', '2x4 × 10\'', '4x4 × 8\'', 'Offcuts 2x3 × 27"'];
   S({
     id: 'doc-count', dept: 'inventory', tab: 'inventory-counts', kind: 'document', title: 'Count sheet (blank)',
     intent: 'The blank sheet for whoever counts: one line per size and length at that yard, with space for pieces or bundles. It reminds the counter to leave the subcontractor\'s own pile out, because only BB Pallets\' wood is tracked.',
@@ -265,12 +265,12 @@
       H.gauge('Booked at shipping', '5.0%', null, '40,000 ft shipped → 42,000 ft out of stock'),
       H.gauge('Actual since Sept 30', '3.4%', 68, 'from the Nov 15 count', 'ok'),
       H.gauge('Over-booked', '+3,150 <small>bd ft</small>', null, 'came back at the count'),
-      H.gauge('Offcuts kept', '1,150 <small>bd ft</small>', null, 'usable 24" pieces (D21)'),
+      H.gauge('Offcuts kept', '1,150 <small>bd ft</small>', null, 'usable 27" pieces (D21)'),
     ]) +
     `<div class="grid2">` + H.panel('Waste by size cut', H.table(['Size cut', 'From', { t: 'Booked', num: true }, { t: 'Actual', num: true }, 'Why'], [
       ['3x3 × 31"', '10\'', '5%', '3.1%', 'Offcut usable: 2" thrown away instead of 3"'],
       ['2x3 × 39"', '7\' trim', '5%', '7.1%', '6" waste on each piece'],
-      ['2x3 × 39"', '12\'', '5%', '2.0%', '24" leftovers kept as offcuts'],
+      ['2x3 × 39"', '12\'', '5%', '2.0%', '27" leftovers kept as offcuts'],
       ['3x3 × 37½"', '10\'', '5%', '4.2%', ''],
       ['All sizes, good wood', '', '5%', '1–2%', 'quality of the wood'],
     ]), '', true) +
@@ -291,23 +291,23 @@
     H.panel('Cost per 1,000 board feet (MBF)', H.form([
       `<div class="field"><label>Lumber cost basis (chosen per price list)</label><div>${H.seg(['Planning number', 'Average on hand', 'Today\'s market'], 0)}</div></div>`,
       H.field('Lumber', '$500.00', '/ MBF'), H.field('Subcontractor labor', '$135.00', '/ MBF'), H.field('Waste (charged on wood in)', '5', '%'),
-      H.field('Freight per load', '$2,300', 'cheapest $2,000 · backup $2,550'), H.field('Board feet per load', '44,000', 'bd ft'),
+      H.field('Freight per load', '$2,300', 'cheapest $2,000 · backup $2,550'), H.field('Board feet per load', '44,000', 'to confirm (D43)'),
       H.field('Target margin per load', '$2,000'), H.field('Other costs per load (this plant)', '$700', 'D18'),
     ]) + `<div class="small muted" style="margin-top:10px">Beside the planning number: average on hand <b>$510</b> · market this week <b>$545</b></div>` +
       `<div style="margin:16px -18px 0">` + H.table(['Step', { t: 'Per MBF', num: true }, 'How'], [
         ['Lumber', '$500.00', 'planning number'],
         ['+ subcontractor labor', '$635.00', '+ $135'],
         ['+ 5% waste (on labor too)', '$666.75', '× 1.05'],
-        ['+ freight', '$719.00', '$2,300 ÷ 44 MBF = $52.25'],
-        ['<b>Delivered cost</b>', '<b>$719.00</b>', ''],
-        ['+ margin & other costs', '$787.00', '($2,000 + $700, call it $3,000) ÷ 44 = $68'],
+        ['+ freight', '$719.02', '$2,300 ÷ 44 MBF = $52.27 (their figure: $52.25)'],
+        ['<b>Delivered cost</b>', '<b>$719.02</b>', 'they call it $719'],
+        ['+ margin & other costs', '$787.20', '($2,000 + $700 + $300 rounding = $3,000) ÷ 44 = $68.18'],
       ], { foot: ['Selling price', '$787.00', 'per MBF'] }) + `</div>`) +
     `<div style="display:flex;flex-direction:column;gap:20px">` +
     H.panel('Per piece', `<div class="g" style="border:0;padding:0"><div class="k">3x3 × 31"</div><div class="v">$1.53 <small>/ piece, quoted</small></div><div class="note">3 × 3 × 31 ÷ 144 = 1.9375 bd ft × $0.787 = $1.5248 → rounded up to $1.53</div></div>`) +
-    H.panel('This plant\'s list, re-priced', H.table(['Item', { t: 'Bd ft / pc', num: true }, { t: 'Now', num: true }, { t: 'New', num: true }], [
-      ['3x3 × 31"', '1.9375', '$1.53', '$1.53'], ['3x3 × 37½"', '2.3438', '$1.82', '$1.85'], ['3x3 × 38½"', '2.4063', '$1.87', '$1.90'], ['2x4 × 40" (filler)', '2.2222', '$1.72', '$1.75'],
+    H.panel('This plant\'s list, re-priced', H.table(['Item', { t: 'Bd ft / pc', num: true }, { t: 'At $787', num: true }, { t: 'Quoted', num: true }], [
+      ['3x3 × 31"', '1.9375', '$1.5248', '$1.53'], ['3x3 × 37½"', '2.3438', '$1.8446', '$1.85'], ['3x3 × 38½"', '2.4063', '$1.8938', '$1.90'], ['2x4 × 40" (filler)', '2.2222', '$1.7489', '$1.75'],
     ]), H.seg(['Per piece', 'Per bundle', 'Per MBF'], 0), true) +
-    H.panel('Margin per load', `<div class="small">$2,000 margin + $700 other costs = <b>$2,700</b> planned; $3,000 used in the price for rounding. The Money report compares this with what each load really made.</div>`) +
+    H.panel('Margin per load', `<div class="small">$2,000 margin + $700 other costs = <b>$2,700</b> planned; $3,000 used in the price, so <b>$300 a load is rounding</b>, and rounding each piece up to the cent adds a little more. Both show as their own lines (D42). <b>To confirm (D43):</b> at about 1.9 lb per board foot, a 45,000 lb load carries about 23,000 bd ft, not 44,000. If so, the per-load costs come to about $130 per MBF instead of $120. The Money report compares this with what each load really made.</div>`) +
     `</div></div>`;
   S({
     id: 'pricing-builder', dept: 'pricing', title: 'Price builder',
@@ -326,7 +326,7 @@
       ['Lakeshore Tube & Bar · Toronto', 'Average on hand', '$440', '$613', '$680', 'Per bundle', 'CAD', 'Jun 12', H.chip('Stale', 'warn')],
       ['Garden State Steel · Newark', 'Today\'s market', '$460', '$718', '$795 → US$575', 'Per MBF', 'USD', 'Jul 3', H.chip('Stale', 'warn')],
     ], { cls: ['', '', 'diff', 'diff'] }), '', true) +
-    `<div class="grid2">` + H.panel('Caldari Road plant · 4 items', H.table(['Item', { t: 'Price', num: true }, 'Unit'], [['3x3 × 31"', '$1.53', 'piece'], ['3x3 × 37½"', '$1.82', 'piece'], ['3x3 × 38½"', '$1.87', 'piece'], ['2x4 × 40" (filler)', '$1.72', 'piece']]), H.docActions(), true) +
+    `<div class="grid2">` + H.panel('Caldari Road plant · 4 items', H.table(['Item', { t: 'Price', num: true }, 'Unit'], [['3x3 × 31"', '$1.53', 'piece'], ['3x3 × 37½"', '$1.85', 'piece'], ['3x3 × 38½"', '$1.90', 'piece'], ['2x4 × 40" (filler)', '$1.75', 'piece']]), H.docActions(), true) +
     H.panel('Why lists differ', '<p>Same item, different prices: "almost no standard". Margin depends on how often a plant orders and how good a customer it is. The Jane Street plant takes 4 loads a year against 20–24 at Caldari Road, so it carries more margin per MBF.</p>') + `</div>`;
   S({
     id: 'pricing-lists', dept: 'pricing', title: 'Price lists',
@@ -342,12 +342,12 @@
       H.field('Lumber', '$545.00', '/ MBF (from $500)'), H.field('Subcontractor labor', '$135.00', '/ MBF'), H.field('Freight per load', '$2,300'), H.field('Keep margin per load', 'Yes'),
     ])) +
     H.panel('Effect on every plant', H.table(['Customer · plant', { t: 'Loads / yr', num: true }, { t: 'Sell now', num: true }, { t: 'Sell at $545', num: true }, { t: '3x3 × 31" now', num: true }, { t: 'New', num: true }, { t: 'Margin / load if not re-priced', num: true }], [
-      ['Ardent Metals · Caldari Road', '20–24', '$787', '$837', '$1.53', '$1.63', '<span style="color:var(--bad)">$700</span>'],
-      ['Ardent Metals · Jane Street', '4', '$812', '$862', '$1.58', '$1.68', '<span style="color:var(--bad)">$1,800</span>'],
-      ['Lakeshore Tube & Bar · Toronto', '12', '$680', '$730', '—', '—', '<span style="color:var(--bad)">$700</span>'],
-      ['Garden State Steel · Newark', '10', '$795', '$845', '—', '—', '<span style="color:var(--bad)">$1,200</span>'],
-    ]) + `<div class="toolbar small muted" style="padding-top:10px">$45 more lumber, plus 5% waste and on labor: about +$50 / MBF, or $2,200 per 44,000 bd ft load.</div>`, '', true) +
-    `<div class="grid2">` + H.panel('Margin per load vs lumber cost · Caldari Road', H.lines(['$450', '$475', '$500', '$525', '$550', '$575'], [{ values: [5000, 3900, 2700, 1600, 500, -600] }], { h: 170 }) + '<div class="small muted">Margin per load at today\'s prices, before re-pricing</div>') +
+      ['Ardent Metals · Caldari Road', '20–24', '$787', '$834.25', '$1.53', '$1.62', '<span style="color:var(--warn)">$921</span>'],
+      ['Ardent Metals · Jane Street', '4', '$812', '$859.25', '$1.58', '$1.67', '$2,012'],
+      ['Lakeshore Tube & Bar · Toronto', '12', '$680', '$727.25', '—', '—', '<span style="color:var(--bad)">−$1,496</span>'],
+      ['Garden State Steel · Newark', '10', '$795', '$842.25', '—', '—', '<span style="color:var(--bad)">$164</span>'],
+    ]) + `<div class="toolbar small muted" style="padding-top:10px">$45 more lumber, plus 5% waste: +$47.25 / MBF (45 × 1.05), or $2,079 per 44,000 bd ft load. Margin if not re-priced = today's margin per load minus $2,079 (Toronto is a pickup, so no freight in its cost).</div>`, '', true) +
+    `<div class="grid2">` + H.panel('Margin per load vs lumber cost · Caldari Road', H.lines(['$450', '$475', '$500', '$525', '$550', '$575'], [{ values: [5310, 4155, 3000, 1845, 690, -465] }], { h: 170 }) + '<div class="small muted">Margin per load at today\'s prices, before re-pricing</div>') +
     H.callout('info', 'Also works the other way: "if we buy at $475 (every $25 under plan = $1,100 per load), what does each plant make?"') + `</div>`;
   S({
     id: 'pricing-whatif', dept: 'pricing', title: 'What-if',

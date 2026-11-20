@@ -11,10 +11,9 @@
     b: { name: '3x3 × 37½"', L: 37.5, cls: '', fill: 'var(--wood-2)', bf: 328 },
     f: { name: '2x4 × 40" filler', L: 40, cls: 'fill', fill: 'var(--wood-4)', bf: 333, filler: true },
   };
-  const BW = 42, BH = 28, GAP = 3, TL = 636, TW = 102;
+  const BW = 42, BH = 28, GAP = 0, TL = 636, TW = 102; // packed tight (D33)
+  const LB_PER_BF = 1.9; // dry SPF, about; set per species and dry/green (D43)
   const ROWS = [
-    { k: 'a', dir: 'across', per: 3, high: 3, drop: 2, step: 1 },
-    { k: 'a', dir: 'across', per: 3, high: 3, drop: 2, step: 1 },
     { k: 'a', dir: 'across', per: 3, high: 3, drop: 2, step: 1 },
     { k: 'g', dir: 'length', per: 2, high: 3, drop: 1, step: 2 },
     { k: 'g', dir: 'length', per: 2, high: 3, drop: 1, step: 2 },
@@ -31,11 +30,13 @@
   ROWS.forEach(r => {
     const it = IT[r.k];
     const depth = r.dir === 'across' ? BW : it.L, zs = r.dir === 'across' ? it.L : BW;
-    const used = r.per * zs + (r.per - 1) * 2; let z = (TW - used) / 2;
+    const used = r.per * zs; let z = (TW - used) / 2;
     for (let j = 0; j < r.per; j++) { for (let h = 0; h < r.high; h++) BOXES.push({ x0: cx, x1: cx + depth, z0: z, z1: z + zs, y0: h * (BH + 3.5) + 3.5, y1: h * (BH + 3.5) + 3.5 + BH, it, dir: r.dir, step: r.step }); z += zs + 2; }
     cx += depth + GAP;
   });
   const USED = cx - GAP;
+  const BF = ROWS.reduce((a, r) => a + r.per * r.high * IT[r.k].bf, 0), LB = BF * LB_PER_BF;
+  const BUNDLES = ROWS.reduce((a, r) => a + r.per * r.high, 0);
 
   // ---------- isometric-style drawing ----------
   const AX = [0.92, 0.29], AZ = [-0.6, 0.4];
@@ -112,18 +113,19 @@
   }
 
   const gauges = () => H.kpis([
-    H.gauge('Board feet', `38,750 <small>/ 44,000</small>`, 88, '88% · room for 13 more bundles of 3x3 × 31"'),
-    H.gauge('Weight', `43,100 <small>/ 45,000 lb</small>`, 96, '96% · weight runs out first', 'warn'),
-    H.gauge('Floor', `82%`, 82, `${Math.round(USED / 12)}' of 53' used · 3 high`),
+    H.gauge('Weight, average', `${n0(LB)} <small>/ 45,000 lb</small>`, LB / 450, `${Math.round(LB / 450)}% · could be ${n0(BF * 1.7)} to ${n0(BF * 2.1)} lb`, BF * 2.1 > 45000 ? 'warn' : 'ok'),
+    H.gauge('Board feet', `${n0(BF)} <small>/ ≈ 23,000 planned</small>`, BF / 230, `${Math.round(BF / 230)}% of the planned load for this plant (D43)`),
+    H.gauge('Floor', `${Math.round(USED / TL * 100)}%`, USED / TL * 100, `${Math.round(USED / 12)}' of 53' used · packed tight, 3 high`),
     H.gauge('Weight over axles', `47% <small>/ 53%</small>`, null, 'Front / rear · balanced', 'ok'),
   ]);
+  const weightRisk = () => `<div class="btns small"><span class="muted">Plan the weight on</span>${H.seg(['Light side', 'Average', 'Heavy side'], 1)}<span class="muted">SPF dry: 1.90 ± 0.20 lb per bd ft. On the heavy side this load is <b>${n0(BF * 2.1)} lb</b>, ${BF * 2.1 > 45000 ? 'over' : 'still under'} the 45,000 limit.</span>${H.go('Species & weights', 'catalog-species', 'ghost sm')}</div>`;
   const trailerPick = () => `<div class="btns">${D.trailers.map((t, i) => `<span class="filter ${i === 0 ? 'on' : ''}">${t.name}</span>`).join('')}${H.go('Trailer types', 'settings-trailers', 'ghost sm')}</div>`;
   const plannerHead = () => H.head(`Load ${st.load} · Proposal ${st.proposal} · ${st.customer}`, 'Two drops: Caldari Road and Jane Street',
     'Ardent Metals, one buyer, two plants 8 miles apart. Drop 1 goes last on, nearest the doors.',
     H.btn('Split into 2 loads') + H.go('Loading list', 'doc-loadlist', '', 'print') + H.go('Confirm load', 'dlg-confirmload', 'primary', 'check'));
 
   const orderRows = [
-    ['a', 2, 27, 'across', 'Jane Street', 1],
+    ['a', 2, 9, 'across', 'Jane Street', 1],
     ['g', 1, 18, 'length', 'Caldari Road', 2],
     ['a', 1, 27, 'across', 'Caldari Road', 3],
     ['b', 1, 12, 'length', 'Caldari Road', 4],
@@ -137,7 +139,7 @@
       H.chip(`${drop} · ${plant}`, drop === 1 ? 'now' : 'info'),
       H.seg(['Across', 'Lengthwise'], dir === 'across' ? 0 : 1),
       n, n === '4+' ? '1,332+' : n0(n * IT[k].bf)]),
-    { foot: ['', '', 'Total', '', '', '88+', '38,750'] });
+    { foot: ['', '', 'Total', '', '', `${BUNDLES - 4}+`, n0(BF)] });
 
   // ---------- Loads › 3D Planner ----------
   S({
@@ -148,18 +150,18 @@
     assistant: ['Plan the load from the proposal ("fill this up for Concord, mostly major sizes")', 'Suggest a split or a top-up and show the result before you approve', 'Turn every item to its best direction'],
     dock: H.assistant([
       ['me', 'Fill this truck up for Concord, mostly their major sizes.'],
-      ['ai', 'Weight runs out before board feet. 3 bundles of 3x3 × 37½" fit, then filler for the rest.'],
-      ['propose', '+3 bundles 3x3 × 37½" (major size)<br>2x4 × 40" filler: as many as fit<br><span class="num">Weight → 44,850 lb (99.7%)</span>'],
+      ['ai', 'Weight runs out first. On average, 6 more bundles of 3x3 × 37½" fit. If the wood is on the heavy side, none do. How much risk do you want to take?'],
+      ['propose', '+6 bundles 3x3 × 37½" (major size)<br><span class="num">Weight → 43,947 lb on average</span><br><span class="small">light side 39,321 · heavy side 48,573 lb: over the limit if the wood is heavy</span>'],
     ]),
     html: () => plannerHead() +
       H.stages(D.stages, 1) +
-      gauges() +
+      gauges() + weightRisk() +
       `<div class="panel"><div class="hd"><h3>3D view</h3>${trailerPick()}</div><div class="bd">${iso3d()}
         <div class="btns small" style="justify-content:space-between"><span class="muted">Drag to turn, pinch or scroll to zoom. The live version works like the <a href="https://claude.ai/artifact/B8tH5FtyJjvUaC5yp4ws7R" target="_blank" rel="noopener">3D flatbed demo</a>.</span>
         <span class="btns">${H.btn('Angle', 'sm')}${H.btn('Side', 'sm')}${H.btn('Top', 'sm')}${H.btn('Doors end', 'sm')}</span></div></div></div>` +
       H.panel('Loading order · nose to doors', loadTable(), H.btn('Best direction for each', 'sm') + H.btn('Add item', 'sm', 'plus'), true) +
       `<div class="grid2" style="gap:12px">` +
-      H.callout('warn', '<b>1,900 lb left before the weight limit.</b> Add 3 bundles of 3x3 × 37½" (a major size for Caldari Road), then fill the rest with 2x4 × 40" filler.', H.btn('Apply', 'sm')) +
+      H.callout('warn', '<b>4,792 lb left on average, but only 560 lb on the heavy side.</b> Planning on the average, 6 more bundles of 3x3 × 37½" fit (a major size for Caldari Road), but the load could then weigh up to 48,573 lb. Planning on the heavy side, add nothing.', H.btn('Apply', 'sm')) +
       H.callout('info', '<b>Too much for one truck?</b> Split into 2 loads: the second becomes its own order (24-0318-B) shipping in 3 weeks or 1 month. Or cut items.', H.btn('Split', 'sm')) +
       H.callout('info', '<b>2x3 × 39" grooved goes lengthwise.</b> Across, it would use 9" more floor for the same 18 bundles.') +
       H.callout('', '<b>Filler: as many as fit.</b> The packing slip leaves the filler quantity blank, to be filled in at loading.') +
@@ -176,7 +178,7 @@
     assistant: ['List what will be created before you confirm', 'Warn if a gauge is over its limit'],
     under: () => plannerHead() + gauges(),
     html: () => H.dialog(`Confirm load ${st.load}`,
-      H.callout('ok', `<b>All gauges are inside their limits.</b> Board feet 88%, weight 96%, floor 82%, axles balanced.`) +
+      H.callout('ok', `<b>All gauges are inside their limits.</b> Weight ${Math.round(LB / 450)}%, board feet ${Math.round(BF / 230)}% of the planned load, floor ${Math.round(USED / TL * 100)}%, axles balanced.`) +
       H.table(['', 'What happens', 'Result'], [
         [H.box(true), 'Lock the 3D plan and the loading order', 'Plan v3, locked'],
         [H.box(true), 'Make the packing slip (filler quantity left blank)', 'Packing slip for 24-0318'],
@@ -190,10 +192,10 @@
 
   // ---------- document: loading list ----------
   const llRows = [
-    [1, 'Nose', '3x3 × 31"', 27, 'Across, 3 per row, 3 high', '2 · Jane Street'],
-    [2, 'Rows 4–6', '2x3 × 39" grooved', 18, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
-    [3, 'Rows 7–9', '3x3 × 31"', 27, 'Across, 3 per row, 3 high', '1 · Caldari Road'],
-    [4, 'Rows 10–11', '3x3 × 37½"', 12, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
+    [1, 'Nose', '3x3 × 31"', 9, 'Across, 1 row of 3, 3 high', '2 · Jane Street'],
+    [2, 'Rows 2–4', '2x3 × 39" grooved', 18, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
+    [3, 'Rows 5–7', '3x3 × 31"', 27, 'Across, 3 per row, 3 high', '1 · Caldari Road'],
+    [4, 'Rows 8–9', '3x3 × 37½"', 12, 'Lengthwise, 2 per row, 3 high', '1 · Caldari Road'],
     [5, 'Doors', '2x4 × 40" filler', '<span class="blank"></span>', 'Lengthwise, as many as fit', '1 · Caldari Road'],
   ];
   S({
@@ -219,7 +221,7 @@
     check: ['How far ahead do you plan loads: one week, two?', 'Should pickups and delivered loads sit on the same calendar?', 'Do you want Jewish holidays and Shabbos marked when scheduling?'],
     assistant: ['"What ships next week?"', 'Remind you when a split load is coming due', 'Move a load to another day and tell the subcontractor and carrier'],
     html: () => H.head('Loads', 'Schedule', 'Week of Nov 23, 2026', H.seg(['Week', 'Month', 'List'], 0) + H.btn('‹') + H.btn('Today') + H.btn('›') + H.btn('Excel', '', 'xls')) +
-      H.kpis([H.gauge('This week', '5 <small>loads</small>', null, '4 delivered · 1 pickup'), H.gauge('Board feet out', '186,400', null, 'Across 5 loads'), H.gauge('Split loads due', '2', null, 'In the next 30 days', 'warn'), H.gauge('Backup carrier', '1 of 4', null, 'Bluewater on Thursday')]) +
+      H.kpis([H.gauge('This week', '5 <small>loads</small>', null, '4 delivered · 1 pickup'), H.gauge('Board feet out', '104,800', null, 'Across 5 loads'), H.gauge('Split loads due', '2', null, 'In the next 30 days', 'warn'), H.gauge('Backup carrier', '1 of 4', null, 'Bluewater on Thursday')]) +
       `<div class="grid3" style="grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr))">` +
       day('Mon Nov 23', [['L-2414 · Lakeshore', 'Toronto plant · pickup', H.chip('Pickup', 'info'), 'info']]) +
       day('Tue Nov 24', [[`${st.load} · Ardent`, 'Caldari Road + Jane Street', H.chip('Confirmed', 'ok') + ' ' + H.chip('2 drops'), 'now'], ['L-2416 · Ardent', 'Caldari Road · Trans-Ontario', H.chip('At subcontractor', 'info'), '']]) +
@@ -244,7 +246,7 @@
     assistant: ['Email the BOL to the carrier', 'Find loads still missing a signed BOL'],
     html: () => H.head('Loads', 'Bills of lading', '', H.btn('Excel', '', 'xls')) +
       H.panel('', H.filters(['*All', 'Draft', 'Sent to carrier', 'Signed', 'US loads']) + H.table(['BOL', 'Load', 'Ship date', 'Consignee', 'Carrier', { t: 'Bundles', num: true }, { t: 'Weight lb', num: true }, 'Status', ''], [
-        [`<a href="#doc-bol">${st.bol}</a>`, st.load, 'Nov 24', 'Ardent · Caldari Road + Jane Street', 'Trans-Ontario Freight', '88+', '43,100', H.chip('Ready', 'info'), H.go('Open', 'doc-bol', 'sm')],
+        [`<a href="#doc-bol">${st.bol}</a>`, st.load, 'Nov 24', 'Ardent · Caldari Road + Jane Street', 'Trans-Ontario Freight', '70+', '40,200', H.chip('Ready', 'info'), H.go('Open', 'doc-bol', 'sm')],
         ['BOL-2419', 'L-2419', 'Nov 26', 'Garden State · Newark NJ', 'Bluewater Carriers', 96, '44,200', H.chip('Needs broker', 'warn'), H.btn('Open', 'sm')],
         ['BOL-2416', 'L-2416', 'Nov 24', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 92, '42,700', H.chip('Sent to carrier'), H.btn('Open', 'sm')],
         ['BOL-2411', 'L-2411', 'Nov 17', 'Ardent · Caldari Road', 'Trans-Ontario Freight', 90, '43,900', H.chip('Signed', 'ok'), H.btn('Open', 'sm')],
@@ -264,9 +266,9 @@
       `<div class="cols"><div class="box2"><div class="k">Shipper · pick up at</div>BB Pallets c/o Kessler Wood Works<br>Concord yard, Concord ON</div><div class="box2"><div class="k">Carrier</div>Trans-Ontario Freight<br>Trailer 53' dry van · # ________ · Seal # ________</div><div class="box2"><div class="k">Freight terms</div>Prepaid · bill to BB Pallets</div></div>` +
       `<div class="cols"><div class="box2"><div class="k">Stop 1 · consignee</div>Ardent Metals, Caldari Road plant<br>Concord ON · Receiving: Dana Ferreira</div><div class="box2"><div class="k">Stop 2 · consignee</div>Ardent Metals, Jane Street plant<br>Vaughan ON · same buyer</div></div>` +
       `<table><thead><tr><th>Stop</th><th class="num">Bundles</th><th>Description</th><th class="num">Weight lb</th></tr></thead><tbody>
-        <tr><td>1</td><td class="num">61+</td><td>Wood dunnage, untreated softwood (3x3, 2x3 grooved, 2x4 filler)</td><td class="num">30,200</td></tr>
-        <tr><td>2</td><td class="num">27</td><td>Wood dunnage, untreated softwood (3x3)</td><td class="num">12,900</td></tr>
-        <tr><td></td><td class="num"><b>88+</b></td><td><b>Total</b></td><td class="num"><b>43,100</b></td></tr></tbody></table>` +
+        <tr><td>1</td><td class="num">61+</td><td>Wood dunnage, untreated softwood (3x3, 2x3 grooved, 2x4 filler)</td><td class="num">35,600</td></tr>
+        <tr><td>2</td><td class="num">9</td><td>Wood dunnage, untreated softwood (3x3)</td><td class="num">4,600</td></tr>
+        <tr><td></td><td class="num"><b>70+</b></td><td><b>Total</b></td><td class="num"><b>40,200</b></td></tr></tbody></table>` +
       `<div class="box2" style="opacity:.55"><div class="k">US loads only · customs broker</div>Broker: ______________ · PARS / entry #: ______________ · Commercial invoice attached ☐</div>` +
       `<div class="fine">Received, subject to the classifications and tariffs in effect on the date of issue, the property described above in apparent good order.</div>` +
       `<div class="sig"><div>Shipper signature · date</div><div>Driver signature · date</div><div>Consignee stop 1 · date</div><div>Consignee stop 2 · date</div></div>`, false),
@@ -326,7 +328,7 @@
     html: () => H.doc('Packing slip · ' + st.order, H.letterhead('PACKING SLIP', [['Order', st.order], ['Customer PO', st.po], ['Load', st.load], ['Ship date', 'Nov 24, 2026']]) +
       `<div class="cols"><div class="box2"><div class="k">Ship to (drop 1)</div>Ardent Metals, Caldari Road plant<br>Concord ON</div><div class="box2"><div class="k">Ship to (drop 2)</div>Ardent Metals, Jane Street plant<br>Vaughan ON</div></div>` +
       `<table><thead><tr><th>Item</th><th>Drop</th><th class="num">Bundles ordered</th><th class="num">Pieces</th><th class="num">Bundles loaded</th></tr></thead><tbody>
-        <tr><td>3x3 × 31"</td><td>2</td><td class="num">27</td><td class="num">3,780</td><td class="num"><span class="blank"></span></td></tr>
+        <tr><td>3x3 × 31"</td><td>2</td><td class="num">9</td><td class="num">1,260</td><td class="num"><span class="blank"></span></td></tr>
         <tr><td>2x3 × 39" grooved</td><td>1</td><td class="num">18</td><td class="num">3,780</td><td class="num"><span class="blank"></span></td></tr>
         <tr><td>3x3 × 31"</td><td>1</td><td class="num">27</td><td class="num">3,780</td><td class="num"><span class="blank"></span></td></tr>
         <tr><td>3x3 × 37½"</td><td>1</td><td class="num">12</td><td class="num">1,680</td><td class="num"><span class="blank"></span></td></tr>
@@ -345,14 +347,14 @@
     html: () => H.dialog(`Loaded quantities · ${st.job} · ${st.order}`,
       `<div class="btns"><span class="muted small">Reported by</span>${H.seg(['Phone', 'Email', 'Packing slip'], 0)}<span class="muted small">Nov 24, 2026 · 11:20 am · Kessler Wood Works</span></div>` +
       H.table(['Item', 'Drop', { t: 'Ordered', num: true }, { t: 'Loaded', num: true }, { t: 'Difference', num: true }, { t: 'Bd ft', num: true }], [
-        ['3x3 × 31"', '2', 27, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">27</span>', H.chip('0', 'ok'), '7,317'],
+        ['3x3 × 31"', '2', 9, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">9</span>', H.chip('0', 'ok'), '2,439'],
         ['2x3 × 39" grooved', '1', 18, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">18</span>', H.chip('0', 'ok'), '6,138'],
         ['3x3 × 31"', '1', 27, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">26</span>', H.chip('−1', 'warn'), '7,046'],
         ['3x3 × 37½"', '1', 12, '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end">12</span>', H.chip('0', 'ok'), '3,936'],
         ['2x4 × 40" filler', '1', 'Fill', '<span class="input" style="display:inline-flex;min-width:60px;justify-content:flex-end;border-color:var(--brand)">5</span>', H.chip('Filled in', 'info'), '1,665'],
-      ], { cls: ['', '', 'diff', '', ''], foot: ['Total', '', '84+', '88', '', '26,102'] }) +
+      ], { cls: ['', '', 'diff', '', ''], foot: ['Total', '', '66+', '70', '', '21,224'] }) +
       H.callout('warn', '<b>One bundle of 3x3 × 31" short for Caldari Road.</b> The order and invoice use the loaded quantity. Add a note for the customer?') +
-      H.callout('info', 'Inventory: 26,102 bd ft shipped is booked as 27,407 bd ft out (5% waste added at shipping).'),
+      H.callout('info', 'Inventory: 21,224 bd ft shipped is booked as 22,285 bd ft out (5% waste added at shipping).'),
       H.btn('Cancel') + H.btn('Save draft') + H.go('Update order for invoicing', 'doc-invoice', 'primary', 'check'), true),
   });
 

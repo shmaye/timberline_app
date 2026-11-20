@@ -55,7 +55,7 @@
         `<div class="btns">${H.box(true)} Grooved (costs more to make) &nbsp; ${H.toggle(true)} Active</div>` +
         `<div><div class="small muted" style="margin-bottom:6px">Stock lengths it can be cut from</div>` + H.table(['Stock length', { t: 'Pieces', num: 1 }, { t: 'Waste', num: 1 }, 'Leftover', 'Best'], [
           ['10\' (120")', 3, '3"', '—', H.chip('best', 'ok')], ['7\' trim (84")', 2, '6"', '—', ''], ['12\' (144")', 3, '—', '27" offcut → item DN-2427 (usable)', H.chip('offcut', 'warn')]]) + '</div>' +
-        H.form([H.field('Pieces per bundle', '210', '14 across × 15 high'), H.field('Bundle size', '39 × 42 × 30', 'in (L × W × H)'), H.field('Weight per piece', '2.1', 'lb'), H.field('Weight per bundle', '441', 'lb', true)]) +
+        H.form([H.field('Pieces per bundle', '210', '14 across × 15 high'), H.field('Bundle size', '39 × 42 × 30', 'in (L × W × H)'), H.field('Species', 'SPF dry · 1.90 ± 0.20 lb / bd ft'), H.field('Weight per piece', '3.09', 'lb (2.76–3.41), from species', true), H.field('Weight per bundle', '648', 'lb (580–716)', true)]) +
         `<div class="grid2"><div class="drop" style="padding:16px">Image (later): drop a photo of the bundle</div>${H.callout('info', 'The 3D planner draws this bundle as a 39" × 42" × 30" box. It can go across the trailer or lengthwise.')}</div>`,
         H.btn('Retire item', 'danger') + '<span style="flex:1"></span>' + H.btn('Cancel') + H.btn('Save', 'primary'), true);
     },

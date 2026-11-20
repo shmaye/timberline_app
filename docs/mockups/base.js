@@ -8,7 +8,7 @@ const D = {
   company: { name: 'BB Pallets', addr: '120 Example Industrial Rd, Concord ON  L4K 0A0', phone: '905-555-0100', gst: 'GST/HST 81234 5678 RT0001' },
   user: 'Sales desk',
   // pricing example (notes 4–6)
-  price: { lumber: 500, labor: 135, wastePct: 5, afterWaste: 666.75, freightLoad: 2300, mbfPerLoad: 44, freightMbf: 52.25, delivered: 719,
+  price: { lumber: 500, labor: 135, wastePct: 5, afterWaste: 666.75, freightLoad: 2300, mbfPerLoad: 44, freightMbf: 52.27, delivered: 719,
            margin: 2000, other: 700, marginTotal: 3000, marginMbf: 68, sell: 787, piece: { name: '3x3 × 31"', bf: 1.9375, raw: 1.5248, quoted: 1.53 } },
   // batch offer example (notes 8–9)
   batch: { offered: 225, asked: 300, settled: 235, freight: 20, delivered: 245, tenFt: 294, cut: 305, firstQuality: 345, nextWeek: 325 },
@@ -22,13 +22,19 @@ const D = {
       { id: 'GSS-NWK', name: 'Newark plant', city: 'Newark NJ', loadsYr: '10', cur: 'USD', mode: 'Delivered', freight: 3400, buyer: 'Mike Russo', major: ['3x3 × 37½"','4x4 × 48"'], filler: '2x4 × 40"', other: 400 } ] },
   ],
   items: [
-    { code: 'DN-3331', name: '3x3 × 31"', type: 'Cut dunnage', t: 3, w: 3, l: 31, grooved: false, bf: 1.9375, perBundle: 140, lbPc: 2.6, from: '10\' (3 pcs) · 12\' (4 pcs) · 7\' (2 pcs)' },
-    { code: 'DN-33375', name: '3x3 × 37½"', type: 'Cut dunnage', t: 3, w: 3, l: 37.5, grooved: false, bf: 2.3438, perBundle: 140, lbPc: 3.1, from: '10\' (3 pcs) · 12\' (3 pcs)' },
-    { code: 'DN-33385', name: '3x3 × 38½"', type: 'Cut dunnage', t: 3, w: 3, l: 38.5, grooved: false, bf: 2.4063, perBundle: 140, lbPc: 3.2, from: '10\' (3 pcs) · 12\' (3 pcs)' },
-    { code: 'DN-2339G', name: '2x3 × 39" grooved', type: 'Grooved', t: 2, w: 3, l: 39, grooved: true, bf: 1.625, perBundle: 210, lbPc: 2.1, from: '10\' (3 pcs) · 7\' (2 pcs) · 12\' (3 pcs + 24")' },
-    { code: 'DN-2440', name: '2x4 × 40"', type: 'Cut dunnage (filler)', t: 2, w: 4, l: 40, grooved: false, bf: 2.2222, perBundle: 150, lbPc: 2.9, from: '10\' (3 pcs)' },
-    { code: 'DN-4448', name: '4x4 × 48"', type: 'Cut dunnage', t: 4, w: 4, l: 48, grooved: false, bf: 5.3333, perBundle: 96, lbPc: 7.0, from: '8\' (2 pcs) · 12\' (3 pcs)' },
+    { code: 'DN-3331', name: '3x3 × 31"', type: 'Cut dunnage', t: 3, w: 3, l: 31, grooved: false, bf: 1.9375, perBundle: 140, lbPc: 3.7, from: '10\' (3 pcs) · 12\' (4 pcs) · 7\' (2 pcs)' },
+    { code: 'DN-33375', name: '3x3 × 37½"', type: 'Cut dunnage', t: 3, w: 3, l: 37.5, grooved: false, bf: 2.3438, perBundle: 140, lbPc: 4.5, from: '10\' (3 pcs) · 12\' (3 pcs)' },
+    { code: 'DN-33385', name: '3x3 × 38½"', type: 'Cut dunnage', t: 3, w: 3, l: 38.5, grooved: false, bf: 2.4063, perBundle: 140, lbPc: 4.6, from: '10\' (3 pcs) · 12\' (3 pcs)' },
+    { code: 'DN-2339G', name: '2x3 × 39" grooved', type: 'Grooved', t: 2, w: 3, l: 39, grooved: true, bf: 1.625, perBundle: 210, lbPc: 3.1, from: '10\' (3 pcs) · 7\' (2 pcs) · 12\' (3 pcs + 27")' },
+    { code: 'DN-2440', name: '2x4 × 40"', type: 'Cut dunnage (filler)', t: 2, w: 4, l: 40, grooved: false, bf: 2.2222, perBundle: 150, lbPc: 4.2, from: '10\' (3 pcs)' },
+    { code: 'DN-4448', name: '4x4 × 48"', type: 'Cut dunnage', t: 4, w: 4, l: 48, grooved: false, bf: 5.3333, perBundle: 96, lbPc: 10.1, from: '8\' (2 pcs) · 12\' (3 pcs)' },
     { code: 'PL-4840', name: 'Pallet 48×40', type: 'Pallet', t: 0, w: 0, l: 48, grooved: false, bf: 24, perBundle: 12, lbPc: 48, from: 'Parts list' },
+  ],
+  species: [
+    { name: 'SPF (spruce-pine-fir)', cond: 'Dry', avg: 1.9, var: 0.2, basis: '6 scale weights', items: 5 },
+    { name: 'SPF (spruce-pine-fir)', cond: 'Green', avg: 2.6, var: 0.35, basis: 'typical figure, no loads yet', items: 0 },
+    { name: 'Hemlock', cond: 'Green', avg: 3.0, var: 0.3, basis: '2 scale weights', items: 1 },
+    { name: 'Hardwood mix (pallets)', cond: 'Dry', avg: 4.0, var: 0.5, basis: 'typical figure', items: 1 },
   ],
   stock: ['2x3 × 7\' trim','2x3 × 8\'','2x3 × 10\'','2x3 × 12\'','3x3 × 10\'','3x3 × 12\'','2x4 × 10\'','4x4 × 8\''],
   suppliers: [
@@ -46,11 +52,11 @@ const D = {
     { name: 'Pinegrove Pallet', yard: 'Bolton yard', does: 'Cut · pallets', rate: '$135 / MBF in + $4.50 / pallet', jobs: 1 },
   ],
   trailers: [
-    { name: '53\' dry van', l: '53\'', w: '102"', h: '110"', axles: 'Tandem', lb: '45,000', bf: '44,000' },
-    { name: '48\' flatbed', l: '48\'', w: '102"', h: '8\' 6" load', axles: 'Tandem', lb: '48,000', bf: '44,000' },
-    { name: '53\' flatbed', l: '53\'', w: '102"', h: '8\' 6" load', axles: 'Tandem', lb: '48,000', bf: '44,000' },
-    { name: 'Tri-axle 53\'', l: '53\'', w: '102"', h: '110"', axles: 'Tri-axle', lb: '41,000', bf: '44,000' },
-    { name: 'B-train (28\' + 32\')', l: '28\' + 32\'', w: '102"', h: '8\' 6" load', axles: '8 axles', lb: '86,000', bf: '60,000' },
+    { name: '53\' dry van', l: '53\'', w: '102"', h: '110"', axles: 'Tandem', lb: '45,000', bf: '≈ 23,000' },
+    { name: '48\' flatbed', l: '48\'', w: '102"', h: '8\' 6" load', axles: 'Tandem', lb: '48,000', bf: '≈ 25,000' },
+    { name: '53\' flatbed', l: '53\'', w: '102"', h: '8\' 6" load', axles: 'Tandem', lb: '48,000', bf: '≈ 25,000' },
+    { name: 'Tri-axle 53\'', l: '53\'', w: '102"', h: '110"', axles: 'Tri-axle', lb: '41,000', bf: '≈ 21,500' },
+    { name: 'B-train (28\' + 32\')', l: '28\' + 32\'', w: '102"', h: '8\' 6" load', axles: '8 axles', lb: '86,000', bf: '≈ 45,000' },
   ],
   // the story order used across the walk-through
   story: { order: '24-0318', proposal: 'P-24-0318', load: 'L-2417', po: 'PO 77815', job: 'J-1182', bol: 'BOL-2417', inv: 'INV-24-0611', plant: 'Caldari Road plant, Concord ON', customer: 'Ardent Metals' },
@@ -63,6 +69,9 @@ const money = (n, d = 2) => '$' + Number(n).toLocaleString('en-CA', { minimumFra
 const n0 = n => Number(n).toLocaleString('en-CA', { maximumFractionDigits: 0 });
 const ICON = {
   workflow:'<path d="M4 6h6v4H4zM14 14h6v4h-6zM7 10v4h10"/>',
+  today:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 15l2.5 2.5L16 13"/>',
+  office:'<path d="M4 21V5l8-3 8 3v16"/><path d="M9 21v-5h6v5M8 8h2M14 8h2M8 12h2M14 12h2"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
   orders:'<path d="M6 3h9l3 3v15H6z"/><path d="M9 10h6M9 14h6M9 18h4"/>',
   loads:'<rect x="2" y="7" width="13" height="9"/><path d="M15 10h4l3 3v3h-7"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>',
   production:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
@@ -154,15 +163,17 @@ const H = {
 
 // ---------------- window registry ----------------
 const DEPTS = [
+  { id: 'today', label: 'Today', tabs: [['today', 'My day']] },
   { id: 'workflow', label: 'Workflow', tabs: [['workflow', 'Whole process']] },
   { id: 'orders', label: 'Orders', tabs: [['orders-incoming', 'Incoming'], ['orders-proposals', 'Proposals'], ['orders-orders', 'Orders'], ['orders-pickups', 'Pickups']] },
   { id: 'loads', label: 'Loads', tabs: [['loads-planner', '3D Planner'], ['loads-bookings', 'Carrier bookings'], ['loads-schedule', 'Schedule'], ['loads-bol', 'Bills of lading']] },
+  { id: 'office', label: 'Office', tabs: [['office-requests', 'Requests']] },
   { id: 'production', label: 'Production', tabs: [['production-jobs', 'Jobs'], ['production-subs', 'Subcontractors']] },
   { id: 'purchasing', label: 'Purchasing', tabs: [['purchasing-offers', 'Offers & batch calculator'], ['purchasing-pos', 'Purchase orders'], ['purchasing-suppliers', 'Suppliers']] },
   { id: 'inventory', label: 'Inventory', tabs: [['inventory-onhand', 'On hand'], ['inventory-counts', 'Counts & recounts'], ['inventory-adjustments', 'Adjustments'], ['inventory-waste', 'Waste']] },
   { id: 'pricing', label: 'Pricing', tabs: [['pricing-builder', 'Price builder'], ['pricing-lists', 'Price lists'], ['pricing-whatif', 'What-if']] },
   { id: 'customers', label: 'Customers', tabs: [['customers-accounts', 'Accounts & plants'], ['customers-contacts', 'Contacts'], ['customers-statements', 'Statements & payments']] },
-  { id: 'catalog', label: 'Catalog', tabs: [['catalog-items', 'Items'], ['catalog-pallets', 'Pallets'], ['catalog-lengths', 'Stock lengths']] },
+  { id: 'catalog', label: 'Catalog', tabs: [['catalog-items', 'Items'], ['catalog-species', 'Species & weights'], ['catalog-pallets', 'Pallets'], ['catalog-lengths', 'Stock lengths']] },
   { id: 'reports', label: 'Reports', tabs: [['reports-operations', 'Operations'], ['reports-money', 'Money'], ['reports-scheduled', 'Scheduled']] },
   { id: 'settings', label: 'Settings', tabs: [['settings-users', 'Users & access'], ['settings-email', 'Email'], ['settings-trailers', 'Trailer types'], ['settings-carriers', 'Carriers'], ['settings-taxes', 'Taxes & currency'], ['settings-imports', 'Imports']] },
 ];

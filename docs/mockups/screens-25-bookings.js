@@ -55,7 +55,7 @@
         <div class="box2"><div class="k">Deliver</div>1. Ardent Metals, Caldari Road plant, Concord ON<br>2. Ardent Metals, Jane Street plant, Vaughan ON<br>Tue Nov 24 · by 15:00</div>
       </div>
       <table><thead><tr><th>Equipment</th><th>Load</th><th class="num">Bundles</th><th class="num">Weight lb</th><th class="num">Drops</th></tr></thead>
-      <tbody><tr><td>53' dry van, tandem</td><td>Wood dunnage, untreated softwood</td><td class="num">88+</td><td class="num">43,100</td><td class="num">2</td></tr></tbody></table>
+      <tbody><tr><td>53' dry van, tandem</td><td>Wood dunnage, untreated softwood</td><td class="num">70+</td><td class="num">40,200</td><td class="num">2</td></tr></tbody></table>
       <table class="tot"><tbody><tr><td>Line haul, per load</td><td class="num">$2,150.00</td></tr><tr><td>Second drop</td><td class="num">$150.00</td></tr><tr><td>Price to put on the PO (CAD)</td><td class="num">$2,300.00</td></tr></tbody></table>
       <p>The carrier's confirmation books the date and accepts this price. Please forward it to me, or ask them to copy me.</p>
       <div class="sig"><div>Requested by: Sales, BB Pallets</div><div>Office PO no. · issued by · date</div></div>
@@ -76,7 +76,7 @@
         ['Date', 'Tue Nov 24', 'Tue Nov 24', H.chip('Same', 'ok')],
         ['Price', '$2,300.00', '$2,300.00', H.chip('Same', 'ok')],
         ['Equipment', '53\' dry van', '53\' dry van', H.chip('Same', 'ok')]])}
-      ${H.callout('info', 'Freight on this load: <b>$2,300</b>, the same as the price list was built on ($2,300 ÷ 44 MBF = $52.25 per MBF). Margin unchanged.')}
+      ${H.callout('info', 'Freight on this load: <b>$2,300</b>, the same as the price list was built on ($2,300 ÷ 44 MBF = $52.27 per MBF). Margin unchanged.')}
       <div class="small muted">Attached: the forwarded email (saved on order ${st.order} and on Trans-Ontario Freight).</div>`,
       H.btn('Cancel') + H.btn('Mark as confirmed', 'primary')),
   });

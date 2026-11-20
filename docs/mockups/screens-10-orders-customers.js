@@ -7,18 +7,18 @@
 
   // ---------- shared bits ----------
   const truckTiles = (bf, lb, floor, note) => H.kpis([
-    H.gauge('Board feet', `${n0(bf)} <small>/ 44,000</small>`, bf / 440, `${Math.round(bf / 440)}% of a truck`, bf > 44000 ? 'bad' : bf / 440 > 92 ? 'warn' : 'ok'),
-    H.gauge('Weight', `${n0(lb)} <small>/ 45,000 lb</small>`, lb / 450, lb > 45000 ? `${n0(lb - 45000)} lb over` : `${n0(45000 - lb)} lb to spare`, lb > 45000 ? 'bad' : lb / 450 > 92 ? 'warn' : 'ok'),
+    H.gauge('Board feet', `${n0(bf)} <small>/ ≈ 23,000 planned</small>`, bf / 230, `${Math.round(bf / 230)}% of this plant\'s planned load (D43)`, bf / 230 > 100 ? 'warn' : 'ok'),
+    H.gauge('Weight, average', `${n0(lb)} <small>/ 45,000 lb</small>`, lb / 450, `could be ${n0(lb * 1.7 / 1.9)} to ${n0(lb * 2.1 / 1.9)} lb (species ± variance)`, lb > 45000 ? 'bad' : lb * 2.1 / 1.9 > 45000 ? 'warn' : 'ok'),
     H.gauge('Floor', `${floor}%`, floor, '53\' dry van, 2 high', floor > 100 ? 'bad' : floor > 92 ? 'warn' : 'ok'),
     H.gauge('Fills', note, null, 'whichever runs out first (D13)'),
   ]);
 
   const needRows = [
-    ['DN-3331', '3x3 × 31"', 'Major', 2400, 1.9375, 2.6],
-    ['DN-33375', '3x3 × 37½"', 'Major', 1800, 2.3438, 3.1],
-    ['DN-33385', '3x3 × 38½"', 'Major', 1400, 2.4063, 3.2],
-    ['DN-2339G', '2x3 × 39" grooved', '', 2100, 1.625, 2.1],
-    ['DN-4448', '4x4 × 48"', '', 480, 5.3333, 7.0],
+    ['DN-3331', '3x3 × 31"', 'Major', 2400, 1.9375, 3.7],
+    ['DN-33375', '3x3 × 37½"', 'Major', 1800, 2.3438, 4.5],
+    ['DN-33385', '3x3 × 38½"', 'Major', 1400, 2.4063, 4.6],
+    ['DN-2339G', '2x3 × 39" grooved', '', 2100, 1.625, 3.1],
+    ['DN-4448', '4x4 × 48"', '', 480, 5.3333, 10.1],
   ];
   const needBf = needRows.reduce((a, r) => a + r[3] * r[4], 0);
   const needLb = needRows.reduce((a, r) => a + r[3] * r[5], 0);
@@ -54,7 +54,7 @@
     html: incomingPage,
     dock: H.assistant([
       ['me', 'What came in from Ardent this morning?'],
-      ['ai', 'Two needs sheets from Dana: Caldari Road (5 lines, about 96% of a truck) and Jane Street (2 lines, 41%). Jane Street is 8 miles away; it could ride on the Caldari Road load as a second drop.'],
+      ['ai', 'Two needs sheets from Dana: Caldari Road (5 lines, about 78% of a truck by weight) and Jane Street (2 lines, 41%). Jane Street is 8 miles away; it could ride on the Caldari Road load as a second drop.'],
       ['propose', 'Build proposal P-24-0318 for Caldari Road from Nov-Dec.xlsx, topped up to a full truck with major sizes.'],
     ]),
   });
@@ -72,7 +72,7 @@
       `<div class="grid2">${H.panel('1. Columns', H.table(['Their column', 'Means'], [
         ['Part #', H.chip('Their part number', 'brand')], ['Description', H.chip('Item', 'brand')], ['Qty', H.chip('Pieces', 'brand')], ['Need by', H.chip('Date', 'brand')], ['Notes', H.chip('Ignore', '')],
       ]), H.chip('Saved for Ardent', 'ok'), true)}
-      ${H.panel('2. Truck while importing', `<div style="padding:4px 0 0">${H.kpis([H.gauge('Board feet', `${n0(needBf)}`, needBf / 440, `${Math.round(needBf / 440)}% of a truck`, 'ok'), H.gauge('Weight', `${n0(needLb)} lb`, needLb / 450, 'of 45,000 lb', 'ok')])}</div>`)}</div>` +
+      ${H.panel('2. Truck while importing', `<div style="padding:4px 0 0">${H.kpis([H.gauge('Board feet', `${n0(needBf)}`, needBf / 230, `${Math.round(needBf / 230)}% of the ≈ 23,000 planned (D43)`, 'ok'), H.gauge('Weight', `${n0(needLb)} lb`, needLb / 450, 'of 45,000 lb', 'ok')])}</div>`)}</div>` +
       H.panel('3. Lines matched to the catalog', H.table(['Their part', 'Their description', 'Our item', { t: 'Pieces', num: true }, { t: 'Bd ft', num: true }, 'Check'], [
         ['ARD-0331', 'Dunnage 3x3x31', 'DN-3331 · 3x3 × 31"', '2,400', n0(2400 * 1.9375), H.chip('Matched', 'ok')],
         ['ARD-0375', '3X3 37.5 IN', 'DN-33375 · 3x3 × 37½"', '1,800', n0(1800 * 2.3438), H.chip('Matched', 'ok')],
@@ -103,9 +103,9 @@
     html: () => H.head(`Orders › Proposals · ${st.proposal}`, `${st.customer} · ${st.plant}`, 'From needs sheet Nov-Dec.xlsx, received today 8:14',
       H.btn('Split into 2 loads') + H.btn('Cut items') + H.go('Plan in 3D', 'loads-planner', '', 'loads') + H.go('Send proposal', 'doc-proposal', 'primary', 'mail')) +
       H.stages(D.stages, 1) +
-      truckTiles(40990, 43350, 97, 'Weight first') +
+      truckTiles(21030, 39960, 61, 'Weight first') +
       `<div class="split">${H.panel('Lines', H.table(['Item', { t: 'Asked', num: true }, { t: 'Proposed', num: true }, { t: 'Change', num: true }, { t: 'Bundles', num: true }, { t: 'Bd ft', num: true }, ''],
-        propLines, { foot: ['Total', '7,780', '8,830', '+980', '62', '40,990', ''] }), H.btn('Add line', 'sm', 'plus'), true)}
+        propLines, { foot: ['Total', '8,180', '9,160', '+980', '64+', '≈ 21,030', ''] }), H.btn('Add line', 'sm', 'plus'), true)}
       <div style="display:flex;flex-direction:column;gap:20px">
       ${H.panel('Suggestions', `<div class="list">
         <div class="li" style="border-top:0;padding-left:0">${H.dot('ok')}<div class="grow"><b>Topped up 980 pcs</b><div class="small muted">Spread over the 3 major sizes, in proportion.</div></div></div>
