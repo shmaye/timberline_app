@@ -173,7 +173,7 @@
       H.callout('warn', '<b>4,792 lb left on average, but only 560 lb on the heavy side.</b> Planning on the average, 6 more bundles of 3x3 × 37½" fit (a major size for Caldari Road), but the load could then weigh up to 48,573 lb. Planning on the heavy side, add nothing.', H.btn('Apply', 'sm')) +
       H.callout('info', '<b>Too much for one truck?</b> Split into 2 loads: the second becomes its own order (24-0318-B) shipping in 3 weeks or 1 month. Or cut items.', H.btn('Split', 'sm')) +
       H.callout('info', '<b>2x3 × 39" grooved goes lengthwise.</b> Across, it would use 9" more floor for the same 18 bundles.') +
-      H.callout('', '<b>Filler: as many as fit.</b> The packing slip leaves the filler quantity blank, to be filled in at loading.') +
+      H.callout('', '<b>Filler: as many as fit.</b> The packing slip leaves the filler quantity blank, to be filled in at loading. On a load picked up at two places the count is set on the plan, so the first loader leaves room for the second.', H.go('Slot plan', 'loads-slots', 'sm')) +
       `</div>` +
       H.panel('Top view · Rev 1', topView(), H.chip('Van: drop 1 nearest the doors', 'now')),
   });
@@ -334,23 +334,23 @@
     id: 'doc-jobsheet', dept: 'production', tab: 'production-jobs', kind: 'document', title: 'Subcontractor job sheet', story: 7,
     intent: 'What the subcontractor needs to cut, groove and load: the items and bundles, which stock lengths to cut them from, which way each bundle\'s risers run (so the fork openings face where it will be unloaded), the fillers, the ship date and the loading order. It carries a revision number; Rev 2 says what changed. The subcontractor acknowledges it and writes the ready date. (Layout proposed until we see theirs.)',
     ref: 'Hand-off 4.6, 8 · D7, D8, D34, D41 · Review S1, M5',
-    check: ['Can we see a job sheet as you send it today?', 'Can the subcontractor build bundles with the risers turned either way on request?', 'Does the subcontractor reply with a ready date, or only call when it is done?'],
+    check: ['Can we see a job sheet as you send it today?', 'Can the subcontractor build bundles with the risers turned either way on request?', 'Does the subcontractor reply with a ready date, or only call when it is done?', 'Do the subcontractors keep each customer\'s bundle count, or do you have to tell them each time?'],
     assistant: ['Email the job sheet with the packing slip and loading list attached', 'Translate the notes for the subcontractor if needed'],
     under: jobsUnder,
     html: () => H.doc('Job sheet · ' + st.job, H.letterhead('JOB SHEET', [['Job', st.job], ['Revision', 'Rev 1'], ['Order', st.order], ['Load', st.load], ['Ship date', 'Nov 24, 2026']]) +
       `<div class="cols"><div class="box2"><div class="k">To</div>Kessler Wood Works<br>Concord yard</div><div class="box2"><div class="k">Ship to</div>Ardent Metals · Caldari Road plant (drop 1)<br>Ardent Metals · Jane Street plant (drop 2)</div><div class="box2"><div class="k">Trailer · carrier</div>53' dry van · Trans-Ontario Freight<br>Pickup Nov 24, 7:00 am</div></div>` +
-      `<table><thead><tr><th>Item</th><th class="num">Pieces / bundle</th><th class="num">Bundles</th><th>Cut from</th><th>Risers</th><th>Extra work</th></tr></thead><tbody>
+      `<table><thead><tr><th>Item</th><th class="num">Pieces / bundle (customer's count)</th><th class="num">Bundles</th><th>Cut from</th><th>Risers</th><th>Extra work</th></tr></thead><tbody>
         <tr><td>3x3 × 31"</td><td class="num">140</td><td class="num">36</td><td>3x3 × 10' (3 pcs, 27" left)</td><td>Turned: along the pieces</td><td></td></tr>
         <tr><td>2x3 × 39" grooved</td><td class="num">210</td><td class="num">18</td><td>2x3 × 10' (3 pcs, 3" waste)</td><td>Across the pieces</td><td>Groove</td></tr>
         <tr><td>3x3 × 37½"</td><td class="num">140</td><td class="num">12</td><td>3x3 × 12' (3 pcs, 31½" left)</td><td>Across the pieces</td><td></td></tr>
         <tr><td>2x4 × 40" filler</td><td class="num">150</td><td class="num">As many as fit</td><td>2x4 × 10' (3 pcs)</td><td>Across the pieces</td><td>Count at loading</td></tr></tbody></table>` +
-      `<div class="fine">Load in the order on the attached loading list: Jane Street bundles at the nose, Caldari Road at the doors. Risers: the fork openings must face the back doors (van). Please reply with your ready date. Call or email the loaded quantities (fillers especially) the same day.</div><div class="sig"><div>Received by · acknowledged</div><div>Ready date</div></div>`, false),
+      `<div class="fine">Load in the order on the attached loading list: Jane Street bundles at the nose, Caldari Road at the doors. Risers: the fork openings must face the back doors (van). Every bundle in the customer's count shown: a short bundle is made up or reported, never sent short. Please reply with your ready date. Call or email the loaded quantities (fillers especially) the same day.</div><div class="sig"><div>Received by · acknowledged</div><div>Ready date</div></div>`, false),
   });
 
   // ---------- document: packing slip ----------
   S({
     id: 'doc-packing', dept: 'production', tab: 'production-jobs', kind: 'document', title: 'Packing slip',
-    intent: 'Goes with the load. It lists what was ordered, with the filler line quantity left blank, to be filled in at loading ("add as many as fit"). The filled-in slip is where the real quantities come from.',
+    intent: 'Goes with the load. It lists what was ordered, with the filler line quantity left blank, to be filled in at loading ("add as many as fit"). The filled-in slip is where the real quantities come from. On a load picked up at two places, the variable item is decided on the plan instead, because the first loader has to leave room for the second (D67).',
     ref: 'Hand-off 4.2, 4.6, 8 · D8',
     check: ['Is the blank filler line how you do it today, or is it written on the BOL?', 'One packing slip per drop, or one per load?'],
     assistant: ['Email it to the subcontractor or the driver', 'Read a photo of the filled-in slip and enter the quantities (proposed)'],

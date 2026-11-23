@@ -44,7 +44,7 @@
     id: 'dlg-item', dept: 'catalog', tab: 'catalog-items', kind: 'dialog', title: 'Item editor',
     intent: 'One form holds everything about an item: size, board feet, grooving, which stock lengths it is cut from and how much is wasted, weight, and the bundle the 3D planner draws. The image slot is there from day one and gets used later.',
     ref: 'Hand-off 5, D6, D21',
-    check: ['Which stock lengths give the best yield for each size (e.g. 2x3 × 39" from 10\', 7\' or 12\')?', 'Are offcuts like the 24" from a 12\' kept as their own item?', 'What does a bundle measure for each size?'],
+    check: ['Which stock lengths give the best yield for each size (e.g. 2x3 × 39" from 10\', 7\' or 12\')?', 'Are offcuts like the 24" from a 12\' kept as their own item?', 'What does a bundle measure for each size?', 'Is the bundle footprint always 48" × 48" (or 40" for short items)?'],
     assistant: ['Fill in yield and waste for each stock length', 'Suggest the French name', 'Warn when the weight looks wrong for the size'],
     under: underCatalog,
     html: () => {
@@ -55,7 +55,7 @@
         `<div class="btns">${H.box(true)} Grooved (costs more to make) &nbsp; ${H.toggle(true)} Active</div>` +
         `<div><div class="small muted" style="margin-bottom:6px">Stock lengths it can be cut from</div>` + H.table(['Stock length', { t: 'Pieces', num: 1 }, { t: 'Waste', num: 1 }, 'Leftover', 'Best'], [
           ['10\' (120")', 3, '3"', '—', H.chip('best', 'ok')], ['7\' trim (84")', 2, '6"', '—', ''], ['12\' (144")', 3, '—', '27" offcut → item DN-2427 (usable)', H.chip('offcut', 'warn')]]) + '</div>' +
-        H.form([H.field('Pieces per bundle', '210', '14 across × 15 high'), H.field('Bundle size', '39 × 42 × 30', 'in (L × W × H)'), H.field('Species', 'SPF dry · 1.90 ± 0.20 lb / bd ft'), H.field('Weight per piece', '3.09', 'lb (2.76–3.41), from species', true), H.field('Weight per bundle', '648', 'lb (580–716)', true)]) +
+        H.form([H.field('Pieces per bundle', '210', '14 across × 15 high · default; a plant can fix its own (D62)'), H.field('Bundle size', '39 × 42 × 30', 'in (L × W × H)'), H.field('Species', 'SPF dry · 1.90 ± 0.20 lb / bd ft'), H.field('Weight per piece', '3.09', 'lb (2.76–3.41), from species', true), H.field('Weight per bundle', '648', 'lb (580–716)', true)]) +
         `<div class="grid2"><div class="drop" style="padding:16px">Image (later): drop a photo of the bundle</div>${H.callout('info', 'The 3D planner draws this bundle as a 39" × 42" × 30" box. It can go across the trailer or lengthwise.')}</div>`,
         H.btn('Retire item', 'danger') + '<span style="flex:1"></span>' + H.btn('Cancel') + H.btn('Save', 'primary'), true);
     },

@@ -98,7 +98,7 @@
     id: 'orders-proposals', dept: 'orders', title: 'Load proposals', story: 2,
     intent: 'His own worksheet, as he works today: the customer\'s needs fitted to a full truck, with the internal order number on it. It shows % of a truck live (weight as light side, average and heavy side, D45), and offers the three moves from the notes: split into two loads, cut items, or top up with the plant\'s major sizes. It is the fast way in and works on a phone; the 3D planner is for confirming the load, not for getting started. The proposal is emailed back and waits for the customer\'s PO.',
     ref: 'Hand-off 4.1, 4.2 · D13, D16, D43, D45 · Review S7',
-    check: ['Is "% of a truck" worked out from board feet, or by eye from experience?', 'When topping up, is it always the major sizes, or what the customer asks for?', 'How long does a proposal usually wait for the PO?'],
+    check: ['Is "% of a truck" worked out from board feet, or by eye from experience?', 'When topping up, is it always the major sizes, or what the customer asks for?', 'How long does a proposal usually wait for the PO?', 'Do you count a van in 48" × 48" slots (52 a truck) for every customer?'],
     assistant: ['Top up to a full truck, weighted to major sizes', 'Split into two loads with the gap the customer picks', 'Draft the email with the proposal attached'],
     html: () => H.head(`Orders › Proposals · ${st.proposal}`, `${st.customer} · ${st.plant}`, 'From needs sheet Nov-Dec.xlsx, received today 8:14',
       H.btn('Split into 2 loads') + H.btn('Cut items') + H.go('Plan in 3D', 'loads-planner', '', 'loads') + H.go('Send proposal', 'doc-proposal', 'primary', 'mail')) +
@@ -239,9 +239,9 @@
   // ---------- dialog: edit plant ----------
   S({
     id: 'dlg-plant', kind: 'dialog', dept: 'customers', tab: 'customers-accounts', title: 'Edit a plant',
-    intent: 'Everything that makes a plant different in one place: where it ships, who buys, price list and currency, pickup or delivered, freight, major sizes for top-ups, filler items and how far the filler may go over the PO, other costs per load (D18), how often it orders, and what a carrier needs: receiving hours, appointment, how it unloads (forklift from the side or a dock), which trailers it takes, shutdown weeks. For US plants: delivery terms, who is the importer of record, and the customs broker (D26). The unloading side sets the planner\'s "Unloads from" (D34).',
-    ref: 'Hand-off 6 · D18, D26, D34 · Review S4, S8, S15',
-    check: ['Do customers tell you their receiving hours and which trucks they can unload?', 'For US plants: who is the importer of record, and who pays duty and the broker?', 'How far over the PO will each plant accept on the filler line?'],
+    intent: 'Everything that makes a plant different in one place: where it ships, who buys, price list and currency, pickup or delivered, freight, major sizes for top-ups, filler items and how far the filler may go over the PO, other costs per load (D18), how often it orders, and what a carrier needs: receiving hours, appointment, how it unloads (forklift from the side or a dock), which trailers it takes, shutdown weeks. For US plants: delivery terms, who is the importer of record, and the customs broker (D26). The unloading side sets the planner\'s "Unloads from" (D34). Each item has <b>this customer\'s own pieces per bundle</b>, which never changes for a cut-to-size item, a bundles-per-load target and a variable item that fills the rest, and the places the load is picked up from (D62–D67).',
+    ref: 'Hand-off 6 · D18, D26, D34, D62–D67 · Review S4, S8, S15',
+    check: ['Do customers tell you their receiving hours and which trucks they can unload?', 'For US plants: who is the importer of record, and who pays duty and the broker?', 'How far over the PO will each plant accept on the filler line?', 'Does every customer have its own pieces per bundle for each item, or only some?', 'Which items do you resell as bought from the supplier, without cutting?'],
     assistant: ['Fill the plant from an email signature or a PO', 'Suggest major sizes from past orders', 'Set "Unloads from" on the planner from this plant'],
     under: accountsPage,
     html: () => H.dialog('Garden State Steel · Newark plant',
@@ -249,6 +249,13 @@
       H.panel('Receiving (for the carrier and the planner)', H.form([H.field('Receiving hours', 'Mon–Thu 6:00–14:00'), H.field('Appointment', 'Needed, 24 h ahead'), H.field('Unloads', H.seg(['Side, forklift', 'Dock (back)'], 1)), H.field('Accepts', '53\' dry van only'), H.field('Shutdown weeks', 'Dec 22 – Jan 2 · July 4 week')])) +
       `<div class="grid2">${H.panel('Major sizes (for top-ups)', `<div class="btns">${H.chip('3x3 × 37½" ✕', 'brand')}${H.chip('4x4 × 48" ✕', 'brand')}${H.btn('Add', 'sm', 'plus')}</div>`)}
       ${H.panel('Filler items', `<div class="btns">${H.chip('2x4 × 40" ✕', 'warn')}${H.btn('Add', 'sm', 'plus')}</div>`)}</div>` +
+      H.panel('This plant\'s bundles and load target (D62–D67)', H.table(['Item', { t: 'Pcs / bundle', num: true }, 'Made', 'Rule'], [
+        ['3x3 × 37½"', '120', 'Cut to size', H.chip('Exact, every bundle', 'brand')],
+        ['4x4 × 48"', '80', 'Cut to size', H.chip('Exact, every bundle', 'brand')],
+        ['2x4 × 40" (variable)', '150', 'Cut to size', H.chip('Fills what is left', 'warn')],
+        ['2x4 × 8\' stock', 'as received', 'Resold as bought', H.chip('Count may vary', '')]]) +
+        `<div style="padding:14px 18px 16px"><div class="form">${H.field('Bundles per load', '52', 'the number he taught them to order')}${H.field('Variable item', '2x4 × 40" ▾', 'fills to what fits')}${H.field('Loads at', 'Kessler, Concord ▾ then Pinegrove, Bolton', 'pickup stops in order')}</div>` +
+        `<div class="small muted" style="margin-top:10px">The plant counts its yard by bundles, so a cut-to-size item always comes in the same count. A short bundle from the supplier is made up or flagged, not sent. Wood resold as bought keeps the supplier's count, and the packing slip shows the real pieces.</div></div>`, '', true) +
       H.panel('Other costs per load (D18)', H.table(['What', { t: 'Per load', num: true }, ''], [['Border wait time, average', '$250', H.btn('Remove', 'sm ghost')], ['Customer pallet tags', '$150', H.btn('Remove', 'sm ghost')]], { foot: ['Counts in margin and profit per load', '$400', ''] }), H.btn('Add cost', 'sm', 'plus'), true) +
       H.panel('Cross-border (D26, S8)', H.form([H.field('Delivery terms', 'Delivered, duty unpaid (to confirm)'), H.field('Importer of record', 'Garden State Steel (to confirm)'), H.field('Customs broker', 'Example Customs Brokers Inc.'), H.field('Broker email', 'entries@example-broker.com'), H.field('Duty and brokerage', 'Ask the broker · goes in the price build-up (D42)')])),
       H.btn('Cancel') + H.btn('Save', 'primary'), true),

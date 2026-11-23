@@ -94,6 +94,7 @@ To check with BB Pallets:
 - Is "% of a truck" worked out from board feet, or by eye from experience?
 - When topping up, is it always the major sizes, or what the customer asks for?
 - How long does a proposal usually wait for the PO?
+- Do you count a van in 48" × 48" slots (52 a truck) for every customer?
 
 Assistant here:
 - Top up to a full truck, weighted to major sizes
@@ -239,6 +240,38 @@ Assistant here:
 - Reprint it after a change to the plan
 
 Ref: Hand-off 4.2, 8 · D8, D15, D31, D34, D41 · Review S7
+
+### Slot plan: two pickups `#loads-slots` (screen)
+
+How he plans a van in his own terms (notes 14–16). Bundles sit on a 48" × 48" footprint, so a 53' van holds 13 rows along, 2 across, 2 high: 52 bundles. Bundles that are only 40" long give back 8" each row; 20 of them make room for 4 more. This customer is trained to order 52 (D66); one variable item takes whatever room is left, so the truck can leave with 56. The load is picked up at two places (D67): the first loader puts on its items and the variable item, and has to leave exactly enough room at the doors for the second place's bundles, so the variable count is decided here, before the truck leaves, not at loading. Every bundle is the customer's own count for that item (D62).
+
+To check with BB Pallets:
+- Are all your bundles on a 48" × 48" footprint, or only this customer's?
+- Is it always 2 across and 2 high in a van? Do you ever stack 3 high?
+- Where are the two pickup places for this customer, and which one loads first?
+- Who decides how many of the variable item go on: you, or the first loader on the day?
+- Are the 52 bundles a rule of yours for every customer, or only one you taught this customer?
+
+Assistant here:
+- "How many of the variable item fit?" from the order
+- Tell the first loader how much room to leave for the second stop
+- Warn when the second stop's bundles would not fit after a change
+
+Ref: Voice notes 14–16 (2026-11-23) · D62–D67 · D13, D15, D33, D43, D45
+
+### Loading list per pickup stop `#doc-loadlist-stops` (document)
+
+When a truck loads at two places, each place gets its own part of the list from the same plan revision. The first stop sees its rows from the nose, the variable item with its count already decided, and in large print how much room it must leave at the doors. The second stop sees what is already on the truck and where its bundles go. Both show the customer's pieces per bundle, which must be exact.
+
+To check with BB Pallets:
+- Does the second place need the first stop's list too, or only its own part?
+- If the first stop runs out of room, who calls whom?
+
+Assistant here:
+- Email each stop its own part of the list
+- After the first stop reports, tell the second stop what is on the truck
+
+Ref: Voice note 16 · D62, D66, D67 · D8, D41
 
 ### Carrier bookings `#loads-bookings` (screen, order story step 6)
 
@@ -409,6 +442,7 @@ To check with BB Pallets:
 - Can we see a job sheet as you send it today?
 - Can the subcontractor build bundles with the risers turned either way on request?
 - Does the subcontractor reply with a ready date, or only call when it is done?
+- Do the subcontractors keep each customer's bundle count, or do you have to tell them each time?
 
 Assistant here:
 - Email the job sheet with the packing slip and loading list attached
@@ -418,7 +452,7 @@ Ref: Hand-off 4.6, 8 · D7, D8, D34, D41 · Review S1, M5
 
 ### Packing slip `#doc-packing` (document)
 
-Goes with the load. It lists what was ordered, with the filler line quantity left blank, to be filled in at loading ("add as many as fit"). The filled-in slip is where the real quantities come from.
+Goes with the load. It lists what was ordered, with the filler line quantity left blank, to be filled in at loading ("add as many as fit"). The filled-in slip is where the real quantities come from. On a load picked up at two places, the variable item is decided on the plan instead, because the first loader has to leave room for the second (D67).
 
 To check with BB Pallets:
 - Is the blank filler line how you do it today, or is it written on the BOL?
@@ -714,19 +748,21 @@ Ref: Hand-off 3, 6 · D18, D26, D36, D39 · Review S15
 
 ### Edit a plant `#dlg-plant` (dialog)
 
-Everything that makes a plant different in one place: where it ships, who buys, price list and currency, pickup or delivered, freight, major sizes for top-ups, filler items and how far the filler may go over the PO, other costs per load (D18), how often it orders, and what a carrier needs: receiving hours, appointment, how it unloads (forklift from the side or a dock), which trailers it takes, shutdown weeks. For US plants: delivery terms, who is the importer of record, and the customs broker (D26). The unloading side sets the planner's "Unloads from" (D34).
+Everything that makes a plant different in one place: where it ships, who buys, price list and currency, pickup or delivered, freight, major sizes for top-ups, filler items and how far the filler may go over the PO, other costs per load (D18), how often it orders, and what a carrier needs: receiving hours, appointment, how it unloads (forklift from the side or a dock), which trailers it takes, shutdown weeks. For US plants: delivery terms, who is the importer of record, and the customs broker (D26). The unloading side sets the planner's "Unloads from" (D34). Each item has this customer's own pieces per bundle, which never changes for a cut-to-size item, a bundles-per-load target and a variable item that fills the rest, and the places the load is picked up from (D62–D67).
 
 To check with BB Pallets:
 - Do customers tell you their receiving hours and which trucks they can unload?
 - For US plants: who is the importer of record, and who pays duty and the broker?
 - How far over the PO will each plant accept on the filler line?
+- Does every customer have its own pieces per bundle for each item, or only some?
+- Which items do you resell as bought from the supplier, without cutting?
 
 Assistant here:
 - Fill the plant from an email signature or a PO
 - Suggest major sizes from past orders
 - Set "Unloads from" on the planner from this plant
 
-Ref: Hand-off 6 · D18, D26, D34 · Review S4, S8, S15
+Ref: Hand-off 6 · D18, D26, D34, D62–D67 · Review S4, S8, S15
 
 ### Contacts `#customers-contacts` (screen)
 
@@ -798,6 +834,7 @@ To check with BB Pallets:
 - Which stock lengths give the best yield for each size (e.g. 2x3 × 39" from 10', 7' or 12')?
 - Are offcuts like the 24" from a 12' kept as their own item?
 - What does a bundle measure for each size?
+- Is the bundle footprint always 48" × 48" (or 40" for short items)?
 
 Assistant here:
 - Fill in yield and waste for each stock length

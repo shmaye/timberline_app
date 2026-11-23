@@ -20,6 +20,9 @@ const D = {
       { id: 'LTB-TOR', name: 'Toronto plant', city: 'Toronto ON', loadsYr: '12', cur: 'CAD', mode: 'Pickup', freight: 0, buyer: 'Raj Patel', major: ['2x3 × 39" grooved'], filler: '—', other: 0 } ] },
     { id: 'GSS', name: 'Garden State Steel', plants: [
       { id: 'GSS-NWK', name: 'Newark plant', city: 'Newark NJ', loadsYr: '10', cur: 'USD', mode: 'Delivered', freight: 3400, buyer: 'Mike Russo', major: ['3x3 × 37½"','4x4 × 48"'], filler: '2x4 × 40"', other: 400 } ] },
+    // notes 14–16: cut-to-size mixed loads of 10–15 items, or a straight load of one item; 52 bundles a truck
+    { id: 'MVS', name: 'Mohawk Valley Steel', plants: [
+      { id: 'MVS-ROM', name: 'Rome plant', city: 'Rome NY', loadsYr: '?', cur: 'USD', mode: 'Delivered', freight: 3600, buyer: 'Tom Walsh', major: ['4x4 × 48"','4x6 × 40"'], filler: '2x4 × 48" (variable)', other: 0 } ] },
   ],
   items: [
     { code: 'DN-3331', name: '3x3 × 31"', type: 'Cut dunnage', t: 3, w: 3, l: 31, grooved: false, bf: 1.9375, perBundle: 140, lbPc: 3.7, from: '10\' (3 pcs) · 12\' (4 pcs) · 7\' (2 pcs)' },
@@ -166,7 +169,7 @@ const DEPTS = [
   { id: 'today', label: 'Today', tabs: [['today', 'My day']] },
   { id: 'workflow', label: 'Workflow', tabs: [['workflow', 'Whole process']] },
   { id: 'orders', label: 'Orders', tabs: [['orders-incoming', 'Incoming'], ['orders-proposals', 'Proposals'], ['orders-orders', 'Orders'], ['orders-pickups', 'Pickups']] },
-  { id: 'loads', label: 'Loads', tabs: [['loads-planner', '3D Planner'], ['loads-bookings', 'Carrier bookings'], ['loads-schedule', 'Schedule'], ['loads-bol', 'Bills of lading']] },
+  { id: 'loads', label: 'Loads', tabs: [['loads-planner', '3D Planner'], ['loads-slots', 'Slot plan'], ['loads-bookings', 'Carrier bookings'], ['loads-schedule', 'Schedule'], ['loads-bol', 'Bills of lading']] },
   { id: 'office', label: 'Office', tabs: [['office-requests', 'Requests']] },
   { id: 'production', label: 'Production', tabs: [['production-jobs', 'Jobs'], ['production-subs', 'Subcontractors']] },
   { id: 'purchasing', label: 'Purchasing', tabs: [['purchasing-offers', 'Offers & batch calculator'], ['purchasing-pos', 'Purchase orders'], ['purchasing-suppliers', 'Suppliers']] },
